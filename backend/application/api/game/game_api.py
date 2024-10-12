@@ -6,8 +6,18 @@ game_fields = {
     'id': fields.Integer,
     'title': fields.String,
     'genre': fields.String,
+    'release_date': fields.String,
+    'developer': fields.String,
+    'publisher': fields.String,
+    'platform': fields.String,
+    'rating': fields.Float,
+    'description': fields.String,
+    'price': fields.Float,
+    'multiplayer': fields.Boolean,
+    'no_of_downloads': fields.Integer,
     'played': fields.Boolean
 }
+
 
 games_parser = reqparse.RequestParser()
 games_parser.add_argument(
@@ -49,7 +59,6 @@ class SingleGameResource(Resource):
         game = game_model.query.filter_by(id=id).first()
         if not game:
             return {"status": 'failure', 'message': 'game not found !'}, 404
-
         title = game.title
         genre = game.genre
         played = game.played
@@ -57,8 +66,6 @@ class SingleGameResource(Resource):
             title = args.get('title')
         if args.get('genre'):
             genre = args.get('genre')
-        if args.get('played'):
-            played = args.get('played')
         game.title = title
         game.genre = genre
         game.played = played
@@ -68,12 +75,7 @@ class SingleGameResource(Resource):
     def delete(self, id):
         game = game_model.query.filter_by(id=id).first()
         if not game:
-            # Return a plain dictionary, no need to use jsonify
             return {"status": "failure", "message": "game not found!"}, 404
-
-        # Proceed with deletion if the game is found
         db.session.delete(game)
         db.session.commit()
-
-        # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200

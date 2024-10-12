@@ -1,48 +1,12 @@
+from datetime import datetime
 from application.data.database import db
+from application.data.datalist import GAMES
 from application.data.datastore import ds
 from application.data.model import Game as game_model
 from application.data.model import Role as role_model
 from application.data.model import RolesUsers as roles_users
 from application.data.model import User as user_model
 from werkzeug.security import generate_password_hash
-
-GAMES = [
-    {
-        "title": "The Elder Scrolls V: Skyrim",
-        "genre": "RPG",
-        "played": True,
-    },
-    {
-        "title": "Grand Theft Auto V",
-        "genre": "Action",
-        "played": False,
-    },
-    {
-        "title": "The Witcher 3: Wild Hunt",
-        "genre": "Fantasy",
-        "played": False,
-    },
-    {
-        "title": "World of Warcraft",
-        "genre": "MMORPG",
-        "played": True,
-    },
-    {
-        "title": "Civilization VI",
-        "genre": "Strategy",
-        "played": True,
-    },
-    {
-        "title": "Settlers of Catan",
-        "genre": "Board",
-        "played": False,
-    },
-    {
-        "title": "Tetris Effect",
-        "genre": "Puzzle",
-        "played": False,
-    },
-]
 
 
 def gen():
@@ -62,7 +26,21 @@ def gen():
     games = game_model.query.all()
     if not games:
         for i in GAMES:
+            release_date = datetime.strptime(
+                i["release_date"], "%Y-%m-%d").date()
             new_game = game_model(
-                title=i["title"], genre=i["genre"], played=i["played"])
+                title=i["title"],
+                genre=i["genre"],
+                release_date=release_date,
+                developer=i["developer"],
+                publisher=i["publisher"],
+                platform=i["platform"],
+                rating=i["rating"],
+                description=i["description"],
+                price=i["price"],
+                multiplayer=i["multiplayer"],
+                no_of_downloads=i["no_of_downloads"]
+            )
+
             db.session.add(new_game)
         db.session.commit()

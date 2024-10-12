@@ -1,14 +1,14 @@
 <template>
   <div>
-    <!-- html code -->
-    <h1>fdhgddkjfhkj</h1>
+    <h2>userDash</h2>
   </div>
+  <!-- html code -->
 </template>
 
 <script>
 // JS
 export default {
-  name: 'UserDashView',
+  name: 'userDash',
   data() {
     return {}
   },

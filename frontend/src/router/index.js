@@ -1,15 +1,24 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
-import userDashView from '../views/userDashView.vue'
+import UserDashView from '../views/userDashView.vue'
 import landingView from '../views/landingView.vue'
+import genreView from '../views/genreView.vue'
+import gameView from '../views/gameView.vue'
+import adminDash from '../views/adminDash.vue'
+import pageNotFound from '../views/pageNotFound.vue'
 
 const routes = [
-  { path: '/', component: landingView },
-  { path: '/user/dashboard', component: userDashView },
+  { path: '/', component: landingView }, // working
+  { path: '/user/dashboard', component: UserDashView },
+  { path: '/genre', component: genreView },
+  { path: '/games', component: gameView },
+  { path: '/admin/dashboard', component: adminDash }, // working
+  { path: '/page-not-found', component: pageNotFound },
+  { path: '/:pathMatch(.*)*', component: pageNotFound },
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(), // Use createWebHistory
   routes,
 })
 

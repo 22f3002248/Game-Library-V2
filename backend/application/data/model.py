@@ -9,14 +9,35 @@ ist_offset = timedelta(hours=5, minutes=30)
 current_time = current_timeutc + ist_offset
 
 # ? id, title, genre, played
+game_genre_association = db.Table('game_genre',
+                                  db.Column('game_id', db.Integer, db.ForeignKey(
+                                      'game.id'), primary_key=True),
+                                  db.Column('genre_id', db.Integer, db.ForeignKey(
+                                      'genre.id'), primary_key=True)
+                                  )
 
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
-    genre = db.Column(db.String(50))
-    played = db.Column(db.Boolean, default=False)
-    # genre=....1-M / M-M
+    # genre = db.Column(db.String(50))
+    release_date = db.Column(db.Date)
+    developer = db.Column(db.String(100))
+    publisher = db.Column(db.String(100))
+    platform = db.Column(db.String(50))
+    rating = db.Column(db.Float)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float)
+    multiplayer = db.Column(db.Boolean, default=False)
+    no_of_downloads = db.Column(db.Integer, default=0)
+    genres = db.relationship(
+        'Genre', secondary=game_genre_association, backref='games', lazy=True)
+
+
+class Genre(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(50), nullable=False)
+    desc = db.Column(db.Text)
 
 
 '''

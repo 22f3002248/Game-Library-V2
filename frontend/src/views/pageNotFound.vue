@@ -1,14 +1,13 @@
 <template>
   <div>
-    <!-- html code -->
-    <h1>fdhgddkjfhkj</h1>
+    <h2>Sorry, Page not found</h2>
   </div>
 </template>
 
 <script>
 // JS
 export default {
-  name: 'UserDashView',
+  name: 'pageNotFound',
   data() {
     return {}
   },
