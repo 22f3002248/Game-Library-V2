@@ -1,18 +1,19 @@
 <template>
-    <div>
-        <!-- html code -->
-    </div>
+  <div>
+    <h2>userDash</h2>
+  </div>
+  <!-- html code -->
 </template>
 
 <script>
 // JS
 export default {
-    name: "userDash",
-    data() {
-        return {};
-    },
-    methods: {},
-};
+  name: 'userDashView',
+  data() {
+    return {}
+  },
+  methods: {},
+}
 </script>
 
 <style>

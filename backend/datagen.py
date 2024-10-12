@@ -2,6 +2,7 @@ from application.data.database import db
 from application.data.datastore import ds
 from application.data.model import Game as game_model
 from application.data.model import Role as role_model
+# from application.data.model import Genre as genre_model #v-
 from application.data.model import RolesUsers as roles_users
 from application.data.model import User as user_model
 from werkzeug.security import generate_password_hash
