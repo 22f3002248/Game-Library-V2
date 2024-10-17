@@ -19,7 +19,7 @@
           <button
             type="button"
             class="btn btn-outline btn-accent"
-            v-on:click="showModal"
+            @click="showAddGenre = true"
           >
             Add Genre
           </button>
@@ -28,18 +28,18 @@
           <button
             type="button"
             class="btn btn-outline btn-info"
-            v-on:click="showDataAll"
+            @click="showDataAll"
           >
-            Show data
+            Show Data
           </button>
 
           <!-- Close Data Button -->
           <button
             type="button"
             class="btn btn-outline btn-error"
-            v-on:click="closeDataAll"
+            @click="closeDataAll"
           >
-            Close data
+            Close Data
           </button>
         </div>
 
@@ -57,115 +57,64 @@
             <tbody>
               <tr v-for="(genre, id) in genre" :key="id">
                 <td>{{ genre.title }}</td>
-                <td>{{ genre.desc }}</td>
+                <td>{{ genre.description }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Filter Button -->
-        <button type="button" class="btn btn-outline btn-primary">
-          Filter
-        </button>
-
-        <!-- Filter Table -->
-        <div>
-          <table class="table w-full mt-4">
-            <thead>
-              <tr>
-                <th>Game Name</th>
-                <th>Genre</th>
-                <th>Played</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(game, index) in filterGenre.games" :key="index">
-                <td>{{ filterGenre.title }}</td>
-                <td>{{ game.title }}</td>
-                <td>
-                  <span v-if="game.played">Yes</span>
-                  <span v-else>No</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Filter Modal -->
-        <div>
-          <b-modal
-            ref="filterGamesByGenre"
-            id="genre-modal"
-            title="Filter Games by Genre"
-            hide-backdrop
-            hide-footer
-          >
-            <form @submit.prevent="onSubmitFilter" class="w-full">
-              <div class="form-control">
-                <label class="label" for="form-genre-input">Genre</label>
-                <select
-                  id="form-genre-input"
-                  v-model="addGameForm.genre_id"
-                  class="select select-accent w-full max-w-xs"
-                  required
+        <!-- Add Genre Dialog -->
+        <TransitionRoot
+          as="template"
+          :show="showAddGenre"
+          @close="showAddGenre = false"
+        >
+          <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen">
+              <DialogPanel class="bg-neutral p-6 rounded-lg shadow-lg">
+                <DialogTitle class="text-lg font-bold"
+                  >Add a New Genre</DialogTitle
                 >
-                  <option
-                    v-for="genre in genres"
-                    :key="genre.id"
-                    :value="genre.id"
-                  >
-                    {{ genre.text }}
-                  </option>
-                </select>
+                <form @submit.prevent="onSubmitGenre" class="dialog-form">
+                  <div class="form-control mt-4">
+                    <label for="form-name-input">Genre</label>
+                    <input
+                      id="form-name-input"
+                      type="text"
+                      v-model="addGenreForm.title"
+                      required
+                      placeholder="Enter Genre"
+                      class="input input-bordered"
+                    />
+                  </div>
 
-                <!-- Submit Button -->
-                <button class="btn btn-outline btn-primary w-20 mt-4" type="submit">
-                  Ok
-                </button>
-              </div>
-            </form>
-          </b-modal>
-        </div>
+                  <div class="form-control mt-4">
+                    <label for="form-genre-input">Description</label>
+                    <input
+                      id="form-genre-input"
+                      type="text"
+                      v-model="addGenreForm.description"
+                      required
+                      placeholder="Enter Description"
+                      class="input input-bordered"
+                    />
+                  </div>
 
-        <!-- Add Genre Modal -->
-        <div v-if="showModalForm">
-          <b-modal
-            ref="addGameModal"
-            id="game-modal"
-            title="Add a New Genre"
-            hide-backdrop
-            hide-footer
-          >
-            <form @submit.prevent="onSubmit" class="w-full">
-              <div class="form-control">
-                <label class="label" for="form-name-input">Genre</label>
-                <input
-                  id="form-name-input"
-                  type="text"
-                  v-model="addGameForm.title"
-                  class="input input-bordered"
-                  required
-                  placeholder="Enter Genre"
-                />
-              </div>
-
-              <div class="form-control mt-4">
-                <label class="label" for="form-genre-input">Description</label>
-                <input
-                  id="form-genre-input"
-                  type="text"
-                  v-model="addGameForm.desc"
-                  class="input input-bordered"
-                  required
-                  placeholder="Enter Description"
-                />
-              </div>
-
-              <!-- Submit Button -->
-              <button class="btn btn-outline mt-4" type="submit">Add</button>
-            </form>
-          </b-modal>
-        </div>
+                  <div class="mt-4">
+                    <button class="btn btn-outline" type="submit">Add</button>
+                    <button
+                      type="button"
+                      class="btn btn-outline"
+                      @click="showAddGenre = false"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </DialogPanel>
+            </div>
+          </Dialog>
+        </TransitionRoot>
 
         <!-- Footer -->
         <footer
@@ -180,42 +129,42 @@
 
 <script>
 import axios from 'axios'
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionRoot,
+} from '@headlessui/vue'
 
 export default {
   name: 'genreView',
+  components: {
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+    TransitionRoot,
+  },
+
   data() {
     return {
       genre: [],
-      filterGenre: {
-        games: [],
-      },
-      addGameForm: {
+      // filterGenre: {
+      //   games: [],
+      // },
+      addGenreForm: {
         title: '',
-        desc: '',
-        genre_id: '',
+        description: '',
       },
       message: '',
       showMessage: false,
       showData: false,
-      showModalForm: false,
-      genres: [
-        { text: 'Select One', value: '' },
-        { text: 'RPG', value: '1' },
-        { text: 'Adventure', value: '2' },
-        { text: 'Action', value: '3' },
-        { text: 'Retro', value: '4' },
-        { text: 'Sports', value: '5' },
-        { text: 'Racing', value: '6' },
-        { text: 'Puzzle', value: '7' },
-        { text: 'Strategy', value: '8' },
-        { text: 'Battle Royal', value: '9' },
-        { text: 'Horror', value: '10' },
-      ],
+      showAddGenre: false,
+      genres: [],
     }
   },
   methods: {
-    getGames() {
-      const path = 'http://localhost:5000/api/Genre'
+    getGenre() {
+      const path = 'http://localhost:5000/genre'
       axios
         .get(path)
         .then((res) => {
@@ -225,57 +174,37 @@ export default {
           console.error(err)
         })
     },
-    getGenre(genre_id) {
-      const path = `http://localhost:5000/api/Genres/${genre_id}`
-      axios
-        .get(path)
-        .then((res) => {
-          this.filterGenre = res.data
-          // if (this.filterGenre) {
-          //   this.message = "Games are found";
-          //   this.showMessage = true;
-          // } else {
-          //   this.message = "games not found";
-          //   this.showMessage = true;
-          // }
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    },
     // POST function
-    addGame(payload) {
-      const path = 'http://localhost:5000/api/Genre'
+    addGenre(payload) {
+      const path = 'http://localhost:5000/genre'
       axios.post(path, payload).then(() => {
         this.getGames()
         // Game alert
-        this.message = 'Game Added!'
+        this.message = 'Genre Added!'
         // Show actual message
         this.showMessage = true
       })
     },
     initForm() {
-      this.addGameForm.title = ''
-      this.addGameForm.desc = ''
-      this.addGameForm.genre_id = ''
+      this.addGenreForm.title = '';
+      this.addGenreForm.description = '';
     },
     // This is for modal 1 - to submit new game
-    onSubmit(e) {
+    onSubmitGenre(e) {
       e.preventDefault()
-      this.hideModal()
+      this.showAddGenre = false;
       const payload = {
-        title: this.addGameForm.title,
-        desc: this.addGameForm.desc,
+        title: this.addGenreForm.title,
+        desc: this.addGenreForm.description,
       }
-      this.addGame(payload)
+      this.addGenre(payload)
       this.initForm()
     },
     onSubmitFilter(e) {
       e.preventDefault()
-      this.$refs.filterGamesByGenre.hide()
-      const genre_id = Number(this.addGameForm.genre_id)
+      // const genre_id = Number(this.addGenreForm.genre_id)
       this.initForm()
-      this.getGenre(genre_id)
+      // this.getGenre(genre_id)
     },
     showDataAll() {
       this.showData = true
@@ -283,15 +212,9 @@ export default {
     closeDataAll() {
       this.showData = false
     },
-    showModal() {
-      this.showModalForm = true
-    },
-    hideModal() {
-      this.showModalForm = false
-    },
   },
   created() {
-    this.getGames()
+    this.getGenre()
   },
 }
 </script>

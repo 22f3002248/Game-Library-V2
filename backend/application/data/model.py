@@ -24,8 +24,8 @@ class Game(db.Model):
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50), nullable=False)
-    desc = db.Column(db.Text)
-    # genres = db.relationship('Genre', secondary=game_genre_association, backref='games', lazy=True)
+    description = db.Column(db.Text)
+
     
 
 # ---------------------------------------TOUR GUIDE----------------------------------

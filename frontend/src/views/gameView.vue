@@ -2,9 +2,7 @@
   <div class="min-h-screen flex items-center justify-center">
     <div class="w-full max-w-5xl p-4">
       <div class="bg-primary text-white p-6 rounded-lg shadow-lg">
-        <h1
-          class="text-3xl text-center bg-primary-content text-primary p-4 rounded-lg"
-        >
+        <h1 class="text-3xl text-center bg-primary-content text-primary p-4 rounded-lg">
           Games Library
         </h1>
         <hr class="my-4" />
@@ -16,11 +14,7 @@
 
         <div class="my-4">
           <!-- Add Game Button -->
-          <button
-            type="button"
-            class="btn btn-success btn-sm"
-            v-b-modal.game-modal
-          >
+          <button type="button" @click="openAddModal = true" class="btn btn-success btn-sm">
             Add Game
           </button>
         </div>
@@ -38,26 +32,17 @@
           <tbody>
             <tr v-for="(game, id) in games" :key="id">
               <td>{{ game.title }}</td>
-              <td>{{ game.genre_id }}</td>
+              <td>{{ game.genre.title }}</td>
               <td>
                 <span v-if="game.played">Yes</span>
                 <span v-else>No</span>
               </td>
               <td>
                 <div class="btn-group">
-                  <button
-                    type="button"
-                    class="btn btn-info btn-sm"
-                    v-b-modal.game-update-modal
-                    @click="editGame(game)"
-                  >
+                  <button @click="editGame(game); openEditModal = true" class="btn btn-info btn-sm">
                     Update
                   </button>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm"
-                    @click="deleteGames(game)"
-                  >
+                  <button @click="deleteGames(game)" class="btn btn-danger btn-sm">
                     Delete
                   </button>
                 </div>
@@ -67,178 +52,166 @@
         </table>
 
         <!-- Footer -->
-        <footer
-          class="bg-primary-content text-primary p-4 text-center mt-6 rounded-lg"
-        >
+        <footer class="bg-primary-content text-primary p-4 text-center mt-6 rounded-lg">
           Copyright &copy;, All Rights Reserved 2024.
         </footer>
       </div>
     </div>
 
-    <!-- Start Add Game Modal -->
-    <div>
-      <b-modal
-        ref="addGameModal"
-        id="game-modal"
-        title="Add a new game"
-        hide-backdrop
-        hide-footer
-      >
-        <form @submit.prevent="onSubmit" @reset="onReset" class="w-full">
-          <div class="form-control">
-            <label class="label" for="form-name-input">Name</label>
-            <input
-              id="form-name-input"
-              type="text"
-              v-model="addGameForm.name"
-              class="input input-bordered"
-              required
-              placeholder="Enter Game"
-            />
-          </div>
+    <!-- Add Game Modal using Headless UI -->
+    <TransitionRoot as="template" :show="openAddModal" @close="openAddModal = false">
+      <Dialog class="relative z-10" @close="openAddModal = false">
+        <div class="fixed inset-0 bg-black bg-opacity-30"></div>
 
-          <div class="form-control mt-4">
-            <label class="label" for="form-genre-input">Genre</label>
-            <select
-              id="form-genre-input"
-              v-model="addGameForm.genre_id"
-              class="select select-bordered"
-              required
-            >
-              <option v-for="genre in genres" :key="genre.id" :value="genre.id">
-                {{ genre.title }}
-              </option>
-            </select>
-          </div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center">
+            <DialogPanel class="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 shadow-xl transition-all">
+              <DialogTitle class="text-lg font-medium leading-6 text-gray-900">
+                Add a New Game
+              </DialogTitle>
 
-          <div class="form-control mt-4">
-            <label class="cursor-pointer">
-              <input
-                type="checkbox"
-                class="checkbox"
-                v-model="addGameForm.played"
-              />
-              <span class="label-text">Played?</span>
-            </label>
-          </div>
+              <form @submit.prevent="onSubmit" @reset="onReset">
+                <div class="mt-4">
+                  <label for="game-name" class="block text-sm font-medium text-gray-700">Game Name</label>
+                  <input
+                    v-model="addGameForm.name"
+                    id="game-name"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    type="text"
+                    placeholder="Enter Game Name"
+                    required
+                  />
+                </div>
 
-          <!-- Submit and Reset Buttons -->
-          <div class="mt-4">
-            <button class="btn btn-outline btn-info" type="submit">
-              Submit
-            </button>
-            <button class="btn btn-outline btn-error" type="reset">
-              Reset
-            </button>
-          </div>
-        </form>
-      </b-modal>
-    </div>
+                <div class="mt-4">
+                  <label for="genres" class="block text-sm font-medium text-gray-700">Genre(s)</label>
+                  <select
+                    id="genres"
+                    v-model="addGameForm.genre_ids"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                    multiple
+                  >
+                    <option v-for="genre in games.genres" :key="genre.id" :value="genre.id">
+                      {{ genre.title }}
+                    </option>
+                  </select>
+                </div>
 
-    <!-- Start Edit Game Modal -->
-    <div>
-      <b-modal
-        ref="editGameModal"
-        id="game-update-modal"
-        title="Update"
-        hide-backdrop
-        hide-footer
-      >
-        <form
-          @submit.prevent="onSubmitUpdate"
-          @reset="onResetUpdate"
-          class="w-full"
-        >
-          <div class="form-control">
-            <label class="label" for="form-name-edit-input">Name</label>
-            <input
-              id="form-name-edit-input"
-              type="text"
-              v-model="editForm.name"
-              class="input input-bordered"
-              required
-              placeholder="Enter name"
-            />
-          </div>
+                <div class="mt-4">
+                  <label for="played" class="block text-sm font-medium text-gray-700">Played?</label>
+                  <input type="checkbox" v-model="addGameForm.played" id="played" />
+                </div>
 
-          <div class="form-control mt-4">
-            <label class="label" for="form-genre-edit-input">Genre</label>
-            <select
-              id="form-genre-edit-input"
-              v-model="addGameForm.genre_id"
-              class="select select-bordered"
-              required
-            >
-              <option v-for="genre in genres" :key="genre.id" :value="genre.id">
-                {{ genre.title }}
-              </option>
-            </select>
+                <div class="mt-4 flex justify-end">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="button" @click="openAddModal = false" class="btn btn-secondary ml-4">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </DialogPanel>
           </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
 
-          <div class="form-control mt-4">
-            <label class="cursor-pointer">
-              <input
-                type="checkbox"
-                class="checkbox"
-                v-model="editForm.played"
-              />
-              <span class="label-text">Played?</span>
-            </label>
-          </div>
+    <!-- Edit Game Modal -->
+    <TransitionRoot as="template" :show="openEditModal" @close="openEditModal = false">
+      <Dialog class="relative z-10" @close="openEditModal = false">
+        <div class="fixed inset-0 bg-black bg-opacity-30"></div>
 
-          <!-- Update and Cancel Buttons -->
-          <div class="mt-4">
-            <button class="btn btn-outline btn-info" type="submit">
-              Update
-            </button>
-            <button class="btn btn-outline btn-error" type="reset">
-              Cancel
-            </button>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center">
+            <DialogPanel class="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 shadow-xl transition-all">
+              <DialogTitle class="text-lg font-medium leading-6 text-gray-900">
+                Update Game
+              </DialogTitle>
+
+              <form @submit.prevent="onSubmitUpdate" @reset="onResetUpdate">
+                <div class="mt-4">
+                  <label for="game-name-edit" class="block text-sm font-medium text-gray-700">Game Name</label>
+                  <input
+                    v-model="editForm.name"
+                    id="game-name-edit"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    type="text"
+                    placeholder="Enter name"
+                    required
+                  />
+                </div>
+
+                <div class="mt-4">
+                  <label for="genres-edit" class="block text-sm font-medium text-gray-700">Genre</label>
+                  <select
+                    id="genres-edit"
+                    v-model="editForm.genre_ids"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                    multiple
+                  >
+                    <option v-for="genre in games.genres" :key="genre.id" :value="genre.id">
+                      {{ genre.title }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="mt-4">
+                  <label for="played-edit" class="block text-sm font-medium text-gray-700">Played?</label>
+                  <input type="checkbox" v-model="editForm.played" id="played-edit" />
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                  <button type="submit" class="btn btn-primary">Update</button>
+                  <button type="button" @click="openEditModal = false" class="btn btn-secondary ml-4">
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </DialogPanel>
           </div>
-        </form>
-      </b-modal>
-    </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+// import { ref } from 'vue';
+import { Dialog, DialogPanel, DialogTitle, TransitionRoot } from '@headlessui/vue';
 export default {
   name: "gameView",
+  components: {
+    Dialog,
+    DialogPanel,
+    DialogTitle,
+    TransitionRoot,
+  },
   data() {
     return {
       games: [],
+      // genres: [],
       addGameForm: {
         name: "",
-        genre_id: "",
+        genre_ids: [],
         played: [],
       },
       editForm: {
         name: "",
-        genre_id: "",
+        genre_ids: [],
         played: [],
       },
       message: "",
-      genres: [
-        { text: "Select One", value: "" },
-        { text: "RPG", value: "1" },
-        { text: "Adventure", value: "2" },
-        { text: "Action", value: "3" },
-        { text: "Retro", value: "4" },
-        { text: "Sports", value: "5" },
-        { text: "Racing", value: "6" },
-        { text: "Puzzle", value: "7" },
-        { text: "Strategy", value: "8" },
-        { text: "Battle Royal", value: "9" },
-        { text: "Horror", value: "10" },
-      ],
       showMessage: false,
+      openAddModal: false,
+      openEditModal: false
     };
   },
   methods: {
     // GET function
     getGames() {
-      const path = "http://localhost:5000/api/Games";
+      const path = "http://localhost:5000/games";
       axios
         .get(path)
         .then((res) => {
@@ -250,7 +223,7 @@ export default {
     },
     // POST function
     addGame(payload) {
-      const path = "http://localhost:5000/api/Games";
+      const path = "http://localhost:5000/games";
       axios.post(path, payload).then(() => {
         this.getGames();
         // Game alert
@@ -261,21 +234,21 @@ export default {
     },
     initForm() {
       this.addGameForm.name = "";
-      this.addGameForm.genre_id = "";
+      this.addGameForm.genre_ids = [];
       this.addGameForm.played = [];
       this.editForm.name = "";
-      this.editForm.genre_id = "";
+      this.editForm.genre_ids = [];
       this.editForm.played = [];
     },
     // This is for modal 1 - to submit new game
     onSubmit(e) {
       e.preventDefault();
-      this.$refs.addGameModal.hide();
+      this.openAddModal = false;
       let played = false;
       if (this.addGameForm.played[0]) played = true;
       const payload = {
         title: this.addGameForm.name,
-        genre_id: Number(this.addGameForm.genre_id),
+        genre_ids: this.addGameForm.genre_ids,
         played,
       };
       this.addGame(payload);
@@ -283,18 +256,18 @@ export default {
     },
     onReset(e) {
       e.preventDefault();
-      this.$refs.addGameModal.hide();
+      this.openAddModal=false;
       this.initForm();
     },
     // This is for modal 2 - to update new game
     onSubmitUpdate(e) {
       e.preventDefault();
-      this.$refs.editGameModal.hide();
+      this.editGameModal=false;
       let played = false;
       if (this.editForm.played[0]) played = true;
       const payload = {
         title: this.editForm.name,
-        genre_id: Number(this.editForm.genre_id),
+        genre_id: this.editForm.genre_ids,
         played,
       };
       this.updateGame(payload, this.editForm.id);
@@ -302,13 +275,13 @@ export default {
     // Handle cancel button click
     onResetUpdate(e) {
       e.preventDefault();
-      this.$refs.editGameModal.hide();
+      this.editGameModal=false;
       this.initForm();
       this.getGames();
     },
     // Update Individual game
     updateGame(payload, gameID) {
-      const path = `http://localhost:5000/api/Games/${gameID}`;
+      const path = `http://localhost:5000/games/${gameID}`;
       axios
         .put(path, payload)
         .then(() => {
@@ -323,7 +296,7 @@ export default {
     },
     // Delete Individual game
     removeGame(gameID) {
-      const path = `http://localhost:5000/api/Games/${gameID}`;
+      const path = `http://localhost:5000/games/${gameID}`;
       axios
         .delete(path)
         .then(() => {

@@ -1,21 +1,26 @@
 from application.data.database import db
 from application.data.model import Game as game_model
+from application.data.model import Genre as genre_model
 from flask_restx import Resource, fields, marshal, reqparse
 
 game_fields = {
     'id': fields.Integer,
     'title': fields.String,
-    'genre': fields.String,
+    'genres': fields.List(fields.String),  # This will be a list of genre titles
     'played': fields.Boolean
 }
 
 games_parser = reqparse.RequestParser()
 games_parser.add_argument(
-    'title', type=str, help="Title is required !")
+    'title', type=str, required=True, help="Title is required!"
+)
 games_parser.add_argument(
-    'genre', type=str, help="Genre is required !")
+    'genre_ids', type=list, location='json', help="Genres must be provided as a list of genre IDs!"
+)
 games_parser.add_argument(
-    'played', type=bool, help="played can be given optionally !")
+    'played', type=bool, default=False, help="Played can be given optionally!"
+)
+
 
 
 class GameResource(Resource):
@@ -26,12 +31,14 @@ class GameResource(Resource):
 
     def post(self):
         args = games_parser.parse_args()
-        title = args.get('title')
-        if not title:
-            return {"status": 'failure', 'message': 'game title is required !'}, 400
-        genre = args.get('genre')
-
-        new_game = game_model(title=title, genre=genre)
+        new_game = game_model(
+            title=args['title'],
+            played=args['played']
+        )
+        genre_ids = args.get('genre_ids', [])
+        if genre_ids:
+            genres = genre_model.query.filter(genre_model.id.in_(genre_ids)).all()
+            new_game.genres = genres  # Associate the game with the selected genres
         db.session.add(new_game)
         db.session.commit()
         return {"status": 'success', 'message': 'game is added !'}
@@ -50,20 +57,19 @@ class SingleGameResource(Resource):
         if not game:
             return {"status": 'failure', 'message': 'game not found !'}, 404
 
-        title = game.title
-        genre = game.genre
-        played = game.played
         if args.get('title'):
-            title = args.get('title')
-        if args.get('genre'):
-            genre = args.get('genre')
-        if args.get('played'):
-            played = args.get('played')
-        game.title = title
-        game.genre = genre
-        game.played = played
+            game.title = args['title']
+
+        if args.get('genre_ids'):
+            genre_ids = args['genre_ids']
+            genres = genre_model.query.filter(genre_model.id.in_(genre_ids)).all()
+            game.genres = genres  # Associate new genres
+
+        if args.get('played') is not None:  # Check if played is provided
+            game.played = args['played']
+            
         db.session.commit()
-        return {"status": 'success', 'message': 'game is updated !'}
+        return {"status": 'success', 'message': 'Game is updated!'}    
 
     def delete(self, id):
         game = game_model.query.filter_by(id=id).first()
