@@ -10,7 +10,7 @@ def initialize_api(app):
     api = Api(app)
     api.add_resource(LoginResource, '/api/login')
     api.add_resource(RegisterResource, '/api/register')
-    api.add_resource(GameResource, '/games')
-    api.add_resource(SingleGameResource, '/games/<int:id>')
-    api.add_resource(GenreResource, '/genre')
+    api.add_resource(GameResource, '/api/games')
+    api.add_resource(SingleGameResource, '/api/games/<int:id>')
+    api.add_resource(GenreResource, '/api/genre')
     return api

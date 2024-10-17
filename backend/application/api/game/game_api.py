@@ -2,11 +2,12 @@ from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Genre as genre_model
 from flask_restx import Resource, fields, marshal, reqparse
+from application.api.game.genre_api import genre_fields
 
 game_fields = {
     'id': fields.Integer,
     'title': fields.String,
-    'genres': fields.List(fields.String),  # This will be a list of genre titles
+    'genres': fields.List(fields.String(attribute='title')),  # This will be a list of genre titles
     'played': fields.Boolean
 }
 
@@ -15,19 +16,18 @@ games_parser.add_argument(
     'title', type=str, required=True, help="Title is required!"
 )
 games_parser.add_argument(
-    'genre_ids', type=list, location='json', help="Genres must be provided as a list of genre IDs!"
+    'genre_ids', type=int, action='append', help="Genres must be provided as a list of genre IDs!"
 )
 games_parser.add_argument(
     'played', type=bool, default=False, help="Played can be given optionally!"
 )
 
-
-
 class GameResource(Resource):
     # ? to send all the games
     def get(self):
         games = game_model.query.all()
-        return {'status': 'success', 'games': marshal(games, game_fields)}
+        genres = genre_model.query.all()
+        return {'status': 'success', 'games': marshal(games, game_fields), 'genres':marshal(genres, genre_fields) }
 
     def post(self):
         args = games_parser.parse_args()
@@ -36,9 +36,11 @@ class GameResource(Resource):
             played=args['played']
         )
         genre_ids = args.get('genre_ids', [])
+        print("Parsed genre_ids:", genre_ids)  # Debugging line
         if genre_ids:
+        # Fetch all genres by their IDs
             genres = genre_model.query.filter(genre_model.id.in_(genre_ids)).all()
-            new_game.genres = genres  # Associate the game with the selected genres
+            new_game.genres = genres
         db.session.add(new_game)
         db.session.commit()
         return {"status": 'success', 'message': 'game is added !'}

@@ -34,6 +34,12 @@
           </button>
 
           <!-- Close Data Button -->
+        </div>
+
+        <br />
+
+        <!-- Genre Table -->
+        <div v-if="showData">
           <button
             type="button"
             class="btn btn-outline btn-error"
@@ -41,80 +47,124 @@
           >
             Close Data
           </button>
-        </div>
-
-        <br />
-
-        <!-- Genre Table -->
-        <div v-if="showData">
           <table class="table w-full">
             <thead>
               <tr>
+                <th>Id</th>
                 <th>Title</th>
                 <th>Description</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(genre, id) in genre" :key="id">
+              <tr v-for="(genre, id) in genres" :key="id" class="text-accent">
+                <td>{{ genre.id }}</td>
                 <td>{{ genre.title }}</td>
-                <td>{{ genre.description }}</td>
+                <td>{{ genre.description || 'No Description' }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- Add Genre Dialog -->
-        <TransitionRoot
-          as="template"
-          :show="showAddGenre"
-          @close="showAddGenre = false"
-        >
-          <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
-            <div class="flex items-center justify-center min-h-screen">
-              <DialogPanel class="bg-neutral p-6 rounded-lg shadow-lg">
-                <DialogTitle class="text-lg font-bold"
-                  >Add a New Genre</DialogTitle
+        <div>
+          <form @submit="onFilter">
+            <div class="">
+              <label
+                for="genres"
+                class="block text-sm font-medium text-accent mb-1"
+                >Genre(s)</label
+              >
+              <select
+                id="genres"
+                v-model="addGameForm.select"
+                class="mt-1 select select-accent w-full max-w-xs"
+                required
+                multiple
+              >
+                <option disabled value="" class="text-grey-700">
+                  Select Genre(s)
+                </option>
+                <option
+                  v-for="genre in genres"
+                  :key="genre.id"
+                  :value="genre.id"
+                  class="text-grey-700 hover:bg-accent"
                 >
-                <form @submit.prevent="onSubmitGenre" class="dialog-form">
-                  <div class="form-control mt-4">
-                    <label for="form-name-input">Genre</label>
-                    <input
-                      id="form-name-input"
-                      type="text"
-                      v-model="addGenreForm.title"
-                      required
-                      placeholder="Enter Genre"
-                      class="input input-bordered"
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label for="form-genre-input">Description</label>
-                    <input
-                      id="form-genre-input"
-                      type="text"
-                      v-model="addGenreForm.description"
-                      required
-                      placeholder="Enter Description"
-                      class="input input-bordered"
-                    />
-                  </div>
-
-                  <div class="mt-4">
-                    <button class="btn btn-outline" type="submit">Add</button>
-                    <button
-                      type="button"
-                      class="btn btn-outline"
-                      @click="showAddGenre = false"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </DialogPanel>
+                  {{ genre.title }}
+                </option>
+              </select>
+              <p class="mt-1 text-xs text-gray-500">
+                Hold down the Ctrl (Windows) or Command (Mac) button to select
+                multiple options.
+              </p>
             </div>
-          </Dialog>
-        </TransitionRoot>
+
+            <div class="mt-4 flex justify-end">
+              <button type="submit" class="btn btn-outline btn-accent">
+                Filter
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Add Genre Dialog -->
+        <div>
+          <TransitionRoot
+            as="template"
+            :show="showAddGenre"
+            @close="showAddGenre = false"
+          >
+            <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
+              <div class="flex items-center justify-center min-h-screen">
+                <DialogPanel class="bg-neutral p-6 rounded-lg shadow-lg">
+                  <DialogTitle class="text-accent font-bold"
+                    >Add a New Genre</DialogTitle
+                  >
+                  <form @submit.prevent="onSubmitGenre" class="dialog-form">
+                    <div class="form-control mt-4">
+                      <label for="form-name-input">Genre</label>
+                      <input
+                        id="form-name-input"
+                        type="text"
+                        v-model="addGenreForm.title"
+                        required
+                        placeholder="Enter Genre"
+                        class="input input-bordered mt-2"
+                      />
+                    </div>
+
+                    <div class="form-control mt-4 text-accent">
+                      <label for="form-genre-input">Description</label>
+                      <input
+                        id="form-genre-input"
+                        type="text"
+                        v-model="addGenreForm.description"
+                        required
+                        placeholder="Enter Description"
+                        class="input input-bordered mt-2"
+                      />
+                    </div>
+
+                    <div class="mt-4">
+                      <button
+                        class="btn btn-outline btn-accent mr-2"
+                        type="submit"
+                      >
+                        Add
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-outline btn-error ml-2"
+                        @click="showAddGenre = false"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </DialogPanel>
+              </div>
+            </Dialog>
+          </TransitionRoot>
+        </div>
 
         <!-- Footer -->
         <footer
@@ -147,28 +197,31 @@ export default {
 
   data() {
     return {
-      genre: [],
+      genres: [],
+      games: [],
       // filterGenre: {
       //   games: [],
       // },
       addGenreForm: {
         title: '',
         description: '',
+        select: []
       },
       message: '',
       showMessage: false,
       showData: false,
       showAddGenre: false,
-      genres: [],
     }
   },
   methods: {
     getGenre() {
-      const path = 'http://localhost:5000/genre'
+      const path = 'http://localhost:5000/api/genre'
       axios
         .get(path)
         .then((res) => {
-          this.genre = res.data
+          this.genres = res.data.genres
+          this.games =res.data.games
+          console.log(this.genres)
         })
         .catch((err) => {
           console.error(err)
@@ -176,9 +229,9 @@ export default {
     },
     // POST function
     addGenre(payload) {
-      const path = 'http://localhost:5000/genre'
+      const path = 'http://localhost:5000/api/genre'
       axios.post(path, payload).then(() => {
-        this.getGames()
+        this.getGenre()
         // Game alert
         this.message = 'Genre Added!'
         // Show actual message
@@ -186,25 +239,37 @@ export default {
       })
     },
     initForm() {
-      this.addGenreForm.title = '';
-      this.addGenreForm.description = '';
+      this.addGenreForm.title = ''
+      this.addGenreForm.description = ''
+      this.addGenreForm.select= []
     },
     // This is for modal 1 - to submit new game
     onSubmitGenre(e) {
       e.preventDefault()
-      this.showAddGenre = false;
+      this.showAddGenre = false
       const payload = {
         title: this.addGenreForm.title,
-        desc: this.addGenreForm.description,
+        description: this.addGenreForm.description,
       }
       this.addGenre(payload)
       this.initForm()
     },
-    onSubmitFilter(e) {
+    getGames(genre_ids){
+      const path = `http://localhost:5000/api/genre/${genre_ids}`
+      axios
+        .get(path)
+        .then((res) => {
+          this.games =res.data
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+    onFilter(e) {
       e.preventDefault()
-      // const genre_id = Number(this.addGenreForm.genre_id)
+      const genre_ids = this.addGameForm.genre_ids.map((id) => parseInt(id))
       this.initForm()
-      // this.getGenre(genre_id)
+      this.getGames(genre_ids)
     },
     showDataAll() {
       this.showData = true

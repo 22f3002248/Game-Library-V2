@@ -7,43 +7,43 @@ from application.data.model import RolesUsers as roles_users
 from application.data.model import User as user_model
 from werkzeug.security import generate_password_hash
 
-GAMES = [
-    {
-        "title": "The Elder Scrolls V: Skyrim",
-        "genre": "RPG",
-        "played": True,
-    },
-    {
-        "title": "Grand Theft Auto V",
-        "genre": "Action",
-        "played": False,
-    },
-    {
-        "title": "The Witcher 3: Wild Hunt",
-        "genre": "Fantasy",
-        "played": False,
-    },
-    {
-        "title": "World of Warcraft",
-        "genre": "MMORPG",
-        "played": True,
-    },
-    {
-        "title": "Civilization VI",
-        "genre": "Strategy",
-        "played": True,
-    },
-    {
-        "title": "Settlers of Catan",
-        "genre": "Board",
-        "played": False,
-    },
-    {
-        "title": "Tetris Effect",
-        "genre": "Puzzle",
-        "played": False,
-    },
-]
+# GAMES = [
+#     {
+#         "title": "The Elder Scrolls V: Skyrim",
+#         "genre": "RPG",
+#         "played": True,
+#     },
+#     {
+#         "title": "Grand Theft Auto V",
+#         "genre": "Action",
+#         "played": False,
+#     },
+#     {
+#         "title": "The Witcher 3: Wild Hunt",
+#         "genre": "Fantasy",
+#         "played": False,
+#     },
+#     {
+#         "title": "World of Warcraft",
+#         "genre": "MMORPG",
+#         "played": True,
+#     },
+#     {
+#         "title": "Civilization VI",
+#         "genre": "Strategy",
+#         "played": True,
+#     },
+#     {
+#         "title": "Settlers of Catan",
+#         "genre": "Board",
+#         "played": False,
+#     },
+#     {
+#         "title": "Tetris Effect",
+#         "genre": "Puzzle",
+#         "played": False,
+#     },
+# ]
 
 
 def gen():
@@ -60,10 +60,10 @@ def gen():
         ds.create_user(username="user1", email="user.gamevault@gmail.com",
                        password=generate_password_hash("12345"), roles=["user"])
         db.session.commit()
-    games = game_model.query.all()
-    if not games:
-        for i in GAMES:
-            new_game = game_model(
-                title=i["title"], genre=i["genre"], played=i["played"])
-            db.session.add(new_game)
-        db.session.commit()
+    # games = game_model.query.all()
+    # if not games:
+    #     for i in GAMES:
+    #         new_game = game_model(
+    #             title=i["title"], genre=i["genre"], played=i["played"])
+    #         db.session.add(new_game)
+    #     db.session.commit()
