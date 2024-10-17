@@ -32,6 +32,8 @@ class devconfig(Config):
     CELERY_BROKER_URL = "redis://localhost:6379/1"
     CELERY_RESULT_BACKEND = "redis://localhost:6379/2"
 
+    STATIC_FOLDER = 'static'
+
 
 class devconfig22(Config):
     DEBUG = True

@@ -25,10 +25,6 @@
           <h1 class="text-4xl font-bold text-center mb-3">GameVault</h1>
           <!-- Make a grid layout for the buttons -->
           <div class="flex flex-col items-center space-y-4">
-            <!-- Guest button, adjustable width and centered -->
-            <button class="btn btn-accent px-10 w-2/5">
-              Continue as Guest
-            </button>
             <!-- Login and Register buttons are placed in a grid -->
             <div class="flex justify-center space-x-4">
               <button class="btn btn-primary px-6 w-full" @click="openModal">
@@ -94,15 +90,74 @@
       </dialog>
 
       <!-- GAME MODAL -->
-      <button class="btn">open modal</button>
       <dialog id="game_modal" class="modal">
         <div class="modal-box w-11/12 max-w-5xl">
-          <h3 class="text-lg font-bold">Hello!</h3>
-          <p class="py-4">Click the button below to close</p>
-          <div class="modal-action">
+          <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-bold">{{ modal_title }}</h3>
             <form method="dialog">
               <button class="btn">Close</button>
             </form>
+          </div>
+          <br />
+          <br />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col items-center">
+              <img
+                :src="modal_poster"
+                alt="Image"
+                height="400px"
+                width="300px"
+                style="
+                  box-shadow: 2px 2px 30px rgb(205, 204, 204);
+                  border-radius: 10px;
+                "
+              />
+              <br />
+              <div class="flex flex-col space-y-2">
+                <button class="btn btn-primary">Buy</button>
+                <button class="btn btn-secondary">Subscribe</button>
+                <button class="btn">Add to Wishlist</button>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="mb-2"><strong>Genre:</strong> {{ modal_genre }}</div>
+              <div class="mb-2">
+                <strong>Release Date:</strong> {{ modal_release_date }}
+              </div>
+              <div class="mb-2">
+                <strong>Developer:</strong> {{ modal_developer }}
+              </div>
+              <div class="mb-2">
+                <strong>Publisher:</strong> {{ modal_publisher }}
+              </div>
+              <div class="mb-2">
+                <strong>Platform:</strong> {{ modal_platform }}
+              </div>
+              <div class="mb-2">
+                <strong>Rating:</strong> {{ modal_rating }}
+              </div>
+              <div class="mb-2">
+                <strong>Description:</strong>
+                <p class="text-justify">{{ modal_description }}</p>
+              </div>
+              <div class="mb-2">
+                <strong>Price:</strong> ${{ modal_price.toFixed(2) }}
+              </div>
+              <div class="mb-2">
+                <strong>Multiplayer:</strong>
+                {{ modal_multiplayer ? 'Yes' : 'No' }}
+              </div>
+              <div class="mb-2">
+                <strong>No. of Downloads:</strong> {{ modal_no_of_downloads }}
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h4 class="text-md font-semibold">Reviews:</h4>
+            <!-- <textarea
+              class="textarea w-full h-24 mt-2"
+              placeholder="Write your review here..."
+            ></textarea> -->
           </div>
         </div>
       </dialog>
@@ -115,37 +170,100 @@
         <!-- Card 1 -->
         <div class="card shadow-lg bg-base-100">
           <div class="card-body">
-            <h2 class="card-title self-center">The Quest of Mystica</h2>
-            <p>Immerse yourself in a magical adventure across unknown lands.</p>
-            <button class="btn btn-primary btn-sm">Play Now</button>
-          </div>
-        </div>
-        <!-- Card 2 -->
-        <div class="card shadow-lg bg-base-100">
-          <div class="card-body">
-            <h2 class="card-title self-center" onclick="game_modal.showModal()">
-              Speed Racer: Nitro Blast
-            </h2>
-            <p>
-              Feel the adrenaline rush in this high-speed racing experience.
-            </p>
-            <button
-              class="btn btn-primary btn-sm"
-              onclick="game_modal.showModal()"
+            <img
+              :src="topGames[0].poster"
+              alt="Image"
+              height="400px"
+              width="300px"
+              style="
+                box-shadow: 2px 2px 30px rgb(205, 204, 204);
+                border-radius: 10px;
+              "
+            />
+            <br />
+            <h2
+              class="card-title self-center mb-2"
+              style="font-size: x-large !important"
             >
+              {{ topGames.length > 0 ? topGames[0].title : 'Loading...' }}
+            </h2>
+
+            <p class="self-center" style="font-weight: 700">
+              Rating:
+              {{ topGames.length > 0 ? topGames[0].rating : 'Loading...' }}
+            </p>
+            <p class="text-justify mb-4">
+              {{ topGames.length > 0 ? topGames[0].description : 'Loading...' }}
+            </p>
+            <button class="btn btn-primary btn-sm" @click="openGameModal(0)">
               Play Now
             </button>
           </div>
         </div>
+
+        <!-- Card 2 -->
+        <div class="card shadow-lg bg-base-100">
+          <div class="card-body">
+            <img
+              :src="topGames[1].poster"
+              alt="Image"
+              height="400px"
+              width="300px"
+              style="
+                box-shadow: 2px 2px 30px rgb(205, 204, 204);
+                border-radius: 10px;
+              "
+            />
+            <br />
+            <h2
+              class="card-title self-center mb-2"
+              style="font-size: x-large !important"
+            >
+              {{ topGames.length > 0 ? topGames[1].title : 'Loading...' }}
+            </h2>
+
+            <p class="self-center" style="font-weight: 700">
+              Rating:
+              {{ topGames.length > 0 ? topGames[1].rating : 'Loading...' }}
+            </p>
+            <p class="text-justify mb-4">
+              {{ topGames.length > 0 ? topGames[1].description : 'Loading...' }}
+            </p>
+            <button class="btn btn-primary btn-sm" @click="openGameModal(1)">
+              Play Now
+            </button>
+          </div>
+        </div>
+
         <!-- Card 3 -->
         <div class="card shadow-lg bg-base-100">
           <div class="card-body">
-            <h2 class="card-title self-center">Galactic Conqueror</h2>
-            <p>Battle across galaxies and conquer enemy territories.</p>
-            <button
-              class="btn btn-primary btn-sm"
-              onclick="game_modal.showModal()"
+            <img
+              :src="topGames[2].poster"
+              alt="Image"
+              height="400px"
+              width="300px"
+              style="
+                box-shadow: 2px 2px 30px rgb(205, 204, 204);
+                border-radius: 10px;
+              "
+            />
+            <br />
+            <h2
+              class="card-title self-center mb-2"
+              style="font-size: x-large !important"
             >
+              {{ topGames.length > 0 ? topGames[2].title : 'Loading...' }}
+            </h2>
+
+            <p class="self-center" style="font-weight: 700">
+              Rating:
+              {{ topGames.length > 0 ? topGames[2].rating : 'Loading...' }}
+            </p>
+            <p class="text-justify mb-4">
+              {{ topGames.length > 0 ? topGames[2].description : 'Loading...' }}
+            </p>
+            <button class="btn btn-primary btn-sm" @click="openGameModal(2)">
               Play Now
             </button>
           </div>
@@ -185,6 +303,19 @@ export default {
       message: '',
       isvisible: false,
       alert_type: '',
+      topGames: [],
+      modal_title: '',
+      modal_genre: '',
+      modal_poster: '',
+      modal_release_date: '',
+      modal_developer: '',
+      modal_publisher: '',
+      modal_platform: '',
+      modal_rating: 0.0,
+      modal_description: '',
+      modal_price: 0.0,
+      modal_multiplayer: false,
+      modal_no_of_downloads: 0,
     }
   },
   methods: {
@@ -222,6 +353,62 @@ export default {
     closeModal() {
       document.getElementById('login_modal').close()
     },
+    getTopGames() {
+      const path = `http://127.0.0.1:5000/api/games/top/${3}`
+      axios
+        .get(path, {})
+        .then((res) => {
+          if (res.data.status == 'success') {
+            this.topGames = res.data.games
+          } else if (res.data.status == 'failure') {
+            this.isvisible = true
+            this.message = res.data.message
+            this.alert_type = 'alert-error'
+          }
+        })
+        .catch(() => {
+          this.isvisible = true
+          this.message = res.data.message
+          this.alert_type = 'alert-error'
+        })
+    },
+    openGameModal(n) {
+      if (Array.isArray(this.topGames) && this.topGames[n]) {
+        this.modal_title = this.topGames[n].title
+        let gs = this.topGames[n].genres
+        let grs = ''
+        for (let i = 0; i < gs.length; i++) {
+          grs = grs.concat(gs[i].title)
+          if (i < gs.length - 1) {
+            grs = grs.concat(', ') // Add comma between genres
+          }
+        }
+        this.modal_genre = grs
+        this.modal_poster = this.topGames[n].poster
+        this.modal_release_date = this.topGames[n].release_date
+        this.modal_developer = this.topGames[n].developer
+        this.modal_publisher = this.topGames[n].publisher
+        this.modal_platform = this.topGames[n].platform
+        this.modal_rating = this.topGames[n].rating
+        this.modal_description = this.topGames[n].description
+        this.modal_price = this.topGames[n].price
+        this.modal_multiplayer = this.topGames[n].multiplayer
+        this.modal_no_of_downloads = this.topGames[n].no_of_downloads
+        try {
+          document.getElementById('game_modal').showModal()
+        } catch (error) {
+          console.error('Error opening modal:', error)
+        }
+      } else {
+        console.error('Game not found at index:', n)
+      }
+    },
+  },
+  created() {
+    this.getTopGames()
+  },
+  beforeMount() {
+    this.getTopGames()
   },
 }
 </script>

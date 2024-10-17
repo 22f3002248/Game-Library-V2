@@ -1,5 +1,8 @@
+import os
 from datetime import datetime, timedelta, timezone
 
+from flask import current_app as app
+from flask import url_for
 from flask_security import RoleMixin, UserMixin
 
 from .database import db
@@ -32,6 +35,18 @@ class Game(db.Model):
     no_of_downloads = db.Column(db.Integer, default=0)
     genres = db.relationship(
         'Genre', secondary=game_genre_association, backref='games', lazy=True)
+
+    def get_cover_image(self):
+        cover_filename = f"{self.id}.jpg"
+        cover_path = os.path.join(
+            app.root_path, app.config['STATIC_FOLDER'], 'game_posters', cover_filename)
+
+        if not os.path.exists(cover_path):
+            cover_filename = "NoCover.jpg"
+
+        cover_url = url_for(
+            'static', filename=f'game_posters/{cover_filename}', _external=True)
+        return cover_url
 
 
 class Genre(db.Model):

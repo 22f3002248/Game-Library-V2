@@ -1,7 +1,7 @@
 GAMES = [
     {
         "title": "The Elder Scrolls V: Skyrim",
-        "genre": "RPG",
+        "genres": ["RPG", "Open World", "Fantasy"],
         "release_date": "2011-11-11",
         "developer": "Bethesda Game Studios",
         "publisher": "Bethesda Softworks",
@@ -14,7 +14,7 @@ GAMES = [
     },
     {
         "title": "Grand Theft Auto V",
-        "genre": "Action",
+        "genres": ["Action", "Open World", "Crime"],
         "release_date": "2013-09-17",
         "developer": "Rockstar North",
         "publisher": "Rockstar Games",
@@ -27,7 +27,7 @@ GAMES = [
     },
     {
         "title": "The Witcher 3: Wild Hunt",
-        "genre": "RPG",
+        "genres": ["RPG", "Fantasy", "Open World"],
         "release_date": "2015-05-19",
         "developer": "CD Projekt Red",
         "publisher": "CD Projekt",
@@ -40,7 +40,7 @@ GAMES = [
     },
     {
         "title": "Cyberpunk 2077",
-        "genre": "RPG",
+        "genres": ["RPG", "Sci-Fi", "Open World"],
         "release_date": "2020-12-10",
         "developer": "CD Projekt Red",
         "publisher": "CD Projekt",
@@ -53,7 +53,7 @@ GAMES = [
     },
     {
         "title": "Red Dead Redemption 2",
-        "genre": "Action-Adventure",
+        "genres": ["Action-Adventure", "Western", "Open World"],
         "release_date": "2018-10-26",
         "developer": "Rockstar Studios",
         "publisher": "Rockstar Games",
@@ -66,7 +66,7 @@ GAMES = [
     },
     {
         "title": "Horizon Zero Dawn",
-        "genre": "Action RPG",
+        "genres": ["Action RPG", "Open World", "Sci-Fi"],
         "release_date": "2017-02-28",
         "developer": "Guerrilla Games",
         "publisher": "Sony Interactive Entertainment",
@@ -79,7 +79,7 @@ GAMES = [
     },
     {
         "title": "Dark Souls III",
-        "genre": "Action RPG",
+        "genres": ["Action RPG", "Dark Fantasy", "Challenging"],
         "release_date": "2016-04-12",
         "developer": "FromSoftware",
         "publisher": "Bandai Namco Entertainment",
@@ -92,7 +92,7 @@ GAMES = [
     },
     {
         "title": "Assassin's Creed Valhalla",
-        "genre": "Action RPG",
+        "genres": ["Action RPG", "Open World", "Historical"],
         "release_date": "2020-11-10",
         "developer": "Ubisoft Montreal",
         "publisher": "Ubisoft",
@@ -105,7 +105,7 @@ GAMES = [
     },
     {
         "title": "Minecraft",
-        "genre": "Sandbox",
+        "genres": ["Sandbox", "Survival", "Creative"],
         "release_date": "2011-11-18",
         "developer": "Mojang",
         "publisher": "Mojang",
@@ -118,7 +118,7 @@ GAMES = [
     },
     {
         "title": "Overwatch",
-        "genre": "Shooter",
+        "genres": ["Shooter", "Team-Based", "Multiplayer"],
         "release_date": "2016-05-24",
         "developer": "Blizzard Entertainment",
         "publisher": "Blizzard Entertainment",
@@ -131,7 +131,7 @@ GAMES = [
     },
     {
         "title": "Fortnite",
-        "genre": "Battle Royale",
+        "genres": ["Action", "Shooter", "Survival"],
         "release_date": "2017-07-25",
         "developer": "Epic Games",
         "publisher": "Epic Games",
@@ -144,7 +144,7 @@ GAMES = [
     },
     {
         "title": "Valorant",
-        "genre": "Shooter",
+        "genres": ["Action", "Shooter", "Strategy"],
         "release_date": "2020-06-02",
         "developer": "Riot Games",
         "publisher": "Riot Games",
@@ -157,7 +157,7 @@ GAMES = [
     },
     {
         "title": "Animal Crossing: New Horizons",
-        "genre": "Simulation",
+        "genres": ["Simulation"],
         "release_date": "2020-03-20",
         "developer": "Nintendo",
         "publisher": "Nintendo",
@@ -170,7 +170,7 @@ GAMES = [
     },
     {
         "title": "God of War",
-        "genre": "Action-Adventure",
+        "genres": ["Action", "Adventure"],
         "release_date": "2018-04-20",
         "developer": "Santa Monica Studio",
         "publisher": "Sony Interactive Entertainment",
@@ -183,7 +183,7 @@ GAMES = [
     },
     {
         "title": "The Last of Us Part II",
-        "genre": "Action-Adventure",
+        "genres": ["Action", "Adventure", "Survival"],
         "release_date": "2020-06-19",
         "developer": "Naughty Dog",
         "publisher": "Sony Interactive Entertainment",
@@ -196,7 +196,7 @@ GAMES = [
     },
     {
         "title": "Sekiro: Shadows Die Twice",
-        "genre": "Action-Adventure",
+        "genres": ["Action", "Adventure"],
         "release_date": "2019-03-22",
         "developer": "FromSoftware",
         "publisher": "Activision",
@@ -207,4 +207,20 @@ GAMES = [
         "multiplayer": False,
         "no_of_downloads": 5000000
     }
+
+]
+
+GENRES = [
+    {"title": "Action", "desc": "Games that emphasize physical challenges and hand-eye coordination."},
+    {"title": "Adventure", "desc": "Games focused on exploration and puzzle-solving."},
+    {"title": "RPG", "desc": "Role-playing games where players control a character in a fictional world."},
+    {"title": "Strategy", "desc": "Games that emphasize planning and tactics."},
+    {"title": "Shooter", "desc": "Games that focus on ranged weapon combat."},
+    {"title": "Sports", "desc": "Games that simulate real-world or fantasy sports."},
+    {"title": "Racing", "desc": "Games that involve racing vehicles or characters."},
+    {"title": "Simulation", "desc": "Games that simulate real-world activities."},
+    {"title": "Puzzle", "desc": "Games that require problem-solving."},
+    {"title": "Fighting", "desc": "Games that involve hand-to-hand combat."},
+    {"title": "Horror", "desc": "Games that aim to scare the player."},
+    {"title": "Survival", "desc": "Games that focus on surviving in a hostile environment."}
 ]

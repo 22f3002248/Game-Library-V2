@@ -2,10 +2,16 @@ from application.data.database import db
 from application.data.model import Game as game_model
 from flask_restx import Resource, fields, marshal, reqparse
 
+genre_fields = {
+    'id': fields.Integer,
+    'title': fields.String,
+    'desc': fields.String
+}
+
 game_fields = {
     'id': fields.Integer,
     'title': fields.String,
-    'genre': fields.String,
+    'genres': fields.List(fields.Nested(genre_fields)),
     'release_date': fields.String,
     'developer': fields.String,
     'publisher': fields.String,
@@ -15,7 +21,8 @@ game_fields = {
     'price': fields.Float,
     'multiplayer': fields.Boolean,
     'no_of_downloads': fields.Integer,
-    'played': fields.Boolean
+    'played': fields.Boolean,
+    'poster': fields.String(attribute=lambda x: x.get_cover_image())
 }
 
 
@@ -79,3 +86,14 @@ class SingleGameResource(Resource):
         db.session.delete(game)
         db.session.commit()
         return {"status": "success", "message": "game deleted!"}, 200
+
+
+class TopGameListResource(Resource):
+    def get(self, no):
+        if no < 1:
+            return {"status": "failure", "message": "games not found!"}
+        games = game_model.query.order_by(game_model.rating.desc()).all()
+        games = games[:no]
+        if len(games) < 1:
+            return {"status": "failure", "message": "games not found!"}
+        return {'status': 'success', 'games': marshal(games, game_fields)}
