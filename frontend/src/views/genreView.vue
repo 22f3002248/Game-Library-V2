@@ -65,9 +65,9 @@
           </table>
         </div>
 
-        <div>
+        <div class="flex justify-start">
           <form @submit="onFilter">
-            <div class="">
+            <div>
               <label
                 for="genres"
                 class="block text-sm font-medium text-accent mb-1"
@@ -92,19 +92,48 @@
                   {{ genre.title }}
                 </option>
               </select>
-              <p class="mt-1 text-xs text-gray-500">
-                Hold down the Ctrl (Windows) or Command (Mac) button to select
-                multiple options.
-              </p>
             </div>
-
-            <div class="mt-4 flex justify-end">
-              <button type="submit" class="btn btn-outline btn-accent">
+            <div>
+              <button
+                type="submit"
+                class="btn btn-outline btn-accent ml-3 mb-3"
+              >
                 Filter
               </button>
             </div>
+            <p class="mt-1 text-xs text-gray-500">
+              Hold down the Ctrl (Windows) or Command (Mac) button to select
+              multiple options.
+            </p>
           </form>
         </div>
+
+        <table class="table w-full">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Played</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(game, id) in filterGames" :key="id" class="text-accent">
+                <td> {{ game.id }} </td>
+              <td>{{ game.title }}</td>
+              <td>
+              <span v-if="game.genres && game.genres.length">
+                {{ game.genres.join(', ') }}
+                <!-- Joining genre titles with a comma -->
+              </span>
+              </td>
+              <td>
+                <span v-if="game.played">Yes</span>
+                <span v-else>No</span>
+              </td>
+              </tr>
+            </tbody>
+          </table>
 
         <!-- Add Genre Dialog -->
         <div>
@@ -198,14 +227,14 @@ export default {
   data() {
     return {
       genres: [],
-      games: [],
-      // filterGenre: {
-      //   games: [],
-      // },
+      filterGames: [],
       addGenreForm: {
         title: '',
         description: '',
-        select: []
+     
+      },
+      addGameForm: {
+        select:[],
       },
       message: '',
       showMessage: false,
@@ -219,9 +248,8 @@ export default {
       axios
         .get(path)
         .then((res) => {
-          this.genres = res.data.genres
-          this.games =res.data.games
-          console.log(this.genres)
+          this.genres = res.data.genres  //marshal problem wrapping
+          // console.log(this.genres)
         })
         .catch((err) => {
           console.error(err)
@@ -239,37 +267,37 @@ export default {
       })
     },
     initForm() {
-      this.addGenreForm.title = ''
-      this.addGenreForm.description = ''
-      this.addGenreForm.select= []
+      this.addGenreForm.title = '';
+      this.addGenreForm.description = '';
+      this.addGameForm.select = [];
     },
     // This is for modal 1 - to submit new game
     onSubmitGenre(e) {
-      e.preventDefault()
-      this.showAddGenre = false
+      e.preventDefault();
+      this.showAddGenre = false;
       const payload = {
         title: this.addGenreForm.title,
         description: this.addGenreForm.description,
       }
-      this.addGenre(payload)
-      this.initForm()
+      this.addGenre(payload);
+      this.initForm();
     },
-    getGames(genre_ids){
+    getGames(genre_ids) {
       const path = `http://localhost:5000/api/genre/${genre_ids}`
       axios
         .get(path)
         .then((res) => {
-          this.games =res.data
+          this.filterGames = res.data.games;
         })
         .catch((err) => {
           console.error(err)
         })
     },
     onFilter(e) {
-      e.preventDefault()
-      const genre_ids = this.addGameForm.genre_ids.map((id) => parseInt(id))
-      this.initForm()
-      this.getGames(genre_ids)
+      e.preventDefault();
+      const genre_ids = this.addGameForm.select.map((id) => parseInt(id)).join(',');
+      this.initForm();
+      this.getGames(genre_ids);
     },
     showDataAll() {
       this.showData = true

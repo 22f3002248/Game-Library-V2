@@ -1,6 +1,6 @@
 from application.api.auth.auth_api import LoginResource, RegisterResource
 from application.api.game.game_api import GameResource, SingleGameResource
-from application.api.game.genre_api import GenreResource
+from application.api.game.genre_api import GenreResource, MultipleGenreResource
 from flask_restx import Api
 
 # ? id, title, genre, played
@@ -13,4 +13,5 @@ def initialize_api(app):
     api.add_resource(GameResource, '/api/games')
     api.add_resource(SingleGameResource, '/api/games/<int:id>')
     api.add_resource(GenreResource, '/api/genre')
+    api.add_resource(MultipleGenreResource, '/api/genre/<string:ids>')
     return api
