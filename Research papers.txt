@@ -1,0 +1,131 @@
+### Summary: Game-Technical Management of the Educational Environment
+
+#### Introduction
+The research presented by Romanova et al. investigates the theoretical and practical implementation of game-technical management technologies in pedagogical universities to enhance the educational environment. Modern education faces significant challenges, driven by an evolving labor market that requires teachers to be adept at interactive technologies. The goal of the research is to develop a model for enriching education content using game-technical methods, emphasizing the teacher's role in mastering, implementing, and managing these technologies.
+
+The study draws on international research and models, particularly those by Renzulli, Savenkov, and Heller, which focus on enriching education both horizontally and vertically. The horizontal enrichment deals with broadening a student’s knowledge, while vertical enrichment involves more in-depth engagement with specific content. The authors aim to adapt these approaches within the context of a contemporary pedagogical university, where teachers play a central role in managing and guiding students through interactive, game-based learning processes.
+
+#### Methodology
+The researchers designed a theoretical model of game-technical management to enhance the educational environment. The model is based on a systematic approach, integrating psychological and pedagogical principles. It consists of three interrelated components: 
+1. **Target-oriented**: focuses on mastering, implementing, and managing game technologies.
+2. **Content-oriented**: involves identifying suitable interactive technologies and incorporating search and research games.
+3. **Estimation component**: measures both cognitive and non-cognitive indicators to assess the model's effectiveness.
+
+The model was tested on students from two universities—Moscow City Pedagogical University and Sakhalin State University—focusing on those in "Pedagogical Education" and "Psychological and Pedagogical Education" programs. The study engaged a mix of vertical (structuring teaching methods) and horizontal (enriching content) approaches.
+
+#### Key Findings
+The implementation of the game-technical management model led to several positive changes in both students and teachers, particularly in non-cognitive aspects like perseverance, creativity, and self-confidence. A significant shift was noted in the role of teachers, as students took a more active role in controlling the learning process, thereby fostering their development and creative problem-solving abilities.
+
+The study's results were compared across experimental and control groups. The experimental groups, which applied the game-technical management model, showed better performance in solving pedagogical cases and more interaction-oriented behavior. The model also led to an increased development of specific qualities such as resourcefulness, originality, and pedagogical thinking.
+
+Role-playing games, pedagogical cases, and interactive simulations proved particularly effective in training future teachers. These tools provided practical experience and better prepared students for real-world teaching challenges. Additionally, the model helped shift the traditional focus from teacher-led instruction to more student-driven, game-based learning environments, which enhanced motivation and engagement.
+
+#### Statistical Results
+The study utilized Pearson’s Chi-square test to analyze data and evaluate the effectiveness of the game-technical model. For example, experimental group A performed significantly more correct operations than the control group B, indicating that the game-technical model promoted better problem-solving skills. Similarly, expert evaluations of students' pedagogical performance showed higher interaction-level indicators in the experimental group.
+
+The model also had a long-term impact. A follow-up survey of young professionals (graduates who had been working for one year) indicated that those who had been trained with the game-technical management model held leadership positions and expressed higher job satisfaction. Notably, 224 out of 254 graduates surveyed were in leadership roles, and many demonstrated exceptional performance in their teaching careers.
+
+#### Discussion and Implications
+The study highlighted the significant qualitative improvements in student and teacher performance due to the game-technical management model. While the non-cognitive predictors such as motivation and engagement increased, cognitive predictors showed varying degrees of improvement, correlating with previous studies on the motivational aspect of intellectual activity. The research emphasizes that interactive technologies foster a dynamic educational environment where both students and teachers engage in creative, hands-on learning.
+
+Game-technical management also shifted traditional teaching roles. By placing students at the center of the learning process, the model encouraged a more collaborative and flexible educational environment. The integration of role-playing, game design, and project-based learning helped future teachers develop skills in leadership, communication, and problem-solving.
+
+#### Conclusion
+The research demonstrated that implementing game-technical management technologies significantly enriched the educational environment in pedagogical universities. This model, when applied in the training of future teachers, led to the development of essential professional skills such as self-management, creativity, and interactive learning. The study underscores the importance of game-based, interactive methods in modern education, as they equip future educators with the tools necessary to adapt to an ever-changing educational landscape.
+
+Further research is suggested to assess the long-term potential and risks of game-technical management in various educational contexts, with an emphasis on optimizing its integration into traditional teaching models. The authors advocate for continued exploration into the role of game-technical management in enhancing the quality of education and improving teacher training programs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+This paper from the *Journal of Digital Convergence* discusses the development of a mobile game management system, particularly focusing on mobile games like *Monster Master*. The key point highlighted is the growing importance of a comprehensive game operation system, driven by the rapid expansion of the mobile game market. The authors explain that traditional mobile games are evolving into more service-oriented platforms requiring continuous updates and user engagement based on data-driven insights.
+
+The paper proposes a mobile game management system that combines a user support system, content analysis system, and content operation system. This system aims to enhance game services, enabling developers to respond quickly to user queries, handle refunds, and improve game content based on user behavior data. Additionally, the system allows for better planning of future updates, contributing to higher player satisfaction and retention. 
+
+Through the analysis of *Monster Master*, a turn-based RPG game, the authors illustrate how this system works in practice. They explain how the user support system facilitates real-time assistance, while the content analysis system helps optimize in-game content and balance. The content management system allows for flexible updates without the need for client modifications.
+
+This paper highlights the need for operational tools that can analyze user data and enable developers to implement dynamic in-game changes quickly, which is critical for maintaining long-term user engagement in an increasingly competitive mobile game market.
+
+The paper titled **"Development of Game Management System Suitable for Mobile Games"** published in the *Journal of Digital Convergence* (2016) discusses the creation and implementation of a mobile game management system that addresses the challenges faced by small mobile game development teams in providing user support, content updates, and data analysis. 
+
+Key components of the system include:
+1. **User Support System**: This system is used to manage user inquiries, refunds, and in-game item recovery efficiently without requiring extensive operator intervention.
+   
+2. **Content Analysis System**: The system provides real-time user data, such as payment history and in-game behavior, to help adjust game mechanics and plan future updates based on user trends and behavior.
+
+3. **Content Management System**: This allows for live updates to in-game content, the running of events, and real-time modifications without requiring game downtime or client-side updates.
+
+The study uses the game "Monster Master" as a case study to illustrate the effectiveness of this management system. It demonstrates that through better user support and data-driven content management, companies can improve user retention and engagement, streamline operational processes, and plan content updates more effectively. 
+
+The paper concludes that such management systems are crucial for mobile games, particularly as the market expands and becomes more competitive. It highlights the importance of efficient game operation systems in enhancing the player experience and ensuring sustainable game development.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The paper titled "Research Trends of Game-Based Language Learning in K-12 Education: A Systematic Review of SSCI Articles during 2009–2022" by Lu Yang, Rui Li, and Yu Zhou, offers a comprehensive analysis of the research conducted in the area of game-based language learning (GBLL) for K-12 students. It focuses on theoretical frameworks, instructional practices, and outcomes based on 83 Social Science Citation Index (SSCI) articles published between 2009 and 2022.
+
+### Key Findings:
+
+1. **Theoretical Frameworks**:
+   Most studies utilized cognitive and social learning theories such as flow theory, situated learning, and socio-cultural theory. These frameworks emphasize how immersive and context-based learning can enhance language acquisition by engaging students in dynamic, interactive environments.
+
+2. **Participants and Languages**:
+   The majority of the studies focused on primary school students, particularly those learning English as a foreign language (EFL). This indicates a strong interest in improving early language learning, especially in non-native English-speaking regions.
+
+3. **Research Methods**:
+   Quantitative research methods dominated, with many studies employing experimental designs, questionnaires, and tests. This aligns with the goal of assessing measurable outcomes such as language proficiency improvements, student engagement, and cognitive load during gameplay.
+
+4. **Game Genres**:
+   Tutorial-based games were the most frequently used genre. These games typically provide structured learning experiences where players follow guided instructions and engage in activities designed to improve specific language skills.
+
+5. **Instructional Activities**:
+   Pre-game activities, like gameplay training and lectures, were commonly implemented to help students understand how to use the games effectively. This preparation was critical for ensuring that students could navigate the games and maximize their learning experience.
+
+6. **Outcomes**:
+   Positive outcomes included enhanced communicative competence, improved attitudes toward language learning, and progress in the four language skills (listening, speaking, reading, and writing). However, technical issues, uncooperative peers, and complex tasks sometimes led to increased cognitive load and frustration among learners.
+
+### Implications:
+
+The findings of this review highlight the need for:
+- **Pedagogical Improvements**: Teachers and designers should continue developing GBLL experiences that balance engagement with cognitive load, ensuring games are neither too easy nor overly challenging.
+- **Technology Enhancements**: Addressing technical issues is essential to providing a smooth gaming experience for learners.
+- **Customizing Games for Younger Learners**: Since primary school students were the main participants, future research should explore the potential of GBLL in secondary education, as well as in different language learning contexts.
+
+This systematic review offers valuable insights for educators, game designers, and researchers seeking to understand the evolving role of games in language education for young learners. It advocates for continued exploration of how games can effectively support language acquisition, while also identifying areas for improvement in game design and instructional integration. 
+
+For more information on this research, you may explore related articles and publications available online【18†source】【19†source】.
