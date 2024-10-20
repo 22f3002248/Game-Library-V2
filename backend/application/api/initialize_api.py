@@ -1,11 +1,8 @@
 from application.api.auth.auth_api import LoginResource, RegisterResource
 from application.api.game.game_api import (GameResource, SingleGameResource,
                                            TopGameListResource)
-<<<<<<< HEAD
-from application.api.genre.genre_api import GenreResource
-=======
-from application.api.game.genre_api import GenreResource, MultipleGenreResource
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
+from application.api.genre.genre_api import (GenreResource,
+                                             MultipleGenreResource)
 from flask_restx import Api
 
 # ? id, title, genre, played

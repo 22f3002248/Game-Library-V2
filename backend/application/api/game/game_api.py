@@ -1,10 +1,8 @@
-from application.data.model import Genre as genre_model
+from application.api.game.genre_api import genre_fields
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Genre as genre_model
 from flask_restx import Resource, fields, marshal, reqparse
-from application.api.game.genre_api import genre_fields
-
 
 game_fields = {
     'id': fields.Integer,
@@ -36,13 +34,12 @@ games_parser.add_argument(
 )
 
 
-
 class GameResource(Resource):
     # ? to send all the games
     def get(self):
         games = game_model.query.all()
         genres = genre_model.query.all()
-        return {'status': 'success', 'games': marshal(games, game_fields), 'genres':marshal(genres, genre_fields) }
+        return {'status': 'success', 'games': marshal(games, game_fields), 'genres': marshal(genres, genre_fields)}
 
     def post(self):
         args = games_parser.parse_args()
@@ -53,8 +50,9 @@ class GameResource(Resource):
         genre_ids = args.get('genre_ids', [])
         print("Parsed genre_ids:", genre_ids)  # Debugging line
         if genre_ids:
-        # Fetch all genres by their IDs
-            genres = genre_model.query.filter(genre_model.id.in_(genre_ids)).all()
+            # Fetch all genres by their IDs
+            genres = genre_model.query.filter(
+                genre_model.id.in_(genre_ids)).all()
             new_game.genres = genres
         db.session.add(new_game)
         db.session.commit()
@@ -79,25 +77,15 @@ class SingleGameResource(Resource):
 
         if args.get('genre_ids'):
             genre_ids = args['genre_ids']
-<<<<<<< HEAD
             genres = genre_model.query.filter(
                 genre_model.id.in_(genre_ids)).all()
-=======
-            genres = genre_model.query.filter(genre_model.id.in_(genre_ids)).all()
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
             game.genres = genres  # Associate new genres
 
         if args.get('played') is not None:  # Check if played is provided
             game.played = args['played']
-<<<<<<< HEAD
 
         db.session.commit()
         return {"status": 'success', 'message': 'Game is updated!'}
-=======
-            
-        db.session.commit()
-        return {"status": 'success', 'message': 'Game is updated!'}    
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
 
     def delete(self, id):
         game = game_model.query.filter_by(id=id).first()
@@ -108,15 +96,13 @@ class SingleGameResource(Resource):
         # Proceed with deletion if the game is found
         db.session.delete(game)
         db.session.commit()
-<<<<<<< HEAD
 
         # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200
-=======
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
 
         # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200
+
 
 class TopGameListResource(Resource):
     def get(self, no):

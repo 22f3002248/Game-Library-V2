@@ -13,7 +13,8 @@ from application.data.model import User as user_model
 from application.data.model import game_genre_association as gg_model
 from werkzeug.security import generate_password_hash
 
-#changes have to do
+
+# changes have to do
 def gen():
     ds.find_or_create_role(
         name="admin", description="Admin manages the system")

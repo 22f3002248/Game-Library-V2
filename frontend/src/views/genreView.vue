@@ -109,7 +109,6 @@
         </div>
 
         <table class="table w-full">
-<<<<<<< HEAD
           <thead>
             <tr>
               <th>Id</th>
@@ -127,39 +126,14 @@
                   {{ game.genres.join(', ') }}
                   <!-- Joining genre titles with a comma -->
                 </span>
-=======
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Played</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(game, id) in filterGames" :key="id" class="text-accent">
-                <td> {{ game.id }} </td>
-              <td>{{ game.title }}</td>
-              <td>
-              <span v-if="game.genres && game.genres.length">
-                {{ game.genres.join(', ') }}
-                <!-- Joining genre titles with a comma -->
-              </span>
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
               </td>
               <td>
                 <span v-if="game.played">Yes</span>
                 <span v-else>No</span>
               </td>
-<<<<<<< HEAD
             </tr>
           </tbody>
         </table>
-=======
-              </tr>
-            </tbody>
-          </table>
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
 
         <!-- Add Genre Dialog -->
         <div>
@@ -257,16 +231,9 @@ export default {
       addGenreForm: {
         title: '',
         description: '',
-<<<<<<< HEAD
       },
       addGameForm: {
         select: [],
-=======
-     
-      },
-      addGameForm: {
-        select:[],
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
       },
       message: '',
       showMessage: false,
@@ -280,11 +247,7 @@ export default {
       axios
         .get(path)
         .then((res) => {
-<<<<<<< HEAD
           this.genres = res.data.genres //marshal problem wrapping
-=======
-          this.genres = res.data.genres  //marshal problem wrapping
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
           // console.log(this.genres)
         })
         .catch((err) => {
@@ -303,7 +266,6 @@ export default {
       })
     },
     initForm() {
-<<<<<<< HEAD
       this.addGenreForm.title = ''
       this.addGenreForm.description = ''
       this.addGameForm.select = []
@@ -312,57 +274,31 @@ export default {
     onSubmitGenre(e) {
       e.preventDefault()
       this.showAddGenre = false
-=======
-      this.addGenreForm.title = '';
-      this.addGenreForm.description = '';
-      this.addGameForm.select = [];
-    },
-    // This is for modal 1 - to submit new game
-    onSubmitGenre(e) {
-      e.preventDefault();
-      this.showAddGenre = false;
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
       const payload = {
         title: this.addGenreForm.title,
         description: this.addGenreForm.description,
       }
-<<<<<<< HEAD
       this.addGenre(payload)
       this.initForm()
-=======
-      this.addGenre(payload);
-      this.initForm();
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
     },
     getGames(genre_ids) {
       const path = `http://localhost:5000/api/genre/${genre_ids}`
       axios
         .get(path)
         .then((res) => {
-<<<<<<< HEAD
           this.filterGames = res.data.games
-=======
-          this.filterGames = res.data.games;
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
         })
         .catch((err) => {
           console.error(err)
         })
     },
     onFilter(e) {
-<<<<<<< HEAD
       e.preventDefault()
       const genre_ids = this.addGameForm.select
         .map((id) => parseInt(id))
         .join(',')
       this.initForm()
       this.getGames(genre_ids)
-=======
-      e.preventDefault();
-      const genre_ids = this.addGameForm.select.map((id) => parseInt(id)).join(',');
-      this.initForm();
-      this.getGames(genre_ids);
->>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
     },
     showDataAll() {
       this.showData = true
