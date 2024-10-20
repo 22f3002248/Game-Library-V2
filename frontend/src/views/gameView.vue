@@ -34,15 +34,22 @@
         </div>
 
         <!-- Games Table -->
+<<<<<<< HEAD
 
         <div v-if="showData">
           <button
+=======
+          
+      <div v-if="showData">
+        <button
+>>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
             type="button"
             @click="showData = false"
             class="btn btn-error btn-sm"
           >
             Close
           </button>
+<<<<<<< HEAD
           <table class="table w-full table-zebra">
             <thead>
               <tr class="text-accent">
@@ -92,6 +99,57 @@
             </tbody>
           </table>
         </div>
+=======
+        <table class="table w-full table-zebra">
+          <thead>
+            <tr class="text-accent">
+              <th>Id</th>
+              <th>Name</th>
+              <th>Genre</th>
+              <th>Played</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(game, id) in games" :key="id">
+              <td> {{ game.id }} </td>
+              <td>{{ game.title }}</td>
+              <td>
+              <span v-if="game.genres && game.genres.length">
+                {{ game.genres.join(', ') }}
+                <!-- Joining genre titles with a comma -->
+              </span>
+              </td>
+              <td>
+                <span v-if="game.played">Yes</span>
+                <span v-else>No</span>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button
+                    @click="
+                      () => {
+                        editGame(game)
+                        openEditModal = true
+                      }
+                    "
+                    class="btn btn-info btn-sm"
+                  >
+                    Update
+                  </button>
+                  <button
+                    @click="deleteGames(game)"
+                    class="btn btn-danger btn-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+>>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
 
         <!-- Footer -->
         <footer
@@ -193,6 +251,7 @@
         </div>
       </Dialog>
     </TransitionRoot>
+<<<<<<< HEAD
 
     <!-- Edit Game Modal -->
     <div v-if="openEditModal">
@@ -228,6 +287,45 @@
                     />
                   </div>
 
+=======
+
+    <!-- Edit Game Modal -->
+    <div v-if="openEditModal">
+      <TransitionRoot :show="openEditModal" @close="openEditModal = false">
+        <Dialog class="relative z-10" @close="openEditModal = false">
+          <div class="fixed inset-0 bg-black bg-opacity-30"></div>
+
+          <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div
+              class="flex min-h-full items-center justify-center p-4"
+            >
+              <DialogPanel
+                class="w-full max-w-md transform overflow-hidden rounded-lg bg-accent-content p-6 shadow-xl transition-all z-50"
+              >
+                <DialogTitle
+                  class="text-accent font-medium leading-6 bg-grey text-center"
+                >
+                  Update Game
+                </DialogTitle>
+
+                <form @submit.prevent="onSubmitUpdate">
+                  <div class="mt-4">
+                    <label
+                      for="game-name-edit"
+                      class="block font-medium text-accent"
+                      >Game Name</label
+                    >
+                    <input
+                      v-model="editForm.name"
+                      id="game-name-edit"
+                      class="mt-1 block w-full rounded-md border-gray-200 shadow-sm"
+                      type="text"
+                      placeholder="Enter name"
+                      required
+                    />
+                  </div>
+
+>>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
                   <div class="mt-4">
                     <label
                       for="genres-edit"
@@ -237,11 +335,19 @@
                     <select
                       id="genres-edit"
                       v-model="editForm.genre_ids"
+<<<<<<< HEAD
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                       required
                       multiple
                     >
                       <option selected disabled value="">Select options</option>
+=======
+                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm "
+                      required
+                      multiple
+                    >
+                    <option selected disabled value="">Select options</option>
+>>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
                       <option
                         class="text-grey-700 hover:bg-accent"
                         v-for="genre in genres"
@@ -254,7 +360,13 @@
                   </div>
 
                   <div class="mt-4">
+<<<<<<< HEAD
                     <label for="played-edit" class="font-bold text-accent mr-4"
+=======
+                    <label
+                      for="played-edit"
+                      class=" font-bold text-accent mr-4"
+>>>>>>> 9eb1938f1a260f19787e6287efad27b639075c44
                       >Played?</label
                     >
                     <input

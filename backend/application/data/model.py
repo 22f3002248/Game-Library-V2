@@ -41,6 +41,7 @@ class Game(db.Model):
     price = db.Column(db.Float)
     multiplayer = db.Column(db.Boolean, default=False)
     no_of_downloads = db.Column(db.Integer, default=0)
+    played = db.Column(db.Boolean, default=False)
     genres = db.relationship(
         'Genre', secondary=game_genre_association, backref='games', lazy=True)
     users = db.relationship('Game_User', back_populates='game')
@@ -59,7 +60,7 @@ class Game(db.Model):
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50), nullable=False)
-    desc = db.Column(db.Text)
+    description = db.Column(db.Text)
 
 
 class Subscription(db.Model):
