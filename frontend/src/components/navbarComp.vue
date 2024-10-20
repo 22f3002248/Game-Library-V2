@@ -23,14 +23,17 @@
             tabindex="0"
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li><a>Homepage</a></li>
-            <li><a>Portfolio</a></li>
-            <li><a>About</a></li>
+            <li><a @click="goToLanding()">Homepage</a></li>
+            <li><a @click="goToLibrary()">Library</a></li>
+            <li><a @click="goToStore()">Store</a></li>
+            <li><a @click="goToWishlist()">Wishlist</a></li>
+            <li><a @click="goToFriends()">Friends</a></li>
+            <li><a @click="goToProfile()">Profile</a></li>
           </ul>
         </div>
       </div>
       <div class="navbar-center">
-        <a class="btn btn-ghost text-xl">daisyUI</a>
+        <a class="btn btn-ghost text-2xl" @click="goToLanding()">GameVault</a>
       </div>
       <div class="navbar-end">
         <button class="btn btn-ghost btn-circle">
@@ -74,14 +77,22 @@
 </template>
 
 <script>
-// JS
 export default {
   name: 'navbarComp',
   props: {},
   data() {
     return {}
   },
-  methods: {},
+  methods: {
+    goToLanding() {},
+    goToLibrary() {
+      this.$router.push({ name: 'allGamesView' })
+    },
+    goToStore() {},
+    goToWishlist() {},
+    goToFriends() {},
+    goToProfile() {},
+  },
 }
 </script>
 

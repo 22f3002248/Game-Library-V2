@@ -320,23 +320,29 @@ export default {
   },
   methods: {
     submitLoginForm() {
+      // console.log(this.email, this.password)
       const path = 'http://127.0.0.1:5000/api/login'
       axios
-        .post(path, { email: this.email, password: this.password }, {})
+        .post(path, { email: this.email, password: this.password })
         .then((res) => {
-          if (res.data.status == 'success') {
-            this.isvisible = true
-            this.message = res.data.message
-            this.alert_type = 'alert-success'
-          } else if (res.data.status == 'failure') {
-            this.isvisible = true
-            this.message = res.data.message
-            this.alert_type = 'alert-error'
+          // console.log(res)
+          // if (res.data.status == 'success') {
+          console.log(res.data.user)
+          this.$store.dispatch('set_state_after_login', res.data.user)
+          if (this.$store.getters.get_role == 'admin') {
+            this.$router.push('/admin-dashboard')
           } else {
-            this.isvisible = true
-            this.message = 'There was an error.'
-            this.alert_type = 'alert-error'
+            this.$router.push('/user-dashboard')
           }
+          // } else if (res.data.status == 'failure') {
+          //   this.isvisible = true
+          //   this.message = res.data.message
+          //   this.alert_type = 'alert-error'
+          // } else {
+          //   this.isvisible = true
+          //   this.message = 'There was an error.'
+          //   this.alert_type = 'alert-error'
+          // }
           this.closeModal()
         })
         .catch(() => {

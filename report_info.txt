@@ -1,0 +1,230 @@
+REQUIREMENTS
+ Game Library Project Requirements
+
+ 3.1 Software Requirements:
+1. Backend Framework:
+   - Python: Use Python for coding the logic behind the game library.
+   - Flask or Django: Handle web requests and interact with the database through Flask or Django.
+   - SQLAlchemy or Django ORM: Utilize SQLAlchemy or Django ORM to manage database communication.
+   
+2. Database Management System (DBMS):
+   - SQLite, PostgreSQL, or MySQL: Choose from SQLite for simplicity, or PostgreSQL/MySQL for scalability to store game-related data.
+
+3. Frontend Technologies:
+   - HTML5, CSS3, JavaScript: Core technologies for creating user interfaces.
+   - Bootstrap: Use Bootstrap for responsive design and styling, as mandated by project constraints.
+   - Vue.js: Frontend framework to build a dynamic and interactive user experience.
+
+4. Additional Libraries and Tools:
+   - Flask-Login or Django's authentication: Handle user authentication for login and session management.
+   - Flask-WTF or Django forms: Build and validate forms for game details, user data, etc.
+   - Image upload tools: Implement functionality for uploading game cover photos.
+   - Reporting and charting libraries: Use Matplotlib or other libraries for generating statistics on games.
+
+5. Caching & Job Scheduling:
+   - Redis: For caching frequently accessed data and improving performance.
+   - Celery with Redis: Handle background tasks such as data processing, report generation, and sending notifications.
+
+ 3.2 Hardware Requirements:
+Server Hardware Requirements:
+   1. Processor: Modern multi-core processor (e.g., Intel Core i5 or AMD Ryzen 5).
+   2. Memory (RAM): At least 4GB, but more may be required for large-scale game data.
+   3. Storage: SSD preferred for faster access to game cover images and inventory data.
+   4. Network Interface: A stable internet connection for API requests and user data access.
+
+Client Hardware Requirements:
+   1. Processor: Any modern processor supporting web browsing.
+   2. Memory (RAM): Minimum 4GB for handling basic UI and interactions.
+   3. Storage: Sufficient storage for browser cache and local files.
+   4. Network Interface: Reliable internet connection to access the web app.
+
+ 3.3 System Requirements:
+
+ 3.3.1 Functional Requirements:
+1. User Roles:
+   - Admin: Full access, able to manage games, categories, and analyze user activity.
+   - User: Regular users can view, search, and borrow games.
+   
+2. Game Categorization:
+   - The system should categorize games by genre, developer, and platform for easy filtering.
+
+3. Game Library Management:
+   - Admin can perform CRUD operations (Create, Read, Update, Delete) on games, genres, and game details such as cover images, descriptions, and ratings.
+
+4. Borrowing and Return System:
+   - Users can borrow games from the library, view borrowed items, and return them. Admins manage the borrowing process.
+
+5. Restock Requests:
+   - Users can request restocks for unavailable games, while admins can approve or deny these requests.
+
+6. Game Statistics and Reporting:
+   - Display sales, borrowing trends, and most popular games in various categories.
+   - Generate reports with dynamic charts (Matplotlib) on demand for user and game activity.
+
+7. Game Search Functionality:
+   - Users and admins can search for games by genre, platform, popularity, or developer using dynamic filters.
+
+8. API Access:
+   - CRUD operations on games and categories via an API for CLI users or external integration.
+
+9. Notification System:
+   - Send automated email or SMS notifications to users for overdue games or new additions to the library.
+
+ 3.3.2 Non-Functional Requirements:
+1. Authentication:
+   - Use Flask-Login or Django's equivalent to ensure role-based access (Admin/User).
+   
+2. Data Storage:
+   - SQLite for lightweight local data storage with SQLAlchemy for ORM integration.
+
+3. Performance Optimization:
+   - Redis for caching to enhance API response times and overall performance.
+
+4. Scalability:
+   - Use Flask or Django with modular components, making it easy to scale with frameworks like Vue.js for a more dynamic frontend if needed.
+
+5. Security:
+   - Only admins should have access to CRUD operations on games, while users are limited to borrowing/viewing games.
+
+6. Statistics and Analytics:
+   - Generate charts and reports using Matplotlib for real-time game analytics.
+   
+7. Responsive Design:
+   - Ensure a responsive UI using Bootstrap, working on both desktop and mobile platforms.
+
+
+
+
+
+SRS
+The requirements above are not yet in the IEEE Software Requirements Specification (SRS) format. Below is the conversion of those requirements into the IEEE SRS format.
+
+---
+
+ IEEE Software Requirements Specification (SRS)
+ Game Library Project
+
+ 1. Introduction
+
+ 1.1 Purpose
+The purpose of this document is to provide a detailed description of the game library project, which enables users to search, borrow, and return games from a digital game library. Admins will manage the system by adding new games, updating game details, and generating statistics and reports.
+
+ 1.2 Scope
+This project will be a web-based platform for managing a game library. It will allow users to browse available games, borrow them, and receive notifications for overdue items. Admins will be able to manage the inventory of games, view statistics, and restock items. The system will provide reporting capabilities and API access for external tools.
+
+ 1.3 Definitions, Acronyms, and Abbreviations
+- CRUD: Create, Read, Update, Delete
+- Admin: A user with the ability to manage the system (games, categories, users)
+- User: A regular user who can search, borrow, and return games
+- API: Application Programming Interface
+- ORM: Object-Relational Mapping (SQLAlchemy/Django ORM)
+
+ 1.4 References
+- IEEE Std 830-1998, IEEE Recommended Practice for Software Requirements Specifications
+- Flask Documentation (https://flask.palletsprojects.com/)
+- Django Documentation (https://www.djangoproject.com/)
+- SQLAlchemy Documentation (https://www.sqlalchemy.org/)
+
+ 1.5 Overview
+This document contains the system’s functional and non-functional requirements, detailing the software, hardware, and system requirements needed to build and maintain the game library system.
+
+---
+
+ 2. Overall Description
+
+ 2.1 Product Perspective
+The game library system is a standalone application that allows users to search for games by categories, borrow them, and receive reminders for overdue items. Admins manage the library's inventory and monitor user activities.
+
+ 2.2 Product Features
+- Game search and filter based on categories (genre, platform, developer)
+- Game borrowing and return system
+- Admin dashboard for CRUD operations on game inventory
+- Analytics and reporting (statistics on game borrowing trends)
+- API access for command-line or external system interaction
+
+ 2.3 User Classes and Characteristics
+- Admin: Full access to all system features, including game management and reporting.
+- User: Regular users who can view, borrow, and return games but cannot manage the system.
+
+ 2.4 Operating Environment
+The system will run on modern web browsers such as Google Chrome, Mozilla Firefox, and Safari. The server environment requires Python 3.x with Flask or Django as the web framework.
+
+ 2.5 Design and Implementation Constraints
+- SQLite is the primary database used for development.
+- Bootstrap is used for UI styling and design; no other CSS framework is allowed.
+- Redis is required for caching and Celery for background tasks.
+
+ 2.6 Assumptions and Dependencies
+- Users have access to the internet and modern browsers.
+- Redis and Celery are set up for background tasks (e.g., notifications).
+- The system is designed to scale with modular components.
+
+---
+
+ 3. Specific Requirements
+
+ 3.1 Functional Requirements
+
+ 3.1.1 User Roles and Authentication
+- FR-1: The system must support two user roles: Admin and User.
+- FR-2: Admins should be able to log in with elevated privileges to manage games and users.
+- FR-3: Users should be able to log in to borrow, view, and return games.
+- FR-4: The login system must use Flask-Login or Django’s authentication system for session management and security.
+
+ 3.1.2 Game Management (Admin Only)
+- FR-5: Admins must be able to create, read, update, and delete (CRUD) games and game categories.
+- FR-6: Admins must be able to upload and update game cover photos, game descriptions, price, and genre.
+- FR-7: Admins must be able to manage inventory, including game restock requests from users.
+
+ 3.1.3 Game Search and Borrowing (User)
+- FR-8: Users must be able to search for games based on category (genre, platform, popularity).
+- FR-9: Users must be able to borrow and return games.
+- FR-10: Users must receive notifications for overdue games via email or SMS.
+
+ 3.1.4 Notifications and Reminders
+- FR-11: The system must send automated notifications to users for overdue games.
+- FR-12: Daily reminders must be sent using Redis and Celery to notify users of pending actions.
+
+ 3.1.5 Analytics and Reporting (Admin Only)
+- FR-13: Admins must be able to view real-time statistics on game borrowing trends.
+- FR-14: The system must generate monthly reports of game usage statistics in PDF or HTML format.
+- FR-15: The system must allow Admins to export data in CSV format via a background process.
+
+ 3.1.6 API for External Tools
+- FR-16: The system must provide API endpoints for CRUD operations on games.
+- FR-17: The API must be secured using token-based authentication.
+
+ 3.2 Non-Functional Requirements
+
+ 3.2.1 Performance Requirements
+- NFR-1: The system must handle up to 100 concurrent users without degradation in performance.
+- NFR-2: Cache frequently accessed data using Redis to reduce load times.
+- NFR-3: The system must return search results within 2 seconds under normal load.
+
+ 3.2.2 Security Requirements
+- NFR-4: Admin-level functions must only be accessible to users with Admin privileges.
+- NFR-5: All passwords must be stored securely using hashing algorithms like bcrypt.
+- NFR-6: The system must prevent unauthorized access through session management and token-based API security.
+
+ 3.2.3 Usability Requirements
+- NFR-7: The user interface must be intuitive and responsive, ensuring compatibility with mobile and desktop devices.
+- NFR-8: The system must provide clear feedback for user actions (e.g., borrowing, returning games).
+
+ 3.2.4 Reliability and Availability
+- NFR-9: The system must maintain 99.9% uptime to ensure continuous access to the game library.
+- NFR-10: The system must recover from crashes within 1 minute, using Redis for session persistence.
+
+ 3.3 System Interfaces
+- SI-1: The system must provide a web interface accessible via browsers (Chrome, Firefox, etc.).
+- SI-2: The system must provide API access for external tools through a RESTful interface.
+  
+---
+
+ 4. Other Non-Functional Requirements
+- Scalability: The system must be designed to scale with increased user traffic and database size.
+- Maintainability: The codebase must be modular, following best practices for Flask/Django applications to allow for easy updates and maintenance.
+- Extensibility: The system must allow for future integration with external services like payment gateways.
+
+---
+
+This IEEE SRS format includes clear divisions into sections that follow the standard: Introduction, Overall Description, Specific Requirements, and additional non-functional aspects like performance and security. This provides a clear and structured approach to the game library project.

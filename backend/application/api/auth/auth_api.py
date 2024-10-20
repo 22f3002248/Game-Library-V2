@@ -48,13 +48,14 @@ class LoginResource(Resource):
         email, pw = args.get('email'), args.get('password')
         user = user_model.query.filter_by(email=email).first()
         if not user:
-            return {"status": "failure", "message": "User does not exist !"}, 404
+            return {"status": "failure", "message": "User does not exist !"}, 402
         if not check_password_hash(user.password, pw):
             return {"status": "failure", "message": "Wrong password !"}, 404
         at = user.get_auth_token()
         return {"status": "success",
                 "message": "You have successfully logged in !",
                 "user": {
+                    "userid": user.id,
                     "username": user.username,
                     "email": user.email,
                     "type": user.roles[0].name,

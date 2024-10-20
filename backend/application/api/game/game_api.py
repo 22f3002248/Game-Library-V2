@@ -1,3 +1,4 @@
+from application.data.model import Genre as genre_model
 from application.data.database import db
 from application.data.model import Game as game_model
 from flask_restx import Resource, fields, marshal, reqparse
@@ -66,25 +67,33 @@ class SingleGameResource(Resource):
         game = game_model.query.filter_by(id=id).first()
         if not game:
             return {"status": 'failure', 'message': 'game not found !'}, 404
-        title = game.title
-        genre = game.genre
-        played = game.played
+
         if args.get('title'):
-            title = args.get('title')
-        if args.get('genre'):
-            genre = args.get('genre')
-        game.title = title
-        game.genre = genre
-        game.played = played
+            game.title = args['title']
+
+        if args.get('genre_ids'):
+            genre_ids = args['genre_ids']
+            genres = genre_model.query.filter(
+                genre_model.id.in_(genre_ids)).all()
+            game.genres = genres  # Associate new genres
+
+        if args.get('played') is not None:  # Check if played is provided
+            game.played = args['played']
+
         db.session.commit()
-        return {"status": 'success', 'message': 'game is updated !'}
+        return {"status": 'success', 'message': 'Game is updated!'}
 
     def delete(self, id):
         game = game_model.query.filter_by(id=id).first()
         if not game:
+            # Return a plain dictionary, no need to use jsonify
             return {"status": "failure", "message": "game not found!"}, 404
+
+        # Proceed with deletion if the game is found
         db.session.delete(game)
         db.session.commit()
+
+        # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200
 
 

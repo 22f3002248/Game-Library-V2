@@ -59,7 +59,7 @@ const store = createStore({
       state.user.email = payload.email
       state.user.type = payload.type
       state.auth_token = payload.auth_token
-      login_status = true
+      state.login_status = true
     },
     setStateAfterLogout(state) {
       state.user.userid = ''
@@ -67,7 +67,7 @@ const store = createStore({
       state.user.email = ''
       state.user.type = ''
       state.auth_token = ''
-      login_status = false
+      state.login_status = false
     },
   },
   actions: {

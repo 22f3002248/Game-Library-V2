@@ -7,11 +7,20 @@ from flask_security import RoleMixin, UserMixin
 
 from .database import db
 
-current_timeutc = datetime.now(timezone.utc)
-ist_offset = timedelta(hours=5, minutes=30)
-current_time = current_timeutc + ist_offset
 
-# ? id, title, genre, played
+def current_time():
+    current_timeutc = datetime.now(timezone.utc)
+    ist_offset = timedelta(hours=5, minutes=30)
+    current_time = current_timeutc + ist_offset
+    return current_time
+
+
+def month_subscribe(dt):
+    ist_offset = timedelta(days=30)
+    current_time = dt + ist_offset
+    return current_time
+
+
 game_genre_association = db.Table('game_genre',
                                   db.Column('game_id', db.Integer, db.ForeignKey(
                                       'game.id'), primary_key=True),
@@ -23,7 +32,6 @@ game_genre_association = db.Table('game_genre',
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
-    # genre = db.Column(db.String(50))
     release_date = db.Column(db.Date)
     developer = db.Column(db.String(100))
     publisher = db.Column(db.String(100))
@@ -35,15 +43,14 @@ class Game(db.Model):
     no_of_downloads = db.Column(db.Integer, default=0)
     genres = db.relationship(
         'Genre', secondary=game_genre_association, backref='games', lazy=True)
+    users = db.relationship('Game_User', back_populates='game')
 
     def get_cover_image(self):
         cover_filename = f"{self.id}.jpg"
         cover_path = os.path.join(
             app.root_path, app.config['STATIC_FOLDER'], 'game_posters', cover_filename)
-
         if not os.path.exists(cover_path):
             cover_filename = "NoCover.jpg"
-
         cover_url = url_for(
             'static', filename=f'game_posters/{cover_filename}', _external=True)
         return cover_url
@@ -55,11 +62,11 @@ class Genre(db.Model):
     desc = db.Column(db.Text)
 
 
-'''
-class category():....
-'''
-
-# ---------------------------------------TOUR GUIDE----------------------------------
+class Subscription(db.Model):
+    userid = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String, default="Subscribed")
+    start_date = db.Column(db.DateTime, default=current_time())
+    end_date = db.Column(db.DateTime, default=month_subscribe(current_time()))
 
 
 class RolesUsers(db.Model):
@@ -90,5 +97,17 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary='roles_users',
                             backref=db.backref('users', lazy='dynamic'))
+    games = db.relationship('Game_User', back_populates='user')
 
-    # functions
+
+class Game_User(db.Model):
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    purchased = db.Column(db.Boolean, default=False)
+    subscribed = db.Column(db.Boolean, default=False)
+    completed = db.Column(db.Boolean, default=False)
+    date = db.Column(db.DateTime, default=current_time())
+
+    # Relationships back to Game and User
+    game = db.relationship('Game', back_populates='users')
+    user = db.relationship('User', back_populates='games')
