@@ -8,7 +8,6 @@ from flask_restx import Resource, fields, marshal, reqparse
 from datetime import datetime
 import os
 from flask import current_app as app
-import base64
 
 game_fields = {
     'id': fields.Integer,
@@ -73,7 +72,8 @@ class GameResource(Resource):
 
     def post(self):
         args = games_parser.parse_args()
-        title=args['title']
+        title = args['title']
+
         if title:
             new_game = game_model(
                 title=title,
@@ -85,49 +85,44 @@ class GameResource(Resource):
                 description=args['description'],
                 price=args['price'],
                 multiplayer=args['multiplayer'],
-                no_of_downloads=args['no_of_downloads'], 
+                no_of_downloads=args['no_of_downloads']
             )
-        release_date=args['release_date']    
+
+        release_date = args['release_date']
         if isinstance(release_date, str):
             new_game.release_date = datetime.strptime(release_date, '%Y-%m-%d').date()
+
         genre_ids = args.get('genre_ids', [])
-        print("Parsed genre_ids:", genre_ids)  # Debugging line
         if genre_ids:
-            # Fetch all genres by their IDs
-            genres = genre_model.query.filter(
-                genre_model.id.in_(genre_ids)).all()
+            genres = genre_model.query.filter(genre_model.id.in_(genre_ids)).all()
             new_game.genres = genres
-                
+
         db.session.add(new_game)
         db.session.commit()
-        
-        #for file 
-        print("vgj")
-        game = game_model.query.filter_by(title=title).first()   
 
-            # Ensure that game exists before accessing its id
-        if not game:
-            return {'message': 'Game not found after creation'}, 401
+        print(f"New game ID: {new_game.id}")
 
-            # Now we know the game exists, so we can safely access game.id
-        print(game.id,request.files)
-        poster_data = args.get('poster')
-        if not poster_data:
-            return {'message': 'No poster data provided'}, 400
+        # File handling
+        file = request.files.get('poster')
+        print(file)
+        if file:
+            if file.filename == '':
+                return {'message': 'No selected file'}, 400
 
-        # Decode the Base64 string
-        header, base64_string = poster_data.split(',', 1)
-        file_extension = header.split(';')[0].split('/')[1]  # Extract file extension from header
-        new_filename = f"{game.id}.{file_extension}"
+            # Extract the file extension
+            file_extension = file.filename.rsplit('.', 1)[1].lower() if '.' in file.filename else ''
+            
+            # Generate the new file name using the game ID and extension
+            new_filename = f"{new_game.id}.{file_extension}"
+            print(f"Saving file as: {new_filename}")
+            
+            # Save the file in the specified location
+            file.save(os.path.join(app.root_path, app.config['STATIC_FOLDER'], 'game_posters', new_filename))
 
-        # Save the file to the specified directory
-        file_path = os.path.join(app.root_path, app.config['STATIC_FOLDER'], 'game_posters', new_filename)
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Ensure the directory exists
+            return {'status': 'success', 'message': 'Game and poster added successfully!'}
+        else:
+            return {'status': 'success', 'message': 'Game added without poster!'}
 
-        # Decode and save the image
-        with open(file_path, "wb") as fh:
-            fh.write(base64.b64decode(base64_string))
-        return {'status': 'success', 'message': 'Game is added!'}
 
 class SingleGameResource(Resource):
     # ? to send all the games
@@ -136,7 +131,6 @@ class SingleGameResource(Resource):
         return {'status': 'success', 'game': marshal(games, game_fields)}
 
     def put(self, id):
-        # print('here !')
         args = games_parser.parse_args()
         game = game_model.query.filter_by(id=id).first()
         if not game:
@@ -144,16 +138,28 @@ class SingleGameResource(Resource):
 
         if args.get('title'):
             game.title = args['title']
-
+            game.developer=args['developer']
+            game.publisher=args['publisher']
+            game.platform=args['platform']
+            game.rating=args['rating']
+            game.description=args['description']
+            game.price=args['price']
+            game.multiplayer=args['multiplayer']
+            game.no_of_downloads=args['no_of_downloads']
+            
+        if args['release_date']:
+            release_date = args['release_date']
+            if isinstance(release_date, str):
+                game.release_date = datetime.strptime(release_date, '%Y-%m-%d').date() 
+                   
         if args.get('genre_ids'):
             genre_ids = args['genre_ids']
             genres = genre_model.query.filter(
                 genre_model.id.in_(genre_ids)).all()
             game.genres = genres  # Associate new genres
 
-        if args.get('played') is not None:  # Check if played is provided
-            game.played = args['played']
-
+        #file handling
+        
         db.session.commit()
         return {"status": 'success', 'message': 'Game is updated!'}
 

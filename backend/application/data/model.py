@@ -44,7 +44,7 @@ class Game(db.Model):
     played = db.Column(db.Boolean, default=False)
     genres = db.relationship(
         'Genre', secondary=game_genre_association, backref='games', lazy=True)
-    users = db.relationship('Game_User', back_populates='game')
+    users = db.relationship('Game_User', back_populates='game', cascade="all, delete-orphan")
 
     def get_cover_image(self):
         cover_filename = f"{self.id}.jpg"
