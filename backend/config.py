@@ -33,6 +33,7 @@ class devconfig(Config):
     CELERY_RESULT_BACKEND = "redis://localhost:6379/2"
 
     STATIC_FOLDER = 'static'
+    TEMPLATES_PATH = 'templates'
 
 
 class devconfig22(Config):

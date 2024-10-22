@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Monthly Report | GameVault</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+            }
+            h1,
+            h2 {
+                color: #444;
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f4f4f4;
+            }
+            .section-title {
+                margin-top: 30px;
+                font-size: 20px;
+                color: #333;
+            }
+            .message {
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Monthly Report | GameVault</h1>
+
+        <h2 class="section-title">Total Purchases</h2>
+        <p>Total Purchases Made: {{ data.total_purchases }}</p>
+
+        <h2 class="section-title">Total Subscriptions</h2>
+        <p>Total Subscriptions: {{ data.total_subscriptions }}</p>
+
+        <h2 class="section-title">User-wise Purchase/Subscription Analysis</h2>
+        {% if data.user_analysis %}
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Purchases</th>
+                    <th>Subscriptions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in data.user_analysis %}
+                <tr>
+                    <td>{{ user.userid }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.purchases }}</td>
+                    <td>{{ user.subscriptions }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No user analysis available for this month.</p>
+        {% endif %}
+
+        <h2 class="section-title">Genre-wise Sales</h2>
+        {% if data.genre_sales %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Genre</th>
+                    <th>Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for genre, sales in data.genre_sales.items() %}
+                <tr>
+                    <td>{{ genre }}</td>
+                    <td>{{ sales }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No genre sales data available for this month.</p>
+        {% endif %}
+
+        <h2 class="section-title">Newly Added Games</h2>
+        {% if data.new_games %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Game ID</th>
+                    <th>Game Title</th>
+                    <th>Release Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in data.new_games %}
+                <tr>
+                    <td>{{ game.game_id }}</td>
+                    <td>{{ game.title }}</td>
+                    <td>{{ game.release_date.strftime('%d/%m/%Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No new games were added this month.</p>
+        {% endif %}
+
+        <h2 class="section-title">Top Rated Games</h2>
+        {% if data.top_rated_games %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Game ID</th>
+                    <th>Game Title</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in data.top_rated_games %}
+                <tr>
+                    <td>{{ game.game_id }}</td>
+                    <td>{{ game.title }}</td>
+                    <td>{{ game.rating }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No game rating data available for this month.</p>
+        {% endif %}
+
+        <h2 class="section-title">User Feedback</h2>
+        {% if data.user_feedback %}
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Game ID</th>
+                    <th>Game Title</th>
+                    <th>Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in data.user_feedback %}
+                <tr>
+                    <td>{{ feedback.userid }}</td>
+                    <td>{{ feedback.username }}</td>
+                    <td>{{ feedback.game_id }}</td>
+                    <td>{{ feedback.game_title }}</td>
+                    <td>{{ feedback.feedback }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No user feedback for this month.</p>
+        {% endif %}
+    </body>
+</html>

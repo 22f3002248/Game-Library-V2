@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Weekly Report | GameVault</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                background-color: #f3f3f3;
+                padding: 0;
+                margin: 0;
+            }
+            .container {
+                width: 80%;
+                margin: auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            h1,
+            h2 {
+                color: #333;
+            }
+            .message {
+                margin-bottom: 20px;
+                font-style: italic;
+                color: #555;
+            }
+            .games-list {
+                list-style-type: none;
+                padding: 0;
+            }
+            .games-list li {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                margin-bottom: 10px;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 0.9em;
+                color: #555;
+                text-align: center;
+            }
+            .user-info {
+                background-color: #f9f9f9;
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
+            .game-details strong {
+                display: inline-block;
+                width: 150px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Hello, {{ data.user.username }}!</h1>
+
+            <div class="user-info">
+                <p><strong>Email:</strong> {{ data.user.email }}</p>
+            </div>
+
+            <p class="message">{{ data.message }}</p>
+
+            <h2>Your Rented Games</h2>
+            {% if data.rented %}
+            <ul class="games-list">
+                {% for game in data.rented %}
+                <li>
+                    <div class="game-details">
+                        <strong>Game Title:</strong> {{ game.game_title }}<br />
+                        <strong>Purchased:</strong> {{ game.purchased }}<br />
+                        <strong>Subscribed:</strong> {{ game.subscribed }}<br />
+                        <strong>Completed:</strong> {{ game.completed }}<br />
+                        <strong>Date Played:</strong> {{ game.date }}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No games rented recently.</p>
+            {% endif %}
+
+            <h2>Top Rated Games This Week</h2>
+            {% if data.top_rated_games %}
+            <ul class="games-list">
+                {% for game in data.top_rated_games %}
+                <li>
+                    <div class="game-details">
+                        <strong>Game Title:</strong> {{ game.title }}<br />
+                        <strong>Rating:</strong> {{ game.rating }} / 10
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No top-rated games available this week.</p>
+            {% endif %}
+
+            <div class="footer">
+                <p>
+                    Thank you for being a part of GameVault! We hope you enjoy
+                    your gaming experiences.
+                </p>
+                <p>
+                    If you have any questions, feel free to contact us at
+                    support@gamevault.com.
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

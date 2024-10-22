@@ -224,3 +224,40 @@ GENRES = [
     {"title": "Horror", "desc": "Games that aim to scare the player."},
     {"title": "Survival", "desc": "Games that focus on surviving in a hostile environment."}
 ]
+
+
+
+feedbacks = [
+        "Amazing gameplay with stunning graphics. The story kept me hooked from start to finish. Definitely worth a play!",
+        "The multiplayer mode is fun, but the single-player campaign feels too short. Needs more content for long-term enjoyment.",
+        "I enjoyed the puzzles and challenges. However, the controls were a bit clunky at times. Overall, a solid game experience.",
+        "Great concept but poorly executed. There were too many bugs, and the AI felt really unresponsive.",
+        "This game has fantastic potential. The art style is unique, and the soundtrack is superb. Looking forward to future updates.",
+        "Too many microtransactions ruined the experience for me. It could have been a great game, but it feels more like a cash grab.",
+        "The open-world exploration was great, but the missions felt repetitive after a while. Needs more variety in objectives.",
+        "An excellent RPG with deep character customization and an engaging story. I spent hours crafting my perfect hero!",
+        "This game is a masterpiece. The attention to detail in the environment and character design is truly impressive.",
+        "Enjoyable for a casual gamer. Easy to pick up, but doesnt have much replay value. Perfect for short bursts of fun.",
+        "Loved the fast-paced action! The combat mechanics are smooth, and the variety of weapons kept things fresh throughout.",
+        "The game is alright, but the loading times are unbearable. It really takes away from the immersion.",
+        "Solid multiplayer experience. Had a blast playing with friends, but the solo mode needs more depth.",
+        "I found the boss fights to be incredibly challenging, but that made the victories so much sweeter!",
+        "The graphics are absolutely stunning, but the story lacks depth. It's visually impressive but doesn't leave a lasting impression.",
+        "I couldn't put it down! The plot twists were incredible, and the character development was top-notch. Highly recommended!",
+        "The game was fun, but it felt a bit too short. I was left wanting more content and better post-launch support.",
+        "This game has a great atmosphere. The soundtrack and visual design create a hauntingly beautiful world.",
+        "The level design is very creative, but the difficulty spikes in some areas made it frustrating to play at times.",
+        "Decent enough game, but the controls take a while to get used to. Once you do, it's an enjoyable experience.",
+        "The story started off strong but became predictable toward the end. Still, the characters were engaging and fun to follow.",
+        "Amazing combat mechanics but lacking in story development. The gameplay is smooth, but the narrative didn't draw me in.",
+        "An emotional rollercoaster! The story and characters really made me feel invested. One of the best narrative-driven games I've played.",
+        "The soundtrack is absolutely phenomenal. It complements the gameplay perfectly and really adds to the overall experience.",
+        "The online community is toxic, which really brings down the enjoyment of multiplayer. Needs better moderation tools.",
+        "Good game with a few minor bugs. Nothing game-breaking, but they can be annoying during certain missions.",
+        "It's a decent game, but nothing really stands out. Feels like it could have used more innovation in its gameplay mechanics.",
+        "The variety of characters you can play as is awesome! Each one feels unique and has a distinct style.",
+        "I liked the overall concept, but it felt unfinished. With more polish, this could be a top-tier game.",
+        "The game had so much potential, but it was ruined by poor balancing. Some parts were just way too easy.",
+        "Beautifully crafted environments with an immersive world. I just wish the story was as engaging as the setting.",
+        "Not my type of game. The combat felt slow, and the narrative wasn't compelling enough to keep me playing."
+    ]

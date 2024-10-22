@@ -65,7 +65,7 @@ class Genre(db.Model):
 
 class Subscription(db.Model):
     userid = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String, default="Subscribed")
+    status = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.DateTime, default=current_time())
     end_date = db.Column(db.DateTime, default=month_subscribe(current_time()))
 
@@ -112,3 +112,12 @@ class Game_User(db.Model):
     # Relationships back to Game and User
     game = db.relationship('Game', back_populates='users')
     user = db.relationship('User', back_populates='games')
+
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    rating = db.Column(db.Integer)
+    feedback = db.Column(db.Text)
+    date = db.Column(db.DateTime, default=current_time())
