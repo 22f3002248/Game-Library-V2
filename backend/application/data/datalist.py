@@ -211,20 +211,19 @@ GAMES = [
 ]
 
 GENRES = [
-    {"title": "Action", "desc": "Games that emphasize physical challenges and hand-eye coordination."},
-    {"title": "Adventure", "desc": "Games focused on exploration and puzzle-solving."},
-    {"title": "RPG", "desc": "Role-playing games where players control a character in a fictional world."},
-    {"title": "Strategy", "desc": "Games that emphasize planning and tactics."},
-    {"title": "Shooter", "desc": "Games that focus on ranged weapon combat."},
-    {"title": "Sports", "desc": "Games that simulate real-world or fantasy sports."},
-    {"title": "Racing", "desc": "Games that involve racing vehicles or characters."},
-    {"title": "Simulation", "desc": "Games that simulate real-world activities."},
-    {"title": "Puzzle", "desc": "Games that require problem-solving."},
-    {"title": "Fighting", "desc": "Games that involve hand-to-hand combat."},
-    {"title": "Horror", "desc": "Games that aim to scare the player."},
-    {"title": "Survival", "desc": "Games that focus on surviving in a hostile environment."}
+    {"title": "Action", "description": "Games that emphasize physical challenges and hand-eye coordination."},
+    {"title": "Adventure", "description": "Games focused on exploration and puzzle-solving."},
+    {"title": "RPG", "description": "Role-playing games where players control a character in a fictional world."},
+    {"title": "Strategy", "description": "Games that emphasize planning and tactics."},
+    {"title": "Shooter", "description": "Games that focus on ranged weapon combat."},
+    {"title": "Sports", "description": "Games that simulate real-world or fantasy sports."},
+    {"title": "Racing", "description": "Games that involve racing vehicles or characters."},
+    {"title": "Simulation", "description": "Games that simulate real-world activities."},
+    {"title": "Puzzle", "description": "Games that require problem-solving."},
+    {"title": "Fighting", "description": "Games that involve hand-to-hand combat."},
+    {"title": "Horror", "description": "Games that aim to scare the player."},
+    {"title": "Survival", "description": "Games that focus on surviving in a hostile environment."}
 ]
-
 
 
 feedbacks = [

@@ -1,16 +1,17 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-3xl p-4">
-      <div class="bg-neutral text-white p-6 rounded-lg shadow-lg">
+  <div class="min-w-screen flex">
+  <navbarCompVertical></navbarCompVertical>
+    <div class="flex-1">
+      <div class="bg-accent-content text-white p-6 rounded-lg shadow-lg w-full h-full">
         <h1
           class="text-3xl text-center bg-primary-content text-accent p-4 rounded-lg"
         >
-          Genre
+         Add Genre
         </h1>
         <hr class="my-4" />
 
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success">
+        <div v-if="showMessage" class="alert alert-success h-10 mb-3">
           {{ message }}
         </div>
 
@@ -18,54 +19,73 @@
           <!-- Add Genre Button -->
           <button
             type="button"
-            class="btn btn-outline btn-accent"
+            class="btn btn-sm btn-accent"
             @click="showAddGenre = true"
           >
             Add Genre
           </button>
 
           <!-- Show Data Button -->
+          <div v-if="showBtn">
           <button
             type="button"
-            class="btn btn-outline btn-info"
-            @click="showDataAll"
+            class="btn btn-sm btn-info"
+            @click="showData=true,showBtn=false,showFilterForm=false,showFilterData=false"
           >
             Show Data
           </button>
+          </div> 
 
-          <!-- Close Data Button -->
+          <div>
+            <button
+                type="button"
+                class="btn btn-sm btn-secondary"
+                @click="showFilterForm=true,showData=false,showBtn=true"
+            >
+               Filter
+            </button>
+          </div>
         </div>
 
         <br />
 
         <!-- Genre Table -->
-        <div v-if="showData">
-          <button
-            type="button"
-            class="btn btn-outline btn-error"
-            @click="closeDataAll"
-          >
-            Close Data
-          </button>
+        <div v-if="showData" class="flex">
           <table class="table w-full">
-            <thead>
+            <thead class="text-accent">
               <tr>
                 <th>Id</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(genre, id) in genres" :key="id" class="text-accent">
+              <tr v-for="(genre, id) in genres" :key="id" class="text-grey">
                 <td>{{ genre.id }}</td>
                 <td>{{ genre.title }}</td>
                 <td>{{ genre.description || 'No Description' }}</td>
+                <td>
+                  <button
+                      @click="deleteGenre(genre)"
+                      class="btn btn-error btn-sm mr-2"
+                    >
+                      Delete
+                    </button>
+                </td>
               </tr>
             </tbody>
           </table>
+          <button
+            type="button"
+            class="btn btn-error mr-5 ml-0"
+            @click="showData=false,showBtn=true"
+          >
+            X
+          </button>
         </div>
 
-        <div class="flex justify-start">
+        <div v-if="showFilterForm" class="flex justify-start">
           <form @submit="onFilter">
             <div>
               <label
@@ -73,52 +93,43 @@
                 class="block text-sm font-medium text-accent mb-1"
                 >Genre(s)</label
               >
-              <select
-                id="genres"
-                v-model="addGameForm.select"
-                class="mt-1 select select-accent w-full max-w-xs"
-                required
-                multiple
-              >
-                <option disabled value="" class="text-grey-700">
-                  Select Genre(s)
-                </option>
-                <option
-                  v-for="genre in genres"
-                  :key="genre.id"
-                  :value="genre.id"
-                  class="text-grey-700 hover:bg-accent"
-                >
-                  {{ genre.title }}
-                </option>
-              </select>
+              <div id="genres">
+                <label v-for="genre in genres" :key="genre.id" class="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    v-model="addGameForm.select"
+                    :value="genre.id"
+                    class="checkbox checkbox-accent"
+                  />
+                  <span class="text-grey-700">{{ genre.title }}</span>
+                </label>
+              </div>
             </div>
             <div>
               <button
                 type="submit"
-                class="btn btn-outline btn-accent ml-3 mb-3"
+                class="btn btn-sm btn-accent ml-3 mt-3"
               >
-                Filter
+                OK
               </button>
             </div>
-            <p class="mt-1 text-xs text-gray-500">
-              Hold down the Ctrl (Windows) or Command (Mac) button to select
-              multiple options.
-            </p>
           </form>
         </div>
 
+    <div v-if="showFilterData">
+      <div v-if="greenFlag" class="mt-5 text-center text-bold text-error">Games not found</div>
+      <div v-else>
         <table class="table w-full">
-          <thead>
+        
+          <thead class="text-accent">
             <tr>
               <th>Id</th>
               <th>Title</th>
               <th>Genre</th>
-              <th>Played</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(game, id) in filterGames" :key="id" class="text-accent">
+            <tr v-for="(game, id) in filterGames" :key="id">
               <td>{{ game.id }}</td>
               <td>{{ game.title }}</td>
               <td>
@@ -127,13 +138,12 @@
                   <!-- Joining genre titles with a comma -->
                 </span>
               </td>
-              <td>
-                <span v-if="game.played">Yes</span>
-                <span v-else>No</span>
-              </td>
             </tr>
           </tbody>
         </table>
+      </div>
+      
+    </div>
 
         <!-- Add Genre Dialog -->
         <div>
@@ -161,16 +171,17 @@
                       />
                     </div>
 
-                    <div class="form-control mt-4 text-accent">
-                      <label for="form-genre-input">Description</label>
-                      <input
-                        id="form-genre-input"
-                        type="text"
-                        v-model="addGenreForm.description"
-                        required
-                        placeholder="Enter Description"
-                        class="input input-bordered mt-2"
-                      />
+                    <div class="form-control mt-4 text-grey">
+                      <label for="form-genre-textarea">Description</label>
+                        <textarea
+                          id="form-genre-textarea"
+                          v-model="addGenreForm.description"
+                          required
+                          placeholder="Enter Description"
+                          class="input input-bordered mt-2"
+                          rows="5"
+                          cols="5"
+                        ></textarea>
                     </div>
 
                     <div class="mt-4">
@@ -196,18 +207,19 @@
         </div>
 
         <!-- Footer -->
-        <footer
+        <!-- <footer
           class="bg-primary-content text-accent p-4 text-center mt-6 rounded-lg"
         >
           Copyright &copy;, All Rights Reserved 2024.
-        </footer>
+        </footer> -->
       </div>
-    </div>
+    </div>  
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import navbarCompVertical from '../components/navbarCompVertical.vue';
 import {
   Dialog,
   DialogPanel,
@@ -222,6 +234,7 @@ export default {
     DialogPanel,
     DialogTitle,
     TransitionRoot,
+    navbarCompVertical
   },
 
   data() {
@@ -237,18 +250,22 @@ export default {
       },
       message: '',
       showMessage: false,
-      showData: false,
+      showData: true,
       showAddGenre: false,
+      showBtn:false,
+      showFilterForm:false,
+      showFilterData:false,
+      greenFlag:false,
     }
   },
   methods: {
     getGenre() {
-      const path = 'http://localhost:5000/api/genre'
+      const path = 'http://localhost:5000/admin/genre'
       axios
         .get(path)
         .then((res) => {
           this.genres = res.data.genres //marshal problem wrapping
-          // console.log(this.genres)
+          console.log(this.genres)
         })
         .catch((err) => {
           console.error(err)
@@ -256,7 +273,7 @@ export default {
     },
     // POST function
     addGenre(payload) {
-      const path = 'http://localhost:5000/api/genre'
+      const path = 'http://localhost:5000/admin/genre'
       axios.post(path, payload).then(() => {
         this.getGenre()
         // Game alert
@@ -282,12 +299,16 @@ export default {
       this.initForm()
     },
     getGames(genre_ids) {
-      const path = `http://localhost:5000/api/genre/${genre_ids}`
+      const path = `http://localhost:5000/admin/genre/${genre_ids}`
       axios
         .get(path)
         .then((res) => {
-          this.filterGames = res.data.games
-        })
+          this.greenFlag=false
+          this.filterGames = res.data.games;
+          if(this.filterGames===undefined){
+            this.greenFlag=true;
+          }
+          })
         .catch((err) => {
           console.error(err)
         })
@@ -297,15 +318,31 @@ export default {
       const genre_ids = this.addGameForm.select
         .map((id) => parseInt(id))
         .join(',')
-      this.initForm()
-      this.getGames(genre_ids)
+      this.showFilterData=true;  
+      this.initForm();
+      this.getGames(genre_ids);
     },
-    showDataAll() {
-      this.showData = true
+    removeGenre(genre_id){
+      const path = `http://localhost:5000/admin/genre/${genre_id}`
+      axios
+        .delete(path)
+        .then(() => {
+          this.getGenre()
+          this.message = 'Genre Removed!'
+          this.showMessage = true
+        })
+        .catch((err) => {
+          console.log(err)
+          this.getGenre()
+        })
     },
-    closeDataAll() {
-      this.showData = false
+    deleteGenre(genre) {
+    // Confirmation prompt before deletion
+      if (confirm(`Are you sure you want to delete the genre: ${genre.title}?`)) {
+      this.removeGenre(genre.id);
+      }
     },
+    
   },
   created() {
     this.getGenre()
