@@ -28,7 +28,7 @@ genres_parser.add_argument(
 )
 
 
-class GenreResource(Resource):
+class AGenreResource(Resource):
     def get(self):
         genres = genre_model.query.all()
         return {'status': 'success', 'genres': marshal(genres, genre_fields)}

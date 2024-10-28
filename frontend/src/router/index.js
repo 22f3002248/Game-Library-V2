@@ -23,6 +23,11 @@ const routes = [
     component: adminAllGamesView,
   },
   { path: '/game/:gameid', name: 'gamePageView', component: gamePageView },
+  {
+    path: '/admin/allgames',
+    name: 'adminAllGamesView',
+    component: adminAllGamesView,
+  },
   { path: '/page-not-found', name: 'pageNotFound', component: pageNotFound },
   { path: '/:pathMatch(.*)*', component: pageNotFound },
 ]

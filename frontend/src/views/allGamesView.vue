@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     getallGames() {
-      const path = `http://127.0.0.1:5000/api/games`
+      const path = `http://127.0.0.1:5000/admin/games`
       axios
         .get(path)
         .then((res) => {

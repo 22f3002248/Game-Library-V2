@@ -55,7 +55,7 @@ def create_genres():
                 title=genre_data["title"]).first()
             if not genre:
                 new_genre = genre_model(
-                    title=genre_data["title"], description=genre_data["desc"])
+                    title=genre_data["title"], description=genre_data["description"])
                 db.session.add(new_genre)
         db.session.commit()
 

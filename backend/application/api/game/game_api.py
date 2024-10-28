@@ -1,5 +1,5 @@
-from datetime import datetime
 import os
+from datetime import datetime
 
 from application.api.game.genre_api import genre_fields
 from application.data.database import db
@@ -23,8 +23,8 @@ game_fields = {
     'price': fields.Float,
     'multiplayer': fields.Boolean,
     'no_of_downloads': fields.Integer,
-    'played': fields.Boolean,
     'poster': fields.String(attribute=lambda x: x.get_cover_image())
+
 }
 
 
