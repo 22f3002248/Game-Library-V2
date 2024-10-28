@@ -1,0 +1,222 @@
+<!-- BOOK UPLOAD MODAL -->
+          <b-modal id="upload-modal" size="xl" hide-footer>
+            <template #modal-title>Upload EBook</template>
+            <b-container fluid>
+              <b-row>
+                <!-- Left Column: Book Picture and PDF File Selection -->
+                <b-col md="5" class="d-flex flex-column align-items-center">
+                  <b-form-group
+                    label="Book Picture:"
+                    label-for="book-picture-input"
+                  >
+                    <b-form-file
+                      id="book-picture-input"
+                      v-model="form.bookPicture"
+                      accept="image/*"
+                      @change="onImageChange"
+                    >
+                    </b-form-file>
+                    <div v-if="imagePreview" class="mt-3">
+                      <img
+                        :src="imagePreview"
+                        alt="Book Picture Preview"
+                        style="max-width: 200px; height: auto"
+                      />
+                    </div>
+                  </b-form-group>
+
+                  <b-form-group label="Book PDF:" label-for="book-pdf-input">
+                    <b-form-file
+                      id="book-pdf-input"
+                      v-model="form.bookPdf"
+                      accept="application/pdf"
+                    >
+                    </b-form-file>
+                  </b-form-group>
+                </b-col>
+
+                <!-- Right Column: Book Details Form -->
+                <b-col md="7">
+                  <b-form @submit="onSubmit" @reset="onReset">
+                    <b-form-group
+                      label="Book Title:"
+                      label-for="book-title-input"
+                    >
+                      <b-form-input
+                        id="book-title-input"
+                        v-model="form.bookname"
+                        type="text"
+                        placeholder="Enter Book Title"
+                        required
+                      >
+                      </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group label="Author:" label-for="author-input">
+                      <b-form-input
+                        id="author-input"
+                        v-model="form.author"
+                        type="text"
+                        placeholder="Enter Author"
+                        required
+                      >
+                      </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group label="Section:" label-for="section-input">
+                      <b-form-select
+                        id="section-input"
+                        v-model="form.section"
+                        :options="Sections"
+                        required
+                      >
+                      </b-form-select>
+                    </b-form-group>
+
+                    <b-form-group label="Price:" label-for="price-input">
+                      <b-form-input
+                        id="price-input"
+                        v-model="form.price"
+                        type="number"
+                        placeholder="Enter Price"
+                        required
+                        step="0.1"
+                        min="0"
+                      >
+                      </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group label="No of Pages:" label-for="pages-input">
+                      <b-form-input
+                        id="pages-input"
+                        v-model="form.noofpages"
+                        type="number"
+                        placeholder="Enter No. of Pages"
+                        required
+                        min="0"
+                      >
+                      </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group label="Summary:" label-for="content-input">
+                      <b-form-textarea
+                        id="content-input"
+                        placeholder="Summary"
+                        v-model="form.content"
+                        rows="3"
+                        max-rows="8"
+                      >
+                      </b-form-textarea>
+                    </b-form-group>
+
+                    <!-- Submit and Clear Buttons -->
+                    <b-button type="submit" variant="primary">Upload</b-button>
+                    <b-button type="reset" variant="danger">Reset</b-button>
+                  </b-form>
+                </b-col>
+              </b-row>
+            </b-container>
+          </b-modal>
+
+
+
+onImageChange(event) {
+      const file = event.target.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.imagePreview = e.target.result
+        }
+        reader.readAsDataURL(file)
+      } else {
+        this.imagePreview = null
+      }
+    },
+
+
+class BookListResource(Resource):
+    @cache.cached(timeout=60)
+    @auth_required("token")
+    def get(self):
+        books = book_model.query.filter_by(available=True).all()
+        response = []
+        for book in books:
+            # Assuming that the static files are being served from /static/covers/
+            cover_filename = f"{book.bookid}.jpg"
+            cover_path = os.path.join(
+                app.root_path, 'static', 'covers', cover_filename)
+
+            if not os.path.exists(cover_path):
+                # Use a default image if the specific cover does not exist
+                cover_filename = "NoCover.jpg"
+
+            cover_url = url_for(
+                'static', filename=f'covers/{cover_filename}', _external=True)
+            response.append({
+                'bookid': book.bookid,
+                'bookname': book.bookname,
+                'author': book.author,
+                'sectionid': book.sectionid,
+                'price': float(book.price),
+                'rating': float(book.rating),
+                'noofpages': book.noofpages,
+                'section': book.section.secname,
+                'available': book.available,
+                'cover_image': cover_url  # This now points directly to the static file
+            })
+        return {"status": "success", "Books": response}
+
+    @auth_required("token")
+    @roles_required('admin')
+    def post(self):
+        bookname = request.form.get('bookname')
+        already = book_model.query.filter_by(bookname=bookname).first()
+        if already:
+            return jsonify({"status": "failure", 'message': 'Book with the same name already exists !'})
+
+        author = request.form.get('author')
+        # Ensure sectionid is an integer
+        sectionid = int(request.form.get('sectionid'))
+        content = request.form.get('content')
+        price = float(request.form.get('price'))  # Convert to float if needed
+        # Convert to int if needed
+        noofpages = int(request.form.get('noofpages'))
+
+        book = book_model(
+            bookname=bookname,
+            content=content,
+            author=author,
+            sectionid=sectionid,
+            price=price,
+            noofpages=noofpages,
+        )
+
+        db.session.add(book)
+        db.session.commit()
+        new_book = book_model.query.filter_by(bookname=bookname).first()
+        n = new_book.bookid
+
+        # Handle book cover
+        cover = request.files.get('cover')
+        if cover:
+            picextension = '.jpg'
+            cover_filename = f"{n}{picextension}"
+            cover_path = os.path.join(UPLOAD_FOLDER, 'covers', cover_filename)
+            cover.save(cover_path)
+        else:
+            cover_filename = 'NoCover.jpg'
+
+        # Handle PDF
+        pdfloc = request.files.get('pdfloc')
+        if pdfloc:
+            pdfextension = '.pdf'
+            pdf_filename = f"{n}{pdfextension}"
+            pdf_path = os.path.join(UPLOAD_FOLDER, 'pdfs', pdf_filename)
+            pdfloc.save(pdf_path)
+        else:
+            pdf_filename = 'notavailable.pdf'
+
+        # Create and save the book object
+
+        cache.clear()
+        return jsonify({"status": "success", 'message': 'New book added successfully !'})

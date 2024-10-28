@@ -8,13 +8,20 @@ import adminDash from '../views/adminDash.vue'
 import pageNotFound from '../views/pageNotFound.vue'
 import gamePageView from '../views/gamePageView.vue'
 import allGamesView from '../views/allGamesView.vue'
+import adminAllGamesView from '../views/adminAllGamesView.vue'
 
 const routes = [
   { path: '/', name: 'landingView', component: landingView }, // working
   { path: '/user-dashboard', name: 'userDash', component: userDash },
-  { path: '/genre', name: 'genreView', component: genreView },
   { path: '/games', name: 'allGamesView', component: allGamesView },
-  { path: '/admin-dashboard', name: 'adminDash', component: adminDash }, // working
+  { path: '/admin/genre', name: 'genreView', component: genreView },
+  { path: '/admin/games', name: 'gameView', component: gameView },
+  { path: '/admin-dashboard', name: 'adminDash', component: adminDash },
+  {
+    path: '/admin/allgames',
+    name: 'adminAllGamesView',
+    component: adminAllGamesView,
+  },
   { path: '/game/:gameid', name: 'gamePageView', component: gamePageView },
   { path: '/page-not-found', name: 'pageNotFound', component: pageNotFound },
   { path: '/:pathMatch(.*)*', component: pageNotFound },

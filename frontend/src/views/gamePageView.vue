@@ -43,10 +43,32 @@
             style="width: 300px; height: 400px"
           />
           <br />
-          <div class="flex flex-col space-y-2">
-            <button class="btn btn-primary w-full">Buy</button>
-            <button class="btn btn-secondary w-full">Subscribe</button>
-            <button class="btn w-full">Add to Wishlist</button>
+          <div v-if="this.completed == true">
+            <div class="flex flex-col space-y-2">
+              <p>You have completed this game</p>
+              <button class="btn btn-secondary w-full">Download</button>
+            </div>
+          </div>
+          <div v-else>
+            <div class="flex flex-col space-y-2">
+              <p v-if="this.purchased == true">You have purchased this game</p>
+              <p v-if="this.subscribed == true && this.purchased == false">
+                You have subscribed
+              </p>
+              <button class="btn btn-secondary w-full">Download</button>
+            </div>
+          </div>
+          <div
+            v-if="
+              this.subscribed == false &&
+              this.purchased == false &&
+              this.completed == false
+            "
+          >
+            <div class="flex flex-col space-y-2">
+              <button class="btn btn-primary w-full">Buy</button>
+              <button class="btn btn-secondary w-full">Subscribe</button>
+            </div>
           </div>
         </div>
 
@@ -83,13 +105,116 @@
       </div>
 
       <!-- Reviews Section -->
+
       <div class="mt-4">
-        <h4 class="text-md font-semibold">Reviews:</h4>
-        <!-- Add review section or display reviews -->
+        <h4 class="text-md font-semibold">Your Review:</h4>
+
+        <!-- User rating -->
+        <div class="rating mt-2">
+          <input
+            type="radio"
+            name="user-rating"
+            value="1"
+            v-model="userRating"
+            class="mask mask-star"
+          />
+          <input
+            type="radio"
+            name="user-rating"
+            value="2"
+            v-model="userRating"
+            class="mask mask-star"
+          />
+          <input
+            type="radio"
+            name="user-rating"
+            value="3"
+            v-model="userRating"
+            class="mask mask-star"
+          />
+          <input
+            type="radio"
+            name="user-rating"
+            value="4"
+            v-model="userRating"
+            class="mask mask-star"
+          />
+          <input
+            type="radio"
+            name="user-rating"
+            value="5"
+            v-model="userRating"
+            class="mask mask-star"
+          />
+        </div>
+
         <textarea
+          v-model="user_review.feedback"
           class="textarea w-full h-24 mt-2"
           placeholder="Write your review here..."
         ></textarea>
+        <button @click="submitReview" class="btn mt-2">
+          {{ userHasReviewed ? 'Update Review' : 'Submit Review' }}
+        </button>
+
+        <div v-if="userHasReviewed" class="mt-4">
+          <button @click="deleteReview()" class="btn btn-error">
+            Delete Review
+          </button>
+        </div>
+
+        <h4 class="text-md font-semibold mt-6">All Reviews:</h4>
+        <div v-for="review in reviews" :key="review.id" class="border-b py-2">
+          <p>
+            <strong>{{ review.username }}</strong> ({{ review.email }})
+          </p>
+
+          <!-- Other user rating -->
+          <div class="rating mt-2">
+            <input
+              type="radio"
+              :name="'rating-' + review.id"
+              value="1"
+              :checked="review.rating === 1"
+              class="mask mask-star"
+              disabled
+            />
+            <input
+              type="radio"
+              :name="'rating-' + review.id"
+              value="2"
+              :checked="review.rating === 2"
+              class="mask mask-star"
+              disabled
+            />
+            <input
+              type="radio"
+              :name="'rating-' + review.id"
+              value="3"
+              :checked="review.rating === 3"
+              class="mask mask-star"
+              disabled
+            />
+            <input
+              type="radio"
+              :name="'rating-' + review.id"
+              value="4"
+              :checked="review.rating === 4"
+              class="mask mask-star"
+              disabled
+            />
+            <input
+              type="radio"
+              :name="'rating-' + review.id"
+              value="5"
+              :checked="review.rating === 5"
+              class="mask mask-star"
+              disabled
+            />
+          </div>
+
+          <p>{{ review.feedback }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -127,6 +252,15 @@ export default {
       modal_no_of_downloads: 0,
       isvisible: false,
       message: '',
+      purchased: false,
+      subscribed: false,
+      access: false,
+      completed: false,
+      user_review: '',
+      reviews: '',
+      userHasReviewed: false, // Track if the user has added a review
+      currentReviewId: null,
+      userRating: 0,
     }
   },
   methods: {
@@ -170,12 +304,90 @@ export default {
           this.alert_type = 'alert-error'
         })
     },
-  },
-  created() {
-    this.getGame()
+    getGamePhotos() {
+      const path = `http://127.0.0.1:5000/api/game/${this.gameid}/photos`
+      axios
+        .get(path, {})
+        .then((res) => {
+          // console.log(res)
+          if (res.data.status == 'success') {
+            this.images = res.data.photos
+          }
+        })
+        .catch(() => {
+          // console.log(res)
+          this.isvisible = true
+          this.message = 'some error'
+          this.alert_type = 'alert-error'
+        })
+    },
+    checkPurchase() {
+      const userid = this.$store.getters.get_userid
+      const path = `http://127.0.0.1:5000/api/check/purchase/${userid}/${this.gameid}`
+      axios
+        .get(path, {})
+        .then((res) => {
+          // console.log(res)
+          if (res.data.status == 'success') {
+            this.purchased = res.data.purchased
+            this.subscribed = res.data.subscribed
+            this.completed = res.data.completed
+          }
+        })
+        .catch(() => {
+          // console.log(res)
+          this.isvisible = true
+          this.message = 'some error'
+          this.alert_type = 'alert-error'
+        })
+    },
+    checkReview() {
+      const userid = this.$store.getters.get_userid
+      const path = `http://127.0.0.1:5000/api/review/modify/${userid}/${this.gameid}`
+      axios
+        .get(path, {})
+        .then((res) => {
+          // console.log(res)
+          if (res.data.status == 'success') {
+            this.userRating = res.data.review.rating
+            this.userHasReviewed = true
+            this.user_review = res.data.review
+            // console.log(this.userRating, this.user_review)
+          }
+        })
+        .catch(() => {
+          // console.log(res)
+          this.isvisible = true
+          this.message = 'some error'
+          this.alert_type = 'alert-error'
+        })
+    },
+    getAllReviews() {
+      const path = `http://127.0.0.1:5000/api/review/${this.$route.params.gameid}`
+      axios
+        .get(path, {})
+        .then((res) => {
+          console.log(res)
+          if (res.data.status == 'success') {
+            this.reviews = res.data.reviews
+          }
+        })
+        .catch(() => {
+          // console.log(res)
+          this.isvisible = true
+          this.message = 'some error'
+          this.alert_type = 'alert-error'
+        })
+    },
+    deleteReview() {},
+    submitReview() {},
   },
   beforeMount() {
     this.getGame()
+    this.getGamePhotos()
+    this.checkPurchase()
+    this.checkReview()
+    this.getAllReviews()
   },
 }
 </script>

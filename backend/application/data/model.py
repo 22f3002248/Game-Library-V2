@@ -45,6 +45,7 @@ class Game(db.Model):
     genres = db.relationship(
         'Genre', secondary=game_genre_association, backref='games', lazy=True)
     users = db.relationship('Game_User', back_populates='game')
+    reviews = db.relationship('Review', back_populates='game')
 
     def get_cover_image(self):
         cover_filename = f"{self.id}.jpg"
@@ -55,6 +56,17 @@ class Game(db.Model):
         cover_url = url_for(
             'static', filename=f'game_posters/{cover_filename}', _external=True)
         return cover_url
+
+
+class GamePhoto(db.Model):
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), primary_key=True)
+    game_title = db.Column(db.Text, default=None)
+    picture1 = db.Column(db.Text, default=None)
+    picture2 = db.Column(db.Text, default=None)
+    picture3 = db.Column(db.Text, default=None)
+    picture4 = db.Column(db.Text, default=None)
+    picture5 = db.Column(db.Text, default=None)
+    game = db.relationship('Game', backref='photos')
 
 
 class Genre(db.Model):
@@ -99,6 +111,7 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary='roles_users',
                             backref=db.backref('users', lazy='dynamic'))
     games = db.relationship('Game_User', back_populates='user')
+    reviews = db.relationship('Review', back_populates='user')
 
 
 class Game_User(db.Model):
@@ -121,3 +134,5 @@ class Review(db.Model):
     rating = db.Column(db.Integer)
     feedback = db.Column(db.Text)
     date = db.Column(db.DateTime, default=current_time())
+    game = db.relationship('Game', back_populates='reviews')
+    user = db.relationship('User', back_populates='reviews')

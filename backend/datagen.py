@@ -2,10 +2,11 @@ import random
 from datetime import datetime
 
 from application.data.database import db
-from application.data.datalist import GAMES, GENRES, feedbacks
+from application.data.datalist import GAMES, GENRES, feedbacks, game_images
 from application.data.datastore import ds
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
+from application.data.model import GamePhoto as game_photos_model
 from application.data.model import Genre as genre_model
 from application.data.model import Review as review_model
 from application.data.model import Role as role_model
@@ -132,4 +133,30 @@ def gen_reviews():
                                rating=random.randint(2, 5),
                                feedback=random.choice(feedbacks))
             db.session.add(rev)
+        db.session.commit()
+
+
+def create_game_photos():
+    if not game_photos_model.query.all():  # Only add if the table is empty
+        for game_data in GAMES:
+            game = game_model.query.filter_by(title=game_data["title"]).first()
+            if game:
+                photos_data = game_images.get(game.title)
+                if photos_data:
+                    # Add up to 5 pictures (if available)
+                    new_game_photos = game_photos_model(
+                        game_id=game.id,
+                        game_title=game.title,
+                        picture1=photos_data[0] if len(
+                            photos_data) > 0 else None,
+                        picture2=photos_data[1] if len(
+                            photos_data) > 1 else None,
+                        picture3=photos_data[2] if len(
+                            photos_data) > 2 else None,
+                        picture4=photos_data[3] if len(
+                            photos_data) > 3 else None,
+                        picture5=photos_data[4] if len(
+                            photos_data) > 4 else None
+                    )
+                    db.session.add(new_game_photos)
         db.session.commit()

@@ -9,8 +9,8 @@ from application.worker import celery_init_app
 from celery.result import AsyncResult
 from celery.schedules import crontab
 from config import devconfig
-from datagen import (assign_games_to_users, create_games, create_genres, gen,
-                     gen_reviews)
+from datagen import (assign_games_to_users, create_game_photos, create_games,
+                     create_genres, gen, gen_reviews)
 from flask import Flask, jsonify, send_file
 from flask_cors import CORS
 from flask_security import Security
@@ -22,6 +22,7 @@ db.init_app(app)
 security = Security(app, ds)
 api = initialize_api(app)
 
+
 with app.app_context():
     db.create_all()
     gen()
@@ -29,6 +30,7 @@ with app.app_context():
     create_games()
     assign_games_to_users()
     gen_reviews()
+    create_game_photos()
 
 
 @app.route('/run-simple-task')
@@ -37,13 +39,13 @@ def simple_task():
     return jsonify({'task_id': res.id})
 
 
-@app.route('/run-task')
+@app.route('/download-installer')
 def installer_task():
     res = send_installer.delay()
     return jsonify({'task_id': res.id})
 
 
-@app.route('/task-result/<task_id>')
+@app.route('/result-download-installer/<task_id>')
 def installer_task_result(task_id):
     res = AsyncResult(task_id)
     if res.ready():
@@ -79,5 +81,4 @@ def celery_tasks(sender, **kwargs):
 
 
 if __name__ == "__main__":
-
     app.run(debug=True)

@@ -65,43 +65,32 @@ def month_subscribe(dt):
 
 class CheckPurchase(Resource):
     def get(self, userid, gameid):
-        gu = gu_model.query.filter_by(userid=userid, gameid=gameid).first()
-        if gu.purchased:
-            return {'status': 'success',
-                    'message': "You have purchased this game",
-                    'type': 'purchase'}
-        elif gu.subscribed:
-            return {'status': 'success',
-                    'message': "You have subscribed to this game",
-                    'type': 'subscribe'}
-        elif gu.completed:
-            return {'status': 'success',
-                    'message': "You have completed this game",
-                    'type': 'completed'}
-        else:
-            return {'status': 'failure',
-                    'message': "You have no access to this game",
-                    'type': 'no access'}
+        gu = gu_model.query.filter_by(user_id=userid, game_id=gameid).first()
+        return {"status": "success", "purchased": gu.purchased,
+                "subscribed": gu.subscribed, "completed": gu.completed}
 
 
 class PurchaseResource(Resource):
     def get(self, userid, gameid):
         gu = gu_model.query.filter_by(userid=userid, gameid=gameid).first()
-        if gu and gu.purchased:
+        if gu.purchased:
             return {'status': 'failure',
                     'message': "You have already purchased this game",
                     'type': 'already purchased'}
-        pur = gu_model(userid=userid, gameid=gameid, purchased=True)
-        db.session.add(pur)
-        db.session.commit()
+        if gu:
+            gu.purchased = True
+            db.session.commit()
+        else:
+            pur = gu_model(userid=userid, gameid=gameid, purchased=True)
+            db.session.add(pur)
+            db.session.commit()
         return {'status': 'success',
                 'message': "You have purchased this game",
                 'type': 'purchased'}
 
 
 class GetPurchasedResource(Resource):
-    def get(self):
-        uid = user_parser.parse_args().get('userid')
+    def get(self, uid):
         if not uid:
             return {'status': 'failure',
                     'message': "User not found"}
@@ -129,29 +118,26 @@ class GetPurchasedResource(Resource):
 
 
 class GetAllPurchasedResource(Resource):
-    def get(self):
-        uid = user_parser.parse_args().get('userid')
-        if not uid:
-            return {'status': 'failure',
-                    'message': "User not found"}
-        if user_model.query.filter_by(id=int(uid)).first().roles[0].name != 'admin' or uid != 1:
-            return {'status': 'failure',
-                    'message': "unauthorized"}
-        else:
-            purchased_games = db.session.query(gu_model, game_model, user_model)\
-                .join(game_model, gu_model.gameid == game_model.id)\
-                .join(user_model, gu_model.userid == user_model.id)\
-                .filter(gu_model.userid == uid, gu_model.purchased == True).all()
+    def get(self, userid):
+        user = user_model.query.filter_by(id=userid).first()
+        if not user:
+            return {'status': 'failure', 'message': "User not found"}, 404
+        if user.roles[0].name != 'admin':
+            return {'status': 'failure', 'message': "Unauthorized"}, 403
+        purchased_games = db.session.query(gu_model, game_model, user_model)\
+            .join(game_model, gu_model.gameid == game_model.id)\
+            .join(user_model, gu_model.userid == user_model.id)\
+            .filter(gu_model.purchased == True).all()
+        result = [{
+            'userid': user.id,
+            'username': user.username,
+            'email': user.email,
+            'gameid': game.id,
+            'game_title': game.title,
+            'date': game_user.date.strftime('%Y-%m-%d %H:%M:%S'),
+            'purchased': game_user.purchased,
+            'subscribed': game_user.subscribed,
+            'completed': game_user.completed
+        } for game_user, game, user in purchased_games]
 
-            result = [{
-                'userid': user.id,
-                'username': user.username,
-                'email': user.email,
-                'gameid': game.id,
-                'game_title': game.title,
-                'date': game_user.date,
-                'purchased': game_user.purchased,
-                'subscribed': game_user.subscribed,
-                'completed': game_user.completed
-            } for game_user, game, user in purchased_games]
         return {'status': 'success', 'purchased': marshal(result, game_user_fields)}

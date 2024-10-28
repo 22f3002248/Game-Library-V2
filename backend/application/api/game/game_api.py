@@ -1,7 +1,13 @@
+from datetime import datetime
+import os
+
 from application.api.game.genre_api import genre_fields
 from application.data.database import db
 from application.data.model import Game as game_model
+from application.data.model import GamePhoto as game_photos_model
 from application.data.model import Genre as genre_model
+from flask import current_app as app
+from flask import request
 from flask_restx import Resource, fields, marshal, reqparse
 
 game_fields = {
@@ -30,7 +36,31 @@ games_parser.add_argument(
     'genre_ids', type=int, action='append', help="Genres must be provided as a list of genre IDs!"
 )
 games_parser.add_argument(
-    'played', type=bool, default=False, help="Played can be given optionally!"
+    'release_date', type=str, required=True, help="release_date is required!"
+)
+games_parser.add_argument(
+    'developer', type=str, required=True, help="developer is required!"
+)
+games_parser.add_argument(
+    'publisher', type=str, required=True, help="publisher is required!"
+)
+games_parser.add_argument(
+    'platform', type=str, required=True, help="platform is required!"
+)
+games_parser.add_argument(
+    'rating', type=float, required=True, help="rating is required!"
+)
+games_parser.add_argument(
+    'description', type=str, required=True, help="description is required!"
+)
+games_parser.add_argument(
+    'price', type=float, required=True, help="price is required!"
+)
+games_parser.add_argument(
+    'multiplayer', type=bool, required=True, help="multiplayer value is required!"
+)
+games_parser.add_argument(
+    'no_of_downloads', type=int, required=True, help="no_of_downloads is required"
 )
 
 
@@ -43,20 +73,60 @@ class GameResource(Resource):
 
     def post(self):
         args = games_parser.parse_args()
-        new_game = game_model(
-            title=args['title'],
-            played=args['played']
-        )
+        title = args['title']
+
+        if title:
+            new_game = game_model(
+                title=title,
+                release_date=args['release_date'],
+                developer=args['developer'],
+                publisher=args['publisher'],
+                platform=args['platform'],
+                rating=args['rating'],
+                description=args['description'],
+                price=args['price'],
+                multiplayer=args['multiplayer'],
+                no_of_downloads=args['no_of_downloads']
+            )
+
+        release_date = args['release_date']
+        if isinstance(release_date, str):
+            new_game.release_date = datetime.strptime(
+                release_date, '%Y-%m-%d').date()
+
         genre_ids = args.get('genre_ids', [])
-        print("Parsed genre_ids:", genre_ids)  # Debugging line
         if genre_ids:
-            # Fetch all genres by their IDs
             genres = genre_model.query.filter(
                 genre_model.id.in_(genre_ids)).all()
             new_game.genres = genres
+
         db.session.add(new_game)
         db.session.commit()
-        return {"status": 'success', 'message': 'game is added !'}
+
+        print(f"New game ID: {new_game.id}")
+
+        # File handling
+        file = request.files.get('poster')
+        print(file)
+        if file:
+            if file.filename == '':
+                return {'message': 'No selected file'}, 400
+
+            # Extract the file extension
+            file_extension = file.filename.rsplit(
+                '.', 1)[1].lower() if '.' in file.filename else ''
+
+            # Generate the new file name using the game ID and extension
+            new_filename = f"{new_game.id}.{file_extension}"
+            print(f"Saving file as: {new_filename}")
+
+            # Save the file in the specified location
+            file.save(os.path.join(
+                app.root_path, app.config['STATIC_FOLDER'], 'game_posters', new_filename))
+
+            return {'status': 'success', 'message': 'Game and poster added successfully!'}
+        else:
+            return {'status': 'success', 'message': 'Game added without poster!'}
 
 
 class SingleGameResource(Resource):
@@ -66,7 +136,6 @@ class SingleGameResource(Resource):
         return {'status': 'success', 'game': marshal(games, game_fields)}
 
     def put(self, id):
-        # print('here !')
         args = games_parser.parse_args()
         game = game_model.query.filter_by(id=id).first()
         if not game:
@@ -74,6 +143,20 @@ class SingleGameResource(Resource):
 
         if args.get('title'):
             game.title = args['title']
+            game.developer = args['developer']
+            game.publisher = args['publisher']
+            game.platform = args['platform']
+            game.rating = args['rating']
+            game.description = args['description']
+            game.price = args['price']
+            game.multiplayer = args['multiplayer']
+            game.no_of_downloads = args['no_of_downloads']
+
+        if args['release_date']:
+            release_date = args['release_date']
+            if isinstance(release_date, str):
+                game.release_date = datetime.strptime(
+                    release_date, '%Y-%m-%d').date()
 
         if args.get('genre_ids'):
             genre_ids = args['genre_ids']
@@ -81,8 +164,7 @@ class SingleGameResource(Resource):
                 genre_model.id.in_(genre_ids)).all()
             game.genres = genres  # Associate new genres
 
-        if args.get('played') is not None:  # Check if played is provided
-            game.played = args['played']
+        # file handling
 
         db.session.commit()
         return {"status": 'success', 'message': 'Game is updated!'}
@@ -100,9 +182,6 @@ class SingleGameResource(Resource):
         # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200
 
-        # Return a success response as a plain dictionary
-        return {"status": "success", "message": "game deleted!"}, 200
-
 
 class TopGameListResource(Resource):
     def get(self, no):
@@ -113,3 +192,21 @@ class TopGameListResource(Resource):
         if len(games) < 1:
             return {"status": "failure", "message": "games not found!"}
         return {'status': 'success', 'games': marshal(games, game_fields)}
+
+
+class GamePhotoResource(Resource):
+    def get(self, gameid):
+        gps = game_photos_model.query.filter_by(game_id=gameid).first()
+        if gps:
+            pic_res = []
+            if gps.picture1 != None:
+                pic_res.append(gps.picture1)
+            if gps.picture2 != None:
+                pic_res.append(gps.picture2)
+            if gps.picture3 != None:
+                pic_res.append(gps.picture3)
+            if gps.picture4 != None:
+                pic_res.append(gps.picture4)
+            if gps.picture5 != None:
+                pic_res.append(gps.picture5)
+            return {"status": "success", "photos": pic_res}
