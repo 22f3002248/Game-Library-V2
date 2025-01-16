@@ -52,6 +52,18 @@ class LoginResource(Resource):
         if not check_password_hash(user.password, pw):
             return {"status": "failure", "message": "Wrong password !"}, 404
         at = user.get_auth_token()
+        roles = user.roles
+        if len(roles) > 1:
+            return {"status": "success",
+                    "message": "You have successfully logged in !",
+                    "user": {
+                        "userid": user.id,
+                        "username": user.username,
+                        "email": user.email,
+                        "type": "admin",
+                        "auth_token": str(at),
+
+                    }}
         return {"status": "success",
                 "message": "You have successfully logged in !",
                 "user": {

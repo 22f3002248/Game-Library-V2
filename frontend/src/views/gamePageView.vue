@@ -275,7 +275,7 @@ export default {
             let gs = res.data.game.genres
             let grs = ''
             for (let i = 0; i < gs.length; i++) {
-              grs = grs.concat(gs[i].title)
+              grs = grs.concat(gs[i])
               if (i < gs.length - 1) {
                 grs = grs.concat(', ')
               }

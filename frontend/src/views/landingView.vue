@@ -329,8 +329,8 @@ export default {
           // if (res.data.status == 'success') {
           console.log(res.data.user)
           this.$store.dispatch('set_state_after_login', res.data.user)
-          if (this.$store.getters.get_role == 'admin') {
-            this.$router.push('/admin-dashboard')
+          if (this.$store.getters.get_type == 'admin') {
+            this.$router.push('/admin/games')
           } else {
             this.$router.push('/user-dashboard')
           }
@@ -384,7 +384,7 @@ export default {
         let gs = this.topGames[n].genres
         let grs = ''
         for (let i = 0; i < gs.length; i++) {
-          grs = grs.concat(gs[i].title)
+          grs = grs.concat(gs[i])
           if (i < gs.length - 1) {
             grs = grs.concat(', ') // Add comma between genres
           }

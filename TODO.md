@@ -25,3 +25,22 @@ add graph and profile update page
 _gmail functionality_
 
 _caching_
+
+NOTES
+
+-   remove navbar from landing page
+-   landing page card split
+-   modal styling
+-   message popup
+-   review management
+-   add genre card size
+-   textarea row increase
+-   add game rating remove, Number Of Downloads
+-   add game description textarea
+-   update remove rating, no of down, split the modal into right and left
+-   description textarea
+-   update modal game name
+-   admin/games open -> default game page not modal
+-   large number add commas
+-   delete game/genre prompt change to modal
+-   game images
