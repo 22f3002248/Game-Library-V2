@@ -99,7 +99,7 @@
             <strong>Multiplayer:</strong> {{ modal_multiplayer ? 'Yes' : 'No' }}
           </div>
           <div class="mb-2">
-            <strong>No. of Downloads:</strong> {{ modal_no_of_downloads }}
+            <strong>No. of Downloads:</strong> {{ modal_no_of_downloads.toLocaleString('en-IN') }}
           </div>
         </div>
       </div>
