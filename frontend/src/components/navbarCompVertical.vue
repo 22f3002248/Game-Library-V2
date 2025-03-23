@@ -37,7 +37,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="block text-white hover:bg-accent p-3 rounded-lg">
+          <a href="http://localhost:5173/admin/users" class="block text-white hover:bg-accent p-3 rounded-lg">
             Manage Users
           </a>
         </li>

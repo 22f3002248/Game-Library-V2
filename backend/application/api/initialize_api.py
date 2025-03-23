@@ -15,6 +15,7 @@ from application.api.purchase.subscription_api import (CheckSubscription,
                                                        SubscriptionResource)
 from application.api.reviews.review_api import (ModifyReviewResource,
                                                 ReviewResource)
+from application.api.user.user_api import AUserResource
 from flask_restx import Api
 
 
@@ -55,4 +56,5 @@ def initialize_api(app):
     api.add_resource(ASingleGenreResource, '/admin/genre/<int:id>')
     api.add_resource(GameResource, '/admin/games')
     api.add_resource(SingleGameResource, '/admin/games/<int:id>')
+    api.add_resource(AUserResource, '/admin/users')
     return api

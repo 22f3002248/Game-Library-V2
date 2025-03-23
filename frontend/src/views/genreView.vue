@@ -13,7 +13,7 @@
         <hr class="my-4" />
 
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success h-10 mb-3">
+        <div v-if="showMessage" class="alert alert-success m-3">
           {{ message }}
         </div>
 
@@ -21,7 +21,7 @@
           <!-- Add Genre Button -->
           <button
             type="button"
-            class="btn btn-sm btn-accent"
+            class="btn btn-sm btn-success"
             @click="showAddGenre = true"
           >
             Add Genre
@@ -76,7 +76,7 @@
                 <td>{{ genre.description || 'No Description' }}</td>
                 <td>
                   <button
-                    @click="deleteGenre(genre)"
+                    @click=";(showDeleteBox = true), deleteGenre(genre)"
                     class="btn btn-error btn-sm mr-2"
                   >
                     Delete
@@ -164,8 +164,10 @@
           >
             <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
               <div class="flex items-center justify-center min-h-screen">
-                <DialogPanel class="bg-neutral p-6 rounded-lg shadow-lg">
-                  <DialogTitle class="text-accent font-bold"
+                <DialogPanel
+                  class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg"
+                >
+                  <DialogTitle class="text-accent font-bold text-[1.7rem]"
                     >Add a New Genre</DialogTitle
                   >
                   <form @submit.prevent="onSubmitGenre" class="dialog-form">
@@ -188,9 +190,9 @@
                         v-model="addGenreForm.description"
                         required
                         placeholder="Enter Description"
-                        class="input input-bordered mt-2"
+                        class="input input-bordered mt-2 h-[100px]"
                         rows="5"
-                        cols="5"
+                        cols="25"
                       ></textarea>
                     </div>
 
@@ -216,6 +218,40 @@
           </TransitionRoot>
         </div>
 
+        <div>
+          <TransitionRoot
+            as="template"
+            :show="showDeleteBox"
+            @close="showDeleteBox = false"
+          >
+            <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
+              <div class="flex items-center justify-center min-h-screen">
+                <DialogPanel
+                  class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg"
+                >
+                  <DialogTitle class="text-accent font-bold text-[1.4rem] mb-4"
+                    >Are you sure you want to delete the genre:
+                    {{ genre_D_title }}?</DialogTitle
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-success ml-2"
+                    @click="removeGenre(this.genre_D_id)"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-error ml-2"
+                    @click="resetDelete()"
+                  >
+                    Cancel
+                  </button>
+                </DialogPanel>
+              </div>
+            </Dialog>
+          </TransitionRoot>
+        </div>
         <!-- Footer -->
         <!-- <footer
           class="bg-primary-content text-accent p-4 text-center mt-6 rounded-lg"
@@ -266,6 +302,9 @@ export default {
       showFilterForm: false,
       showFilterData: false,
       greenFlag: false,
+      showDeleteBox: false,
+      genre_D_id: 0,
+      genre_D_title: '',
     }
   },
   methods: {
@@ -275,7 +314,6 @@ export default {
         .get(path)
         .then((res) => {
           this.genres = res.data.genres //marshal problem wrapping
-          console.log(this.genres)
         })
         .catch((err) => {
           console.error(err)
@@ -339,6 +377,7 @@ export default {
         .then(() => {
           this.getGenre()
           this.message = 'Genre Removed!'
+          this.resetDelete()
           this.showMessage = true
         })
         .catch((err) => {
@@ -347,12 +386,13 @@ export default {
         })
     },
     deleteGenre(genre) {
-      // Confirmation prompt before deletion
-      if (
-        confirm(`Are you sure you want to delete the genre: ${genre.title}?`)
-      ) {
-        this.removeGenre(genre.id)
-      }
+      this.genre_D_id = genre.id
+      this.genre_D_title = genre.title
+    },
+    resetDelete() {
+      this.genre_D_id = 0
+      this.genre_D_title = ''
+      this.showDeleteBox = false
     },
   },
   created() {

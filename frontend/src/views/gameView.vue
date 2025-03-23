@@ -9,7 +9,7 @@
         <hr class="my-4" />
 
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success h-10 mb-3">
+        <div v-if="showMessage" class="alert alert-success m-3">
           {{ message }}
         </div>
 
@@ -31,6 +31,7 @@
               <th>Id</th>
               <th>Name</th>
               <th>Genre</th>
+              <th>No. of Downloads</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -61,7 +62,7 @@
                     Update
                   </button>
                   <button
-                    @click="deleteGames(game)"
+                    @click=";(showDeleteBox = true),(deleteGames(game))"
                     class="btn btn-error btn-sm mr-2"
                   >
                     Delete
@@ -181,7 +182,7 @@
             class="bg-accent-content p-6 rounded-lg shadow-lg w-full max-w-5xl z-50"
           >
             <DialogTitle
-              class="text-accent font-medium leading-6 bg-grey text-center text-2xl mb-5"
+              class="text-accent font-medium leading-6 bg-grey text-center mb-4 font-bold text-3xl"
             >
               Add New Game
             </DialogTitle>
@@ -405,9 +406,9 @@
                 class="w-full max-w-4xl transform overflow-hidden rounded-lg bg-accent-content p-6 shadow-xl transition-all z-50"
               >
                 <DialogTitle
-                  class="text-accent font-medium leading-6 bg-grey text-center"
+                  class="text-accent font-medium leading-6 bg-grey text-center mb-4 font-bold text-3xl underline"
                 >
-                  Update Game
+                  {{ editForm.title }}
                 </DialogTitle>
 
                 <form
@@ -586,6 +587,42 @@
         </Dialog>
       </TransitionRoot>
     </div>
+
+    <div>
+          <TransitionRoot
+            as="template"
+            :show="showDeleteBox"
+            @close="showDeleteBox = false"
+          >
+            <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
+              <div class="flex items-center justify-center min-h-screen">
+                <DialogPanel
+                  class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg"
+                >
+                  <DialogTitle class="text-accent font-bold text-[1.4rem] mb-4"
+                    >Are you sure you want to delete the game:
+                    {{ game_D_title }}?</DialogTitle
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-success ml-2"
+                    @click="removeGame(this.game_D_id)"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-error ml-2"
+                    @click="resetDelete()"
+                  >
+                    Cancel
+                  </button>
+                </DialogPanel>
+              </div>
+            </Dialog>
+          </TransitionRoot>
+        </div>
+
   </div>
 </template>
 
@@ -656,6 +693,9 @@ export default {
       showGameModal: false,
       selectedFile: null, //for file
       imagePreview: null,
+      game_D_id:0,
+      game_D_title:'',
+      showDeleteBox: false,
     }
   },
   methods: {
@@ -804,6 +844,7 @@ export default {
         .then(() => {
           this.getGames()
           this.message = 'Game Removed!'
+          this.resetDelete()
           this.showMessage = true
         })
         .catch((err) => {
@@ -817,9 +858,13 @@ export default {
     },
     // Handle delete button
     deleteGames(game) {
-      if (confirm(`Are you sure you want to delete the game: ${game.title}?`)) {
-        this.removeGame(game.id)
-      }
+      this.game_D_id = game.id
+      this.game_D_title = game.title
+    },
+    resetDelete() {
+      this.game_D_id = 0
+      this.game_D_title = ''
+      this.showDeleteBox = false
     },
     openGameModal(num) {
       let n = num - 1 ///change
