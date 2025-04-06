@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div><navbar-comp /></div>
     <div class="container mx-auto">
       <!-- Header Section -->
       <div role="alert" :class="['alert', alert_type]" v-show="isvisible">
@@ -289,13 +288,9 @@
 </template>
 
 <script>
-import navbarComp from '../components/navbarComp.vue'
 import axios from 'axios'
 export default {
   name: 'LandingView',
-  components: {
-    navbarComp: navbarComp,
-  },
   data() {
     return {
       email: '',
