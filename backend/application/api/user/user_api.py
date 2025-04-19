@@ -22,3 +22,20 @@ class AUserResource(Resource):
     def get(self):
         users = user_model.query.all()
         return {'status': 'success', 'users': marshal(users, genre_fields)}
+    
+class SUserResource(Resource):
+    def get(self,id):
+        user = user_model.query.get(id)
+        if(not user):
+            return {"message": 'User not found'}
+        if(user.active):
+            user.active = False
+            print(user.active)
+            db.session.commit()
+            return {"status": 'success', 'message':'User Status is Deactivated'}
+        else:
+            user.active = True
+            print(user.active) 
+            db.session.commit() 
+            return {"status": 'success', 'message':'User Status is Activated'} 
+       

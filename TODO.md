@@ -40,7 +40,7 @@ NOTES
 -   update remove rating, no of down, split the modal into right and left             --done
 -   description textarea                                                              --done
 -   update modal game name                                                            --done
--   admin/games open -> default game page not modal
+-   admin/games open -> default game page not modal                                   --done
 -   large number add commas                                                           --done
 -   delete game/genre prompt change to modal                                          --done
 -   game images  

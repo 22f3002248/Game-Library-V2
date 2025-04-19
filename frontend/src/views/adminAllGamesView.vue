@@ -96,11 +96,11 @@ export default {
         )
       }
 
-      // Filter by selected genre
+      // Filter by selected genre)
       if (this.selectedGenre) {
-        filtered = filtered.filter((game) =>
-          game.genres.some((genre) => genre.title === this.selectedGenre)
-        )
+        filtered = filtered.filter((game) => {
+          return game.genres.some((genre) => genre === this.selectedGenre)
+        })
       }
 
       return filtered

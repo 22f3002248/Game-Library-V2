@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      class="container mx-auto flex flex-row mt-3"
-      
-    >
+    <div class="container mx-auto flex flex-row mt-3">
       <!-- Header Section -->
       <div role="alert" :class="['alert', alert_type]" v-show="isvisible">
         <svg
@@ -21,38 +18,68 @@
         </svg>
         <span>{{ message }}</span>
       </div>
+    </div>
 
-      <div class="headline" style="height: 400px; background-image: url(https://th.bing.com/th/id/OIP.TGab8-eSpLItcGDxUZKfNAHaEL?w=293&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7); background-size: cover;">
-        <div>
-          <p style="font-size: 40px;">Let The <br> Game Begin</p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque,
-            totam sunt incidunt ab corrupti fugiat error perferendis iure nemo
-            ipsa harum delectus, dicta omnis exercitationem expedita optio rem,
-            id magni.
-          </p>
-        </div>
-
-        <div style="border: 2px solid red; display: inline-block">
-          <p class="text-4xl font-bold mb-3">GameVault</p>
-          <!-- Make a grid layout for the buttons -->
-          <div class="flex">
-            <!-- Login and Register buttons are placed in a grid -->
-            <div>
-              <button class="btn btn-primary px-6" @click="openModal">
-                Login
-              </button>
-            </div>
-            <div>
-              <button class="btn btn-secondary px-6">Register</button>
-            </div>
+    <div
+      class="mt-3 w-[1200px] h-[680px] shadow-lg mx-auto rounded rounded-xl bg-[url(https://th.bing.com/th/id/R.d023351cd802d65c50f0f5cfd372f297?rik=AKM1qkQvw1KLsg&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f05%2fDesktop-gaming-backgrounds-1080p-dosh-tosh.jpg&ehk=vdt7p4cwZQfq4ul%2fSKWfhGTpUBcqPgBwvX%2blPS93sKA%3d&risl=&pid=ImgRaw&r=0)] p-8 bg-cover"
+    >
+      <div>
+        <!-- Make a grid layout for the buttons -->
+        <div class="flex justify-end gap-3 mr-24">
+          <!-- Login and Register buttons are placed in a grid -->
+          <div>
+            <button
+              class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+            >
+              Explore
+            </button>
+          </div>
+          <div>
+            <button
+              class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+              @click="openModal"
+            >
+              Login
+            </button>
+          </div>
+          <div>
+            <button
+              class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+            >
+              Register
+            </button>
           </div>
         </div>
       </div>
+      <div class="italic">
+        <p class="text-6xl mt-10 ml-8 font-bold space-y-1">
+          <span class="text-cyan-300 block animate-bounce">Discover.</span>
+          <span class="block animate-pulse">Collect.</span>
+          <span class="text-cyan-400 block animate-bounce">Play.</span>
+          <span class="block animate-pulse">Repeat.</span>
+        </p>
+        <p
+          class="ml-14 mt-3 font-bold w-[170px] opacity-0 animate-fade-in transition-opacity duration-1000 delay-700"
+        >
+          Whether you're a casual player or a hardcore collector, our game
+          library helps you stay connected to the games you love, anytime and
+          anywhere.
+        </p>
+      </div>
     </div>
 
+    <br />
+    <hr />
     <div class="container mx-auto">
-      <div class="mr-3" style="margin-bottom: 200px">
+      <div
+        class="text-center text-4xl text-white-200 font-bold p-2 rounded-lg italic mb-3 p-5 opacity-0.9 animate-pulse hover:scale-105 hover:text-cyan-300 transition-all duration-500 ease-in-out"
+      >
+        Organize your games. Unleash your play.
+      </div>
+
+      <hr />
+      <br />
+      <div class="mr-3">
         <!-- Top Games Section -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <!-- Card 1 -->
@@ -164,13 +191,20 @@
           </div>
         </div>
         <!-- Footer Section -->
+        <hr />
+        <br />
+        <div
+          class="text-center italic mx-auto w-[400px] text-2xl text-grey-300 font-bold border border-white-400 p-2 rounded-lg"
+        >
+          Contact US:
+        </div>
+        <br />
         <footer
           class="mt-auto p-5 bg-neutral text-neutral-content"
           style="margin-bottom: -29px"
         >
           <div class="flex justify-between">
             <div>
-              <h3 class="text-lg font-bold">Contact Us</h3>
               <p>Email: support@gamevault.com</p>
             </div>
             <div>
@@ -445,5 +479,19 @@ export default {
 <style scoped>
 .container {
   max-width: 1200px;
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

@@ -94,10 +94,12 @@ export default {
       }
 
       // Filter by selected genre
+      console.log(this.selectedGenre)
       if (this.selectedGenre) {
         filtered = filtered.filter((game) =>
           game.genres.some((genre) => genre === this.selectedGenre)
         )
+        console.log(filtered)
       }
 
       return filtered
