@@ -8,7 +8,10 @@
       </h2>
       <ul class="space-y-4">
         <li>
-          <a href="#" class="block text-white hover:bg-accent p-3 rounded-lg">
+          <a
+            href="http://localhost:5173/admin/dashboard"
+            class="block text-white hover:bg-accent p-3 rounded-lg"
+          >
             Home
           </a>
         </li>
@@ -37,8 +40,35 @@
           </a>
         </li>
         <li>
-          <a href="http://localhost:5173/admin/users" class="block text-white hover:bg-accent p-3 rounded-lg">
+          <a
+            href="http://localhost:5173/admin/users"
+            class="block text-white hover:bg-accent p-3 rounded-lg"
+          >
             Manage Users
+          </a>
+        </li>
+        <li>
+          <a
+            href="http://localhost:5173/admin/reviews"
+            class="block text-white hover:bg-accent p-3 rounded-lg"
+          >
+            Manage Reviews
+          </a>
+        </li>
+        <li>
+          <a
+            href="http://localhost:5173/admin/subscriptions"
+            class="block text-white hover:bg-accent p-3 rounded-lg"
+          >
+            Manage Subscriptions
+          </a>
+        </li>
+        <li>
+          <a
+            href="http://localhost:5173/admin/Orders"
+            class="block text-white hover:bg-accent p-3 rounded-lg"
+          >
+            Manage Orders
           </a>
         </li>
       </ul>

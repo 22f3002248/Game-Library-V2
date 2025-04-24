@@ -27,7 +27,7 @@ game_fields = {
 }
 
 
-# Define the fields for the Game review
+# Define the fields for the Game review  
 review_fields = {
     'id': fields.Integer,
     'user_id': fields.Integer,
@@ -170,3 +170,26 @@ class ModifyReviewResource(Resource):
             return {'status': 'success', 'message': 'Review updated !'}
         else:
             return {'status': 'failure', 'message': 'Review not found !'}
+
+class AdminReviewResource(Resource):
+    def get(self):
+        reviews = review_model.query.all()
+        if not reviews:
+            return {'status': 'failure', 'message': 'Review not found'}, 404
+        
+        # Get the related user and game details
+        review_data = []
+        for review in reviews:
+            review_data.append({
+                'id': review.id,
+                'user_id': review.user_id,
+                'username': review.user.username,
+                'email': review.user.email,
+                'game_id': review.game_id,
+                'title': review.game.title,
+                'rating': review.rating,
+                'feedback': review.feedback,
+                'date': review.date
+            })
+
+        return{'status':'success', 'message':'reviews load successfully', 'reviews': marshal(review_data, review_fields)}, 200

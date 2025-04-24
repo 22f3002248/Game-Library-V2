@@ -30,12 +30,10 @@ class SUserResource(Resource):
             return {"message": 'User not found'}
         if(user.active):
             user.active = False
-            print(user.active)
             db.session.commit()
             return {"status": 'success', 'message':'User Status is Deactivated'}
         else:
             user.active = True
-            print(user.active) 
             db.session.commit() 
             return {"status": 'success', 'message':'User Status is Activated'} 
        

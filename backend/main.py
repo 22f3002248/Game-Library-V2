@@ -20,7 +20,7 @@ app.config.from_object(devconfig)
 CORS(app, resources={r"/*": {"origins": "*"}})
 db.init_app(app)
 security = Security(app, ds)
-api = initialize_api(app)
+api = initialize_api(app)    
 
 
 with app.app_context():

@@ -45,6 +45,7 @@
           <div>
             <button
               class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+              @click="openRegisterModal"
             >
               Register
             </button>
@@ -270,6 +271,70 @@
       </div>
     </dialog>
 
+    <!-- Modal Structure -->
+    <dialog id="register_modal" class="modal">
+      <div class="modal-box w-11/12 max-w-xl">
+        <h3 class="text-lg font-bold">Register</h3>
+
+        <!-- Register form -->
+        <form class="py-4">
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Username</span>
+            </label>
+            <input
+              v-model="username"
+              type="text"
+              placeholder="Enter your username"
+              class="input input-bordered w-full"
+              required
+            />
+          </div>
+
+          <!-- Email input -->
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Email</span>
+            </label>
+            <input
+              v-model="email"
+              type="email"
+              placeholder="Enter your email"
+              class="input input-bordered w-full"
+              required
+            />
+          </div>
+
+          <!-- Password input -->
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Password</span>
+            </label>
+            <input
+              v-model="password"
+              type="password"
+              placeholder="Enter your password"
+              class="input input-bordered w-full"
+              required
+            />
+          </div>
+        </form>
+
+        <!-- Modal action buttons -->
+        <div class="modal-action">
+          <!-- Close button -->
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+
+          <!-- Submit button -->
+          <button class="btn btn-primary" @click="submitRegisterForm">
+            Register
+          </button>
+        </div>
+      </div>
+    </dialog>
+
     <!-- GAME MODAL -->
     <dialog id="game_modal" class="modal">
       <div class="modal-box w-11/12 max-w-5xl">
@@ -355,6 +420,7 @@ export default {
   },
   data() {
     return {
+      username: '',
       email: '',
       password: '',
       message: '',
@@ -387,7 +453,7 @@ export default {
           console.log(res.data.user)
           this.$store.dispatch('set_state_after_login', res.data.user)
           if (this.$store.getters.get_type == 'admin') {
-            this.$router.push('/admin/games')
+            this.$router.push('/admin/dashboard')
           } else {
             this.$router.push('/user-dashboard')
           }
@@ -400,6 +466,10 @@ export default {
           //   this.message = 'There was an error.'
           //   this.alert_type = 'alert-error'
           // }
+          //reset
+          this.username = ''
+          this.email = ''
+          this.password = ''
           this.closeModal()
         })
         .catch(() => {
@@ -410,11 +480,48 @@ export default {
         })
       this.closeModal()
     },
+
+    submitRegisterForm() {
+      const path = 'http://127.0.0.1:5000/api/register'
+      axios
+        .post(path, {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        })
+        .then((res) => {
+          // console.log(res)
+          this.closeRegisterModal()
+          //reset
+          this.username = ''
+          this.email = ''
+          this.password = ''
+          //show message
+          this.isvisible = true
+          this.message = res.data.message
+          this.alert_type = 'alert-success'
+          this.openModal()
+        })
+        .catch(() => {
+          this.isvisible = true
+          this.message = 'There was an error...'
+          this.alert_type = 'alert-error'
+          this.closeModal()
+        })
+      this.closeModal()
+    },
+
     openModal() {
       document.getElementById('login_modal').showModal()
     },
     closeModal() {
       document.getElementById('login_modal').close()
+    },
+    openRegisterModal() {
+      document.getElementById('register_modal').showModal()
+    },
+    closeRegisterModal() {
+      document.getElementById('register_modal').close()
     },
     getTopGames() {
       const path = `http://127.0.0.1:5000/api/games/top/${3}`
