@@ -4,20 +4,14 @@
 
     <div class="container mx-auto mt-6">
       <!-- Main Content -->
-
-      <!-- Top Navbar -->
-      <div
-        class="flex justify-between items-center bg-base-100 shadow p-6 mb-8 rounded-lg"
-      >
-        <div class="text-2xl font-bold text-white-800">
-          Welcome, {{ this.$store.getters.get_username }}
-        </div>
-      </div>
+      <h1 class="text-3xl font-bold mb-4">User Dashboard</h1>
       <UserStatsChart
         v-if="stats"
         :stats="stats"
         class="mb-12"
       ></UserStatsChart>
+      <hr style="border-color: darkslategray" />
+      <br />
       <!-- Featured Games Section -->
       <section>
         <h3 class="text-3xl font-bold mb-6">Featured Games</h3>
@@ -86,7 +80,7 @@
                 class="btn btn-primary mt-4 w-full"
                 @click="openGame(game.id)"
               >
-                Play Again
+                Play
               </button>
             </div>
           </div>

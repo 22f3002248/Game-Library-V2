@@ -1,3 +1,20 @@
+
+# GENRES = [
+#     "Action", "Adventure", "RPG", "Strategy",
+#     "Shooter", "Sports", "Racing", "Simulation",
+#     "Puzzle",  "Fighting",  "Horror", "Survival"
+# ]
+# '''
+# "Open World"
+# "Fantasy"
+# "Crime"
+# "Sci-Fi"
+# "Western"
+# "Dark Fantasy", "Challenging""Historical"
+# "Sandbox", "Survival", "Creative"
+# "Team-Based", "Multiplayer"
+# '''
+
 GAMES = [
     {
         "title": "The Elder Scrolls V: Skyrim",
@@ -53,7 +70,7 @@ GAMES = [
     },
     {
         "title": "Red Dead Redemption 2",
-        "genres": ["Action-Adventure", "Western", "Open World"],
+        "genres": ["Action", "Adventure", "Western", "Open World"],
         "release_date": "2018-10-26",
         "developer": "Rockstar Studios",
         "publisher": "Rockstar Games",
@@ -66,7 +83,7 @@ GAMES = [
     },
     {
         "title": "Horizon Zero Dawn",
-        "genres": ["Action RPG", "Open World", "Sci-Fi"],
+        "genres": ["Action", "RPG", "Open World", "Sci-Fi"],
         "release_date": "2017-02-28",
         "developer": "Guerrilla Games",
         "publisher": "Sony Interactive Entertainment",
@@ -79,7 +96,7 @@ GAMES = [
     },
     {
         "title": "Dark Souls III",
-        "genres": ["Action RPG", "Dark Fantasy", "Challenging"],
+        "genres": ["Action", "RPG", "Dark Fantasy", "Challenging"],
         "release_date": "2016-04-12",
         "developer": "FromSoftware",
         "publisher": "Bandai Namco Entertainment",
@@ -92,7 +109,7 @@ GAMES = [
     },
     {
         "title": "Assassin's Creed Valhalla",
-        "genres": ["Action RPG", "Open World", "Historical"],
+        "genres": ["Action", "RPG", "Open World", "Historical"],
         "release_date": "2020-11-10",
         "developer": "Ubisoft Montreal",
         "publisher": "Ubisoft",
@@ -209,7 +226,6 @@ GAMES = [
     }
 
 ]
-
 GENRES = [
     {"title": "Action", "description": "Games that emphasize physical challenges and hand-eye coordination."},
     {"title": "Adventure", "description": "Games focused on exploration and puzzle-solving."},
@@ -222,7 +238,28 @@ GENRES = [
     {"title": "Puzzle", "description": "Games that require problem-solving."},
     {"title": "Fighting", "description": "Games that involve hand-to-hand combat."},
     {"title": "Horror", "description": "Games that aim to scare the player."},
-    {"title": "Survival", "description": "Games that focus on surviving in a hostile environment."}
+    {"title": "Survival",
+        "description": "Games that focus on surviving in a hostile environment."},
+    {"title": "Open World",
+        "description": "Games set in expansive worlds that players can explore freely."},
+    {"title": "Fantasy",
+        "description": "Games set in imaginative, magical, or mythical settings."},
+    {"title": "Crime", "description": "Games centered around criminal activities or investigations."},
+    {"title": "Sci-Fi", "description": "Games set in futuristic or science-based settings."},
+    {"title": "Western", "description": "Games themed around the American Old West."},
+    {"title": "Dark Fantasy", "description": "Fantasy games with horror or grim elements."},
+    {"title": "Challenging",
+        "description": "Games known for high difficulty and skill-based gameplay."},
+    {"title": "Historical",
+        "description": "Games based on real historical events or settings."},
+    {"title": "Sandbox",
+        "description": "Games that offer open-ended gameplay with creative freedom."},
+    {"title": "Creative",
+        "description": "Games focused on building, designing, or imaginative tasks."},
+    {"title": "Team-Based",
+        "description": "Games where cooperative team play is a core mechanic."},
+    {"title": "Multiplayer",
+        "description": "Games that allow multiple players to play together or against each other."}
 ]
 
 

@@ -14,47 +14,46 @@
   <div>
     <!-- html code -->
     <navbar-comp></navbar-comp>
-    <div class="container mx-auto mt-6">
+    <div class="container mx-auto">
       <div
         class="flex justify-between items-center bg-base-100 shadow p-6 mb-8 rounded-lg"
       ></div>
       <h1 class="text-3xl font-bold mb-4">Download Games</h1>
-      <h3 v-if="set_subscription == true">
-        Your subscription status: <b>Active</b>
-      </h3>
-      <h3 v-else>Your subscription status: <b>Inactive</b></h3>
-      <h3 v-if="set_subscription == true">
-        Your subscription end date: <b>{{ formattedEndDate }}</b>
-      </h3>
       <section class="mt-12">
-        <div v-if="allGames.length > 0" class="overflow-x-auto">
+        <h1 class="text-2xl font-bold mb-4">Purchased Games</h1>
+        <div v-if="purchasedGames.length > 0" class="overflow-x-auto">
           <table
             class="table-auto w-full text-left border-collapse rounded shadow-lg bg-dark"
           >
-            <thead class="bg-gray-200">
+            <thead class="bg-gray-600">
               <tr>
                 <th class="px-4 py-2">Picture & Name</th>
                 <th class="px-4 py-2">Genre</th>
                 <th class="px-4 py-2">Rating</th>
-                <th class="px-4 py-2">Purchased / Subscribed</th>
                 <th class="px-4 py-2">Completed?</th>
                 <th class="px-4 py-2">Hash</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="(game, index) in allGames"
+                v-for="(game, index) in purchasedGames"
                 :key="index"
                 class="border-t hover:bg-gray-700"
               >
                 <!-- Picture & Name -->
                 <td class="px-4 py-3 flex items-center gap-3">
-                  <img
-                    :src="game.poster"
-                    :alt="game.title"
-                    class="w-12 h-12 object-cover rounded"
-                  />
-                  <span class="text-white font-medium">{{ game.title }}</span>
+                  <a
+                    key=""
+                    @click="openGame(game.id)"
+                    class="flex items-center gap-3 cursor-pointer"
+                  >
+                    <img
+                      :src="game.poster"
+                      :alt="game.title"
+                      class="w-12 h-12 object-cover rounded"
+                    />
+                    <span class="text-white font-medium">{{ game.title }}</span>
+                  </a>
                 </td>
 
                 <!-- Genre -->
@@ -67,20 +66,95 @@
                   {{ game.rating || 'N/A' }}
                 </td>
 
-                <!-- Purchased/Subscribed -->
+                <!-- Completed -->
                 <td class="px-4 py-3 text-white">
-                  {{
-                    game.purchased
-                      ? 'Purchased'
-                      : game.subscribed
-                      ? 'Subscribed'
-                      : 'No'
-                  }}
+                  {{ game.id in completedGames ? 'Yes' : 'No' }}
+                </td>
+
+                <!-- Hash -->
+                <td class="px-4 py-3 text-white">
+                  <div v-if="hashes[game.id]">
+                    {{ hashes[game.id] }}
+                  </div>
+                  <div v-else>
+                    <button
+                      class="btn btn-primary"
+                      @click="showHash(game.id)"
+                      :disabled="loadingHashes[game.id]"
+                    >
+                      {{ loadingHashes[game.id] ? 'Loading...' : 'Show Hash' }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else class="mt-4 text-white">
+          <p>No purchased games found.</p>
+        </div>
+      </section>
+      <br /><br />
+      <hr style="border-color: darkslategray" />
+
+      <section class="mt-12">
+        <h2 class="text-2xl font-bold mb-4">Subscribed Games</h2>
+        <h3 v-if="set_subscription == true">
+          Your subscription status: <b>Active</b>
+        </h3>
+        <h3 v-else>Your subscription status: <b>Inactive</b></h3>
+        <h3 v-if="set_subscription == true">
+          Your subscription end date: <b>{{ formattedEndDate }}</b>
+        </h3>
+        <br /><br />
+        <div v-if="subOnlyGames.length > 0" class="overflow-x-auto">
+          <table
+            class="table-auto w-full text-left border-collapse rounded shadow-lg bg-dark"
+          >
+            <thead class="bg-gray-600">
+              <tr>
+                <th class="px-4 py-2">Picture & Name</th>
+                <th class="px-4 py-2">Genre</th>
+                <th class="px-4 py-2">Rating</th>
+                <th class="px-4 py-2">Completed?</th>
+                <th class="px-4 py-2">Hash</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(game, index) in subOnlyGames"
+                :key="index"
+                class="border-t hover:bg-gray-700"
+              >
+                <!-- Picture & Name -->
+                <td class="px-4 py-3 flex items-center gap-3">
+                  <a
+                    key=""
+                    @click="openGame(game.id)"
+                    class="flex items-center gap-3 cursor-pointer"
+                  >
+                    <img
+                      :src="game.poster"
+                      :alt="game.title"
+                      class="w-12 h-12 object-cover rounded"
+                    />
+                    <span class="text-white font-medium">{{ game.title }}</span>
+                  </a>
+                </td>
+
+                <!-- Genre -->
+                <td class="px-4 py-3 text-white">
+                  {{ game.genres.map((g) => g.title).join(', ') || 'TBD' }}
+                </td>
+
+                <!-- Rating -->
+                <td class="px-4 py-3 text-white">
+                  {{ game.rating || 'N/A' }}
                 </td>
 
                 <!-- Completed -->
                 <td class="px-4 py-3 text-white">
-                  {{ game.completed ? 'Yes' : 'No' }}
+                  {{ game.id in completedGames ? 'Yes' : 'No' }}
                 </td>
 
                 <!-- Hash -->
@@ -133,7 +207,7 @@ export default {
     return {
       isWaiting: false,
       set_subscription: false,
-      allGames: [],
+      subOnlyGames: [],
       end_date: null,
       paymentMethod: '',
       paymentDetails: {
@@ -150,6 +224,8 @@ export default {
       hashes: {}, // Stores fetched hashes per game id
       loadingHashes: {}, // Optional: shows loading state per game
       timeoutHandles: {},
+      purchasedGames: [],
+      completedGames: [],
     }
   },
   components: {
@@ -171,7 +247,7 @@ export default {
   watch: {
     set_subscription(newValue) {
       if (newValue) {
-        this.getAllGames()
+        this.getSubOnlyGames()
       }
     },
   },
@@ -185,7 +261,7 @@ export default {
           if (response.data.subscription == true) {
             this.end_date = response.data.end_date
             this.set_subscription = true
-            this.getAllGames()
+            this.getSubOnlyGames()
           } else {
             this.set_subscription = false
           }
@@ -197,13 +273,25 @@ export default {
     closeModal() {
       document.getElementById('subscription_modal').close()
     },
-    getAllGames() {
+    getSubOnlyGames() {
       axios
         .get(
-          `http://127.0.0.1:5000/api/subscription/${this.$store.getters.get_userid}/games`
+          `http://127.0.0.1:5000/api/subscription/${this.$store.getters.get_userid}/games/only`
         )
         .then((response) => {
-          this.allGames = response.data.games
+          this.subOnlyGames = response.data.games
+        })
+        .catch((error) => {
+          console.error('Error fetching games:', error)
+        })
+    },
+    getPurchasedGames() {
+      axios
+        .get(
+          `http://127.0.0.1:5000/api/purchase/${this.$store.getters.get_userid}/purchased`
+        )
+        .then((response) => {
+          this.purchasedGames = response.data.games
         })
         .catch((error) => {
           console.error('Error fetching games:', error)
@@ -247,6 +335,19 @@ export default {
         }, 1000)
       }
     },
+    openGame(gameid) {
+      this.$router.push({ name: 'gamePageView', params: { gameid } })
+    },
+    getCompletedGames() {
+      axios
+        .get(
+          `http://127.0.0.1:5000/api/${this.$store.getters.get_userid}/games/completed`
+        )
+        .then((response) => {
+          console.log(response.data.games)
+          this.completedGames = response.data.games
+        })
+    },
     showHash(gameId) {
       // Prevent multiple parallel requests
       if (this.loadingHashes[gameId]) return
@@ -280,6 +381,8 @@ export default {
   },
   created() {
     this.checkSubscription()
+    this.getPurchasedGames()
+    this.getCompletedGames()
   },
 }
 </script>

@@ -73,7 +73,7 @@ class CheckPurchase(Resource):
 
 class PurchaseResource(Resource):
     def get(self, userid, gameid):
-        gu = gu_model.query.filter_by(userid=userid, gameid=gameid).first()
+        gu = gu_model.query.filter_by(user_id=userid, game_id=gameid).first()
         if gu.purchased:
             return {'status': 'failure',
                     'message': "You have already purchased this game",
@@ -82,7 +82,7 @@ class PurchaseResource(Resource):
             gu.purchased = True
             db.session.commit()
         else:
-            pur = gu_model(userid=userid, gameid=gameid, purchased=True)
+            pur = gu_model(user_id=userid, game_id=gameid, purchased=True)
             db.session.add(pur)
             db.session.commit()
         return {'status': 'success',

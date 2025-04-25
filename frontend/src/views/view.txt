@@ -1,0 +1,23 @@
+[*]    T   gamePageView.vue  
+[*]    T   pageNotFound.vue
+[*]    T   subscriptionUserManage.vue
+[*]    T   allGamesView.vue               
+[*]    T   userDash.vue
+[*]    T   downloadView.vue              
+[*]    T   userProfile.vue
+
+--------------------------------------------------------
+
+[*]    V   genreView.vue  
+[ ]    V   adminManageReviews.vue  
+[*]    V  landingView.vue 
+[ ]    V   adminManageOrders.vue   
+[*]    V   adminDash.vue           
+[*]    V   adminManageUsers.vue          
+[*]    V   gameView.vue  
+[*]    V   adminAllGamesView.vue
+[ ]    V   adminManageSubscriptions.vue  
+
+
+
+

@@ -3,33 +3,6 @@
     <div><navbar-comp /></div>
     <div class="container mx-auto py-8">
       <!-- Carousel Section -->
-      <div class="carousel w-full custom-carousel">
-        <div
-          v-for="(image, index) in images"
-          :key="index"
-          :id="'slide' + (index + 1)"
-          class="carousel-item relative w-full"
-        >
-          <img :src="image" class="w-full h-full object-cover" />
-          <div
-            class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
-          >
-            <a
-              :href="'#slide' + (index === 0 ? images.length : index)"
-              class="btn btn-circle"
-            >
-              ❮
-            </a>
-            <a
-              :href="'#slide' + (index === images.length - 1 ? 1 : index + 2)"
-              class="btn btn-circle"
-            >
-              ❯
-            </a>
-          </div>
-        </div>
-      </div>
-      <br /><br /><br />
       <h1 class="text-4xl font-bold text-center mb-3">{{ modal_title }}</h1>
       <br />
       <!-- Game Information Section -->
@@ -42,35 +15,66 @@
             class="shadow-lg rounded-lg"
             style="width: 300px; height: 400px"
           />
-          <br />
-          <div v-if="this.completed == true">
-            <div class="flex flex-col space-y-2">
-              <p>You have completed this game</p>
-              <button class="btn btn-secondary w-full">Download</button>
+          <br /><br />
+
+          <div class="flex flex-col space-y-4">
+            <!-- Top Row: Status on left, Purchased/Subscribed on right -->
+            <div class="flex justify-between w-full">
+              <!-- Left: Status -->
+              <div class="pr-4 w-1/2">
+                <p v-if="this.completed == true"><b>Status: </b>Completed</p>
+                <p v-else><b>Status: </b>Incomplete</p>
+              </div>
+
+              <!-- Right: Purchased and Subscribed with vertical separator -->
+              <div class="pl-4 w-1/2 border-l border-gray-300">
+                <p v-if="this.purchased == true"><b>Purchased: </b>Yes</p>
+                <p v-else><b>Purchased: </b>No</p>
+                <p v-if="this.subscribed == true"><b>Subscribed: </b>Yes</p>
+                <p v-else><b>Subscribed: </b>No</p>
+              </div>
             </div>
-          </div>
-          <div v-else>
-            <div class="flex flex-col space-y-2">
-              <p v-if="this.purchased == true">You have purchased this game</p>
-              <p v-if="this.subscribed == true && this.purchased == false">
-                You have subscribed
-              </p>
-              <button class="btn btn-secondary w-full" @click="yourGames()">
+
+            <!-- Download Button (below both) -->
+            <div
+              v-if="
+                this.purchased == true ||
+                (this.subscribed == true && this.gu_subscribed == true)
+              "
+              class="flex justify-center"
+            >
+              <button class="btn btn-secondary w-32" @click="yourGames()">
                 Download
               </button>
             </div>
-          </div>
-          <div
-            v-if="
-              this.subscribed == false &&
-              this.purchased == false &&
-              this.completed == false
-            "
-          >
-            <div class="flex flex-col space-y-2">
-              <button class="btn btn-primary w-full">Buy</button>
-              <button class="btn btn-secondary w-full">Subscribe</button>
+            <div
+              v-if="this.subscribed == true && this.gu_subscribed == false"
+              class="flex justify-center"
+            >
+              <button class="btn btn-secondary w-48" @click="subAndDownload()">
+                Sub & Download
+              </button>
             </div>
+          </div>
+
+          <br />
+          <div>
+            <div
+              class="flex flex-col space-y-2"
+              v-if="this.subscribed == false && this.gu_subscribed == false"
+            >
+              <button
+                class="btn btn-secondary w-32"
+                @click="manageUserSubscription()"
+              >
+                Subscribe
+              </button>
+            </div>
+          </div>
+          <div class="flex flex-col space-y-2" v-if="this.purchased == false">
+            <button class="btn btn-primary w-32" @click="openModal()">
+              Buy
+            </button>
           </div>
         </div>
 
@@ -107,9 +111,41 @@
         </div>
       </div>
 
+      <h1 key="" class="text-4xl font-bold text-center mb-3 mt-8">
+        Screenshots
+      </h1>
+      <div class="carousel w-full custom-carousel">
+        <div
+          v-for="(image, index) in images"
+          :key="index"
+          :id="'slide' + (index + 1)"
+          class="carousel-item relative w-full"
+        >
+          <img :src="image" class="w-full h-full object-cover" />
+          <div
+            class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
+          >
+            <a
+              :href="'#slide' + (index === 0 ? images.length : index)"
+              class="btn btn-circle"
+            >
+              ❮
+            </a>
+            <a
+              :href="'#slide' + (index === images.length - 1 ? 1 : index + 2)"
+              class="btn btn-circle"
+            >
+              ❯
+            </a>
+          </div>
+        </div>
+      </div>
       <!-- Reviews Section -->
-
+      <br /><br />
+      <hr style="border-color: darkslategray" />
+      <br />
       <div class="mt-4">
+        <h1 class="text-2xl font-bold mb-4">Reviews</h1>
         <h4 class="text-md font-semibold">Your Review:</h4>
 
         <!-- User rating -->
@@ -220,6 +256,138 @@
         </div>
       </div>
     </div>
+
+    <!-- PURCHASE EXTENSION MODAL. -->
+    <dialog id="subscription_modal" class="modal">
+      <div class="modal-box w-11/12 max-w-xl h-auto">
+        <h3 class="text-lg font-bold mb-4">
+          Purchase the game {{ modal_title }}
+        </h3>
+
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">Select Payment Method</span>
+          </label>
+          <select v-model="paymentMethod" class="select select-bordered w-full">
+            <option disabled value="">Choose one</option>
+            <option value="card">Credit / Debit Card</option>
+            <option value="upi">UPI</option>
+            <option value="netbanking">Net Banking</option>
+            <option value="wallet">Paytm / Wallet</option>
+          </select>
+        </div>
+
+        <!-- Dynamic form based on selected payment method -->
+        <div v-if="paymentMethod === 'card'">
+          <div class="form-control mb-2">
+            <label class="label"
+              ><span class="label-text">Cardholder Name</span></label
+            >
+            <input
+              v-model="paymentDetails.cardName"
+              type="text"
+              placeholder="John Doe"
+              class="input input-bordered"
+            />
+          </div>
+          <div class="form-control mb-2">
+            <label class="label"
+              ><span class="label-text">Card Number</span></label
+            >
+            <input
+              v-model="paymentDetails.cardNumber"
+              type="text"
+              placeholder="XXXX-XXXX-XXXX-XXXX"
+              class="input input-bordered"
+            />
+          </div>
+          <div class="flex gap-2">
+            <div class="form-control flex-1">
+              <label class="label"
+                ><span class="label-text">Expiry Date</span></label
+              >
+              <input
+                v-model="paymentDetails.expiry"
+                type="text"
+                placeholder="MM/YY"
+                class="input input-bordered"
+              />
+            </div>
+            <div class="form-control flex-1">
+              <label class="label"><span class="label-text">CVV</span></label>
+              <input
+                v-model="paymentDetails.cvv"
+                type="password"
+                placeholder="123"
+                class="input input-bordered"
+              />
+            </div>
+          </div>
+        </div>
+        <br />
+        <div v-if="paymentMethod === 'upi'" class="mt-4">
+          <div class="flex justify-center mt-2">
+            <img
+              src="https://help.spreadsheetconverter.com/wp-content/uploads/2013/07/car-loan-amortization-mobile-qrcode.png"
+              alt="UPI QR Code"
+              class="w-32 h-32 rounded-lg border border-gray-300"
+              height="100"
+              width="100"
+            />
+          </div>
+          <div class="form-control mb-2">
+            <label class="label"><span class="label-text">UPI ID</span></label>
+            <input
+              v-model="paymentDetails.upiId"
+              type="text"
+              placeholder="yourname@upi"
+              class="input input-bordered"
+            />
+          </div>
+        </div>
+
+        <div v-if="paymentMethod === 'netbanking'" class="mt-4">
+          <div class="form-control">
+            <label class="label"
+              ><span class="label-text">Select Bank</span></label
+            >
+            <select
+              v-model="paymentDetails.bank"
+              class="select select-bordered w-full"
+            >
+              <option disabled value="">Choose Bank</option>
+              <option>State Bank of India</option>
+              <option>HDFC Bank</option>
+              <option>ICICI Bank</option>
+              <option>Axis Bank</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div v-if="paymentMethod === 'wallet'" class="mt-4">
+          <div class="form-control">
+            <label class="label"
+              ><span class="label-text">Mobile Number</span></label
+            >
+            <input
+              v-model="paymentDetails.walletNumber"
+              type="text"
+              placeholder="Enter mobile number linked with wallet"
+              class="input input-bordered"
+            />
+          </div>
+        </div>
+
+        <!-- Modal action buttons -->
+        <div class="modal-action mt-6">
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+          <button class="btn btn-primary" @click="handlePayment()">Pay</button>
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
 
@@ -264,6 +432,18 @@ export default {
       userHasReviewed: false, // Track if the user has added a review
       currentReviewId: null,
       userRating: 0,
+      set_subscription: false,
+      gu_subscribed: false,
+      paymentMethod: '',
+      paymentDetails: {
+        cardName: '',
+        cardNumber: '',
+        expiry: '',
+        cvv: '',
+        upiId: '',
+        bank: '',
+        walletNumber: '',
+      },
     }
   },
   methods: {
@@ -324,6 +504,19 @@ export default {
           this.alert_type = 'alert-error'
         })
     },
+    checkSubscription() {
+      axios
+        .get(
+          `http://127.0.0.1:5000/api/check/subscription/${this.$store.getters.get_userid}`
+        )
+        .then((response) => {
+          if (response.data.subscription == true) {
+            this.subscribed = true
+          } else {
+            this.set_subscription = false
+          }
+        })
+    },
     checkPurchase() {
       const userid = this.$store.getters.get_userid
       const path = `http://127.0.0.1:5000/api/check/purchase/${userid}/${this.gameid}`
@@ -333,8 +526,8 @@ export default {
           // console.log(res)
           if (res.data.status == 'success') {
             this.purchased = res.data.purchased
-            this.subscribed = res.data.subscribed
             this.completed = res.data.completed
+            this.gu_subscribed = res.data.subscribed
           }
         })
         .catch(() => {
@@ -439,6 +632,42 @@ export default {
     yourGames() {
       this.$router.push({ name: 'downloadView' })
     },
+    handlePayment() {
+      axios
+        .get(
+          `http://127.0.0.1:5000/api/purchase/${this.$store.getters.get_userid}/${this.gameid}`,
+          {}
+        )
+        .then((response) => {
+          if (response.data.status == 'success') {
+            this.closeModal()
+            this.checkPurchase()
+          }
+        })
+        .catch(() => {
+          this.closeModal()
+          this.checkPurchase()
+        })
+    },
+    openModal() {
+      document.getElementById('subscription_modal').showModal()
+    },
+    closeModal() {
+      document.getElementById('subscription_modal').close()
+    },
+    manageUserSubscription() {
+      this.$router.push({ name: 'subscriptionUserManage' })
+    },
+    subAndDownload() {
+      const userid = this.$store.getters.get_userid
+      const gameid = this.gameid
+      const path = `http://127.0.0.1:5000/api/subscribe/download/${userid}/${gameid}`
+      axios.get(path, {}).then((res) => {
+        if (res.data.status == 'success') {
+          this.checkSubscription()
+        }
+      })
+    },
   },
   beforeMount() {
     this.getGame()
@@ -446,6 +675,7 @@ export default {
     this.checkPurchase()
     this.checkReview()
     this.getAllReviews()
+    this.checkSubscription()
   },
 }
 </script>

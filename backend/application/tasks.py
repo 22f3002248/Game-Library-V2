@@ -6,15 +6,16 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
 
+from celery import shared_task
+from flask import current_app as app
+from jinja2 import Template
+
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
 from application.data.model import Review as review_model
 from application.data.model import Subscription as sub_model
 from application.data.model import User as user_model
-from celery import shared_task
-from flask import current_app as app
-from jinja2 import Template
 
 
 # Define a sample Celery task
@@ -209,8 +210,8 @@ def autorevoke():
         current_timeutc = datetime.now(timezone.utc)
         ist_offset = timedelta(hours=5, minutes=30)
         current_time = current_timeutc + ist_offset
-        subs = sub_model.query.filter((sub_model.status == True) & (
-            sub_model.end_date < current_time)).all()
+        subs = sub_model.query.filter((sub_model.subscription_status == True) & (
+            sub_model.subscription_end_date < current_time)).all()
         for i in subs:
             gus = gu_model.query.filter_by(user_id=i.userid).all()
             for j in gus:

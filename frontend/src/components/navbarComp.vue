@@ -29,7 +29,7 @@
             <li>
               <a @click="manageUserSubscription()">Manage Subscription</a>
             </li>
-            <li><a @click="yourGames()">Your Games</a></li>
+            <li><a @click="yourGames()">Download Games</a></li>
             <li><a @click="logout()">Logout</a></li>
           </ul>
         </div>

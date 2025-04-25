@@ -143,6 +143,8 @@ const chartOptions = {
   @apply bg-gray-900 shadow-lg p-6 rounded-lg flex flex-col items-center justify-center pt-10;
   width: 600px; /* 🔧 change this to resize chart */
   height: 400px; /* 🔧 change this to resize chart */
+  border: 2px solid #ababab; /* Optional: add border for better visibility */
+  border-radius: 10px; /* Optional: add border radius for better visibility */
 }
 
 .chart-title {

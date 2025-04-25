@@ -110,3 +110,52 @@ class GetHash(Resource):
         hash = hashlib.sha256(
             str("GAME_HASH"+str(userid)+str(gameid)).encode('utf-8')).hexdigest()
         return {'status': 'success', 'hash': hash}
+
+
+class GetSubscribedOnlyGames(Resource):
+    def get(self, userid):
+        sub = sub_model.query.filter_by(
+            userid=userid, subscription_status=True).first()
+        if not sub:
+            return {'status': 'failure', 'message': "No subscription found", 'games': []}
+        subscribed_games = gu_model.query.filter_by(
+            user_id=userid, subscribed=True, purchased=False).all()
+        games = []
+        for i in subscribed_games:
+            game = game_model.query.filter_by(id=i.game_id).first()
+            if game:
+                games.append(game)
+        if not subscribed_games:
+            return {'status': 'failure', 'message': "No games found", 'games': []}
+        else:
+            return {'status': 'success', 'games': marshal(games, game_fields)}
+
+
+class GetCompletedGames(Resource):
+    def get(self, userid):
+        completed_games = gu_model.query.filter_by(
+            user_id=userid, completed=True).all()
+        li = []
+        for i in completed_games:
+            li.append(i.game_id)
+        if not completed_games:
+            return {'status': 'failure', 'message': "No games found", 'games': []}
+        else:
+            return {'status': 'success', 'games': li}
+
+
+class SubscribeDownloadGames(Resource):
+    def get(self, userid, gameid):
+        sub = sub_model.query.filter_by(
+            userid=userid, subscription_status=True).first()
+        if not sub:
+            return {'status': 'failure', 'message': "No subscription found", 'games': []}
+        game = gu_model.query.filter_by(
+            user_id=userid, game_id=gameid).first()
+        if not game:
+            game = gu_model(user_id=userid, game_id=gameid, subscribed=True)
+            db.session.add(game)
+            db.session.commit()
+        game.subscribed = True
+        db.session.commit()
+        return {'status': 'success', 'message': "Game subscribed"}
