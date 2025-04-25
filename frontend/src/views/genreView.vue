@@ -6,15 +6,25 @@
         class="bg-accent-content text-white p-6 rounded-lg shadow-lg w-full h-full"
       >
         <h1
-          class="text-3xl text-center bg-primary-content text-accent p-4 rounded-lg"
+          class="text-3xl text-center bg-primary-content text-accent p-4 rounded-lg font-bold"
         >
           Add Genre
         </h1>
         <hr class="my-4" />
 
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success m-3">
-          {{ message }}
+        <div
+          v-show="showMessage"
+          class="alert alert-success m-2 mx-auto flex justify-between"
+          style="max-width: 400px"
+        >
+          <span>{{ message }}</span>
+          <button
+            class="rounded-md border border-black px-2 font-bold"
+            @click="showMessage = false"
+          >
+            X
+          </button>
         </div>
 
         <div class="flex space-x-2">
@@ -198,14 +208,14 @@
 
                     <div class="mt-4">
                       <button
-                        class="btn btn-outline btn-accent mr-2"
+                        class="btn btn-sm btn-accent mr-2"
                         type="submit"
                       >
                         Add
                       </button>
                       <button
                         type="button"
-                        class="btn btn-outline btn-error ml-2"
+                        class="btn btn-sm btn-error ml-2"
                         @click="showAddGenre = false"
                       >
                         Cancel
@@ -235,14 +245,14 @@
                   >
                   <button
                     type="button"
-                    class="btn btn-outline btn-success ml-2"
+                    class="btn btn-sm btn-success ml-2"
                     @click="removeGenre(this.genre_D_id)"
                   >
                     Confirm
                   </button>
                   <button
                     type="button"
-                    class="btn btn-outline btn-error ml-2"
+                    class="btn btn-sm btn-error ml-2"
                     @click="resetDelete()"
                   >
                     Cancel

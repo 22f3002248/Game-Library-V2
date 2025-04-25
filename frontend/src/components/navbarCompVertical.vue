@@ -9,7 +9,7 @@
       <ul class="space-y-4">
         <li>
           <a
-            href="http://localhost:5173/admin/dashboard"
+            @click="goToHome()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Home
@@ -17,7 +17,7 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/allgames"
+            @click="goToLibrary()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Game Library
@@ -25,7 +25,7 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/games"
+            @click="goToAddGame()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Add Game
@@ -33,7 +33,7 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/genre"
+            @click="goToAddGenre()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Add Genre
@@ -41,7 +41,7 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/users"
+            @click="goToUsers()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Manage Users
@@ -49,7 +49,7 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/reviews"
+            @click="goToReviews()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Manage Reviews
@@ -57,7 +57,7 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/subscriptions"
+            @click="goToSubscribes()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
             Manage Subscriptions
@@ -65,10 +65,10 @@
         </li>
         <li>
           <a
-            href="http://localhost:5173/admin/Orders"
+            @click="goToOrders()"
             class="block text-white hover:bg-accent p-3 rounded-lg"
           >
-            Manage Orders
+            Manage Purchased Orders
           </a>
         </li>
         <li>
@@ -97,6 +97,30 @@ export default {
       this.$store.dispatch('set_state_after_logout').then(() => {
         this.$router.push({ name: 'landingView' })
       })
+    },
+    goToHome() {
+      this.$router.push({ name: 'adminDash' })
+    },
+    goToLibrary() {
+      this.$router.push({ name: 'adminAllGamesView' })
+    },
+    goToAddGame() {
+      this.$router.push({ name: 'gameView' })
+    },
+    goToAddGenre() {
+      this.$router.push({ name: 'genreView' })
+    },
+    goToUsers() {
+      this.$router.push({ name: 'adminManageUsers' })
+    },
+    goToReviews() {
+      this.$router.push({ name: 'adminManageReviews' })
+    },
+    goToSubscribes() {
+      this.$router.push({ name: 'adminManageSubscriptions' })
+    },
+    goToOrders() {
+      this.$router.push({ name: 'adminManageOrders' })
     },
   },
 }

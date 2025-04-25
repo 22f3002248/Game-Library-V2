@@ -1,5 +1,3 @@
-from flask_restx import Api
-
 from application.api.auth.auth_api import LoginResource, RegisterResource
 from application.api.game.game_api import (CompleteGameListResource,
                                            GamePhotoResource, GameResource,
@@ -11,11 +9,13 @@ from application.api.game.genre_api import (AGenreResource,
 from application.api.genre.genre_api import (GenreResource,
                                              MultipleGenreResource)
 from application.api.profile.profile_api import ProfileResource
-from application.api.purchase.purchase_api import (CheckPurchase,
+from application.api.purchase.purchase_api import (AGetAllPurchasedResource,
+                                                   CheckPurchase,
                                                    GetAllPurchasedResource,
                                                    GetPurchasedResource,
                                                    PurchaseResource)
-from application.api.purchase.subscription_api import (CheckSubscription,
+from application.api.purchase.subscription_api import (AGetSubscribedGames,
+                                                       CheckSubscription,
                                                        GetCompletedGames,
                                                        GetHash,
                                                        GetSubscribedGames,
@@ -27,6 +27,7 @@ from application.api.reviews.review_api import (AdminReviewResource,
                                                 ReviewResource)
 from application.api.stats.stat import UserStats
 from application.api.user.user_api import AUserResource, SUserResource
+from flask_restx import Api
 
 
 def initialize_api(app):
@@ -54,10 +55,14 @@ def initialize_api(app):
                      '/api/purchase/<int:uid>/purchased')
     api.add_resource(GetAllPurchasedResource,
                      '/api/purchase/<int:userid>/purchased/all')
+    api.add_resource(AGetAllPurchasedResource,
+                     '/admin/purchases')
     api.add_resource(CheckSubscription, '/api/check/subscription/<int:userid>')
     api.add_resource(SubscriptionResource, '/api/subscribe/<int:userid>')
     api.add_resource(GetSubscribedGames,
                      '/api/subscription/<int:userid>/games')
+    api.add_resource(AGetSubscribedGames,
+                     '/admin/subscriptions')
     # > REVIEW
     api.add_resource(
         ReviewResource, '/api/review/<int:gameid>')

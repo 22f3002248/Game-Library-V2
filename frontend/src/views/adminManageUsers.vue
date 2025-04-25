@@ -1,71 +1,72 @@
 <template>
   <div class="min-w-screen flex">
     <navbarCompVertical></navbarCompVertical>
-
     <div class="flex-1">
       <div
         class="bg-accent-content text-white p-6 rounded-lg shadow-lg w-full h-full"
       >
-        <h1 class="text-3xl text-center bg-grey text-accent p-4">
+        <h1 class="text-3xl text-center bg-grey text-accent p-4 font-bold">
           Manage Users
         </h1>
         <hr class="my-4" />
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success m-3">
-          {{ message }}
+        <div v-show="showMessage" class="alert alert-success m-2 mx-auto flex justify-between" style="max-width: 400px;">
+          <span>{{ message }}</span> <button class=" rounded-md border border-black px-2 font-bold" @click="showMessage=false">X</button>
         </div>
-        <table class="table w-full">
-          <thead class="text-accent">
-            <tr>
-              <th>Id</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(user, id) in users" :key="id" class="text-grey">
-              <td>{{ user.id }}</td>
-              <td>{{ user.username }}</td>
-              <td>{{ user.email }}</td>
-              <td>
-                <div>
-                  <p
-                    v-if="user.active"
-                    class="bg-green-600 w-14 border rounded font-bold text-center p-1"
-                  >
-                    Active
-                  </p>
-                  <p
-                    v-if="!user.active"
-                    class="bg-red-600 w-16 border rounded font-bold text-center p-1"
-                  >
-                    Inactive
-                  </p>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <button
-                    v-if="user.active"
-                    @click="confirmBlock(user.id)"
-                    class="btn btn-sm btn-error"
-                  >
-                    Block
-                  </button>
-                  <button
-                    v-if="!user.active"
-                    @click="confirmBlock(user.id)"
-                    class="btn btn-sm btn-success"
-                  >
-                    Unlock
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="overflow: auto; height: 550px">
+          <table class="table w-full">
+            <thead class="text-accent">
+              <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(user, id) in users" :key="id" class="text-grey">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                  <div>
+                    <p
+                      v-if="user.active"
+                      class="bg-green-600 w-14 border rounded font-bold text-center p-1"
+                    >
+                      Active
+                    </p>
+                    <p
+                      v-if="!user.active"
+                      class="bg-red-600 w-16 border rounded font-bold text-center p-1"
+                    >
+                      Blocked
+                    </p>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <button
+                      v-if="user.active"
+                      @click="confirmBlock(user.id)"
+                      class="btn btn-sm btn-error"
+                    >
+                      Block
+                    </button>
+                    <button
+                      v-if="!user.active"
+                      @click="confirmBlock(user.id)"
+                      class="btn btn-sm btn-success"
+                    >
+                      Unlock
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <div>
           <TransitionRoot
@@ -83,14 +84,14 @@
                   >
                   <button
                     type="button"
-                    class="btn btn-outline btn-success ml-2"
+                    class="btn btn-sm btn-success ml-2"
                     @click="changeStatusUser(this.user_id)"
                   >
                     Confirm
                   </button>
                   <button
                     type="button"
-                    class="btn btn-outline btn-error ml-2"
+                    class="btn btn-sm btn-error ml-2"
                     @click="resetBlock()"
                   >
                     Cancel
@@ -135,6 +136,7 @@ export default {
       showMessage: false,
     }
   },
+
   methods: {
     getUsers() {
       const path = 'http://127.0.0.1:5000/admin/users'

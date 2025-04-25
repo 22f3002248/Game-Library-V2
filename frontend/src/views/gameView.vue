@@ -5,12 +5,26 @@
       <div
         class="bg-accent-content text-white p-6 rounded-lg shadow-lg w-full h-full"
       >
-        <h1 class="text-3xl text-center bg-grey text-accent p-4">ADD GAME</h1>
+      <h1
+          class="text-3xl text-center bg-primary-content text-accent p-4 rounded-lg font-bold"
+        >
+          Add Game
+        </h1>
         <hr class="my-4" />
 
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success m-3">
-          {{ message }}
+        <div
+          v-show="showMessage"
+          class="alert alert-success m-2 mx-auto flex justify-between"
+          style="max-width: 400px"
+        >
+          <span>{{ message }}</span>
+          <button
+            class="rounded-md border border-black px-2 font-bold"
+            @click="showMessage = false"
+          >
+            X
+          </button>
         </div>
 
         <div class="my-4">
@@ -25,59 +39,61 @@
         </div>
 
         <!-- Games Table -->
-        <table class="table w-full table-zebra">
-          <thead>
-            <tr class="text-accent">
-              <th>Id</th>
-              <th>Name</th>
-              <th>Genre</th>
-              <th>No. of Downloads</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(game, id) in games" :key="id">
-              <td>{{ game.id }}</td>
-              <td>{{ game.title }}</td>
-              <td>
-                <span v-if="game.genres && game.genres.length">
-                  {{ game.genres.join(', ') }}
-                  <!-- Joining genre titles with a comma -->
-                </span>
-              </td>
-              <td>
-                {{ game.no_of_downloads.toLocaleString('en-IN') }}
-              </td>
-              <td>
-                <div class="btn-group">
-                  <button
-                    @click="
-                      () => {
-                        editGame(game)
-                        openEditModal = true
-                      }
-                    "
-                    class="btn btn-info btn-sm mr-2"
-                  >
-                    Update
-                  </button>
-                  <button
-                    @click=";(showDeleteBox = true), deleteGames(game)"
-                    class="btn btn-error btn-sm mr-2"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    @click="openGameModal(game.id)"
-                    class="btn btn-primary btn-sm"
-                  >
-                    Open
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="overflow: auto; height: 550px">
+          <table class="table w-full table-zebra">
+            <thead>
+              <tr class="text-accent">
+                <th>Id</th>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>No. of Downloads</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(game, id) in games" :key="id">
+                <td>{{ game.id }}</td>
+                <td>{{ game.title }}</td>
+                <td>
+                  <span v-if="game.genres && game.genres.length">
+                    {{ game.genres.join(', ') }}
+                    <!-- Joining genre titles with a comma -->
+                  </span>
+                </td>
+                <td>
+                  {{ game.no_of_downloads.toLocaleString('en-IN') }}
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <button
+                      @click="
+                        () => {
+                          editGame(game)
+                          openEditModal = true
+                        }
+                      "
+                      class="btn btn-info btn-sm mr-2"
+                    >
+                      Update
+                    </button>
+                    <button
+                      @click=";(showDeleteBox = true), deleteGames(game)"
+                      class="btn btn-error btn-sm mr-2"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      @click="openGameModal(game.id)"
+                      class="btn btn-primary btn-sm"
+                    >
+                      Open
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <TransitionRoot :show="showGameModal" @close="showGameModal = false">
@@ -124,7 +140,11 @@
                   :id="'slide' + (index + 1)"
                   class="carousel-item relative w-full"
                 >
-                  <img style="height: 16rem;" :src="image" class="w-full object-cover" />
+                  <img
+                    style="height: 16rem"
+                    :src="image"
+                    class="w-full object-cover"
+                  />
                   <div
                     class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
                   >
@@ -639,11 +659,11 @@
 
                   <!-- Submit and Cancel Buttons -->
                   <div class="mt-4 flex justify-end col-span-2 space-x-4">
-                    <button type="submit" class="btn btn-accent">Update</button>
+                    <button type="submit" class="btn btn-accent btn-sm">Update</button>
                     <button
                       type="button"
                       @click="openEditModal = false"
-                      class="btn btn-error"
+                      class="btn btn-error btn-sm"
                     >
                       Cancel
                     </button>
@@ -671,14 +691,14 @@
               >
               <button
                 type="button"
-                class="btn btn-outline btn-success ml-2"
+                class="btn btn-outline btn-success btn-sm ml-2"
                 @click="removeGame(this.game_D_id)"
               >
                 Confirm
               </button>
               <button
                 type="button"
-                class="btn btn-outline btn-error ml-2"
+                class="btn btn-outline btn-error btn-sm ml-2"
                 @click="resetDelete()"
               >
                 Cancel
@@ -983,7 +1003,7 @@ export default {
           this.alert_type = 'alert-error'
         })
     },
-    getGamePhotos(id) {  
+    getGamePhotos(id) {
       const path = `http://127.0.0.1:5000/api/game/${id}/photos`
       axios
         .get(path, {})

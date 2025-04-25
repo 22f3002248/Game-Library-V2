@@ -1,12 +1,13 @@
 import hashlib
 from datetime import datetime, timedelta, timezone
 
-from flask_restx import Resource, fields, marshal, reqparse
-
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
+from application.data.model import Subscription
 from application.data.model import Subscription as sub_model
+from application.data.model import User as user_model
+from flask_restx import Resource, fields, marshal, reqparse
 
 genre_fields = {
     'id': fields.Integer,
@@ -29,6 +30,14 @@ game_fields = {
     'no_of_downloads': fields.Integer,
     'played': fields.Boolean,
     'poster': fields.String(attribute=lambda x: x.get_cover_image())
+}
+
+sub_fields = {
+    'username': fields.String,
+    'email': fields.String,
+    'subscription_date': fields.DateTime,
+    'subscription_end_date': fields.DateTime,
+    'subscription_status': fields.Boolean,
 }
 
 
@@ -159,3 +168,20 @@ class SubscribeDownloadGames(Resource):
         game.subscribed = True
         db.session.commit()
         return {'status': 'success', 'message': "Game subscribed"}
+
+
+class AGetSubscribedGames(Resource):
+    def get(self):
+        subscriptions = sub_model.query.all()
+        sub_data = []
+        for sub in subscriptions:
+            user = user_model.query.filter_by(
+                id=sub.userid).first()
+            sub_data.append({
+                'username': user.username,
+                'email': user.email,
+                'subscription_date': sub.subscription_date,
+                'subscription_end_date': sub.subscription_end_date,
+                'subscription_status': sub.subscription_status,
+            })
+        return {'status': 'success', 'subscriptions': marshal(sub_data, sub_fields)}
