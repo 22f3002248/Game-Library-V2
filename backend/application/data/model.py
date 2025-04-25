@@ -44,8 +44,10 @@ class Game(db.Model):
     played = db.Column(db.Boolean, default=False)
     genres = db.relationship(
         'Genre', secondary=game_genre_association, backref='games', lazy=True)
-    users = db.relationship('Game_User', back_populates='game')
-    reviews = db.relationship('Review', back_populates='game')
+    users = db.relationship(
+        'Game_User', back_populates='game', cascade="all, delete")
+    reviews = db.relationship(
+        'Review', back_populates='game', cascade="all, delete-orphan")
 
     def get_cover_image(self):
         cover_filename = f"{self.id}.jpg"
@@ -115,6 +117,7 @@ class User(db.Model, UserMixin):
 
 
 class Game_User(db.Model):
+    __tablename__ = 'game__user'
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     purchased = db.Column(db.Boolean, default=False)

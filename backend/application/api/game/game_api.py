@@ -24,7 +24,6 @@ game_fields = {
     'multiplayer': fields.Boolean,
     'no_of_downloads': fields.Integer,
     'poster': fields.String(attribute=lambda x: x.get_cover_image())
-
 }
 
 
@@ -48,9 +47,6 @@ games_parser.add_argument(
     'platform', type=str, required=True, help="platform is required!"
 )
 games_parser.add_argument(
-    'rating', type=float, required=True, help="rating is required!"
-)
-games_parser.add_argument(
     'description', type=str, required=True, help="description is required!"
 )
 games_parser.add_argument(
@@ -59,10 +55,6 @@ games_parser.add_argument(
 games_parser.add_argument(
     'multiplayer', type=bool, required=True, help="multiplayer value is required!"
 )
-games_parser.add_argument(
-    'no_of_downloads', type=int, required=True, help="no_of_downloads is required"
-)
-
 
 class GameResource(Resource):
     # ? to send all the games
@@ -82,11 +74,9 @@ class GameResource(Resource):
                 developer=args['developer'],
                 publisher=args['publisher'],
                 platform=args['platform'],
-                rating=args['rating'],
                 description=args['description'],
                 price=args['price'],
                 multiplayer=args['multiplayer'],
-                no_of_downloads=args['no_of_downloads']
             )
 
         release_date = args['release_date']
@@ -146,20 +136,18 @@ class SingleGameResource(Resource):
             game.developer = args['developer']
             game.publisher = args['publisher']
             game.platform = args['platform']
-            game.rating = args['rating']
             game.description = args['description']
             game.price = args['price']
             game.multiplayer = args['multiplayer']
-            game.no_of_downloads = args['no_of_downloads']
 
         if args['release_date']:
             release_date = args['release_date']
             if isinstance(release_date, str):
                 game.release_date = datetime.strptime(
                     release_date, '%Y-%m-%d').date()
-
-        if args.get('genre_ids'):
-            genre_ids = args['genre_ids']
+                
+        genre_ids = args.get('genre_ids', [])
+        if genre_ids:
             genres = genre_model.query.filter(
                 genre_model.id.in_(genre_ids)).all()
             game.genres = genres  # Associate new genres
@@ -181,7 +169,6 @@ class SingleGameResource(Resource):
 
         # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200
-
 
 class TopGameListResource(Resource):
     def get(self, no):

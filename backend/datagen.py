@@ -115,8 +115,9 @@ def assign_games_to_users():
                     )
                 else:
                     continue
-            db.session.add(game_user)
-        db.session.commit()
+                with db.session.no_autoflush:
+                    db.session.add(game_user)
+                    db.session.commit()
     db.session.commit()
 
 

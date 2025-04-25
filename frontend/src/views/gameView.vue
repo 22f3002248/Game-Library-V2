@@ -9,7 +9,7 @@
         <hr class="my-4" />
 
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success h-10 mb-3">
+        <div v-if="showMessage" class="alert alert-success m-3">
           {{ message }}
         </div>
 
@@ -46,7 +46,7 @@
                 </span>
               </td>
               <td>
-                {{ game.no_of_downloads }}
+                {{ game.no_of_downloads.toLocaleString('en-IN') }}
               </td>
               <td>
                 <div class="btn-group">
@@ -62,7 +62,7 @@
                     Update
                   </button>
                   <button
-                    @click="deleteGames(game)"
+                    @click=";(showDeleteBox = true),(deleteGames(game))"
                     class="btn btn-error btn-sm mr-2"
                   >
                     Delete
@@ -97,7 +97,6 @@
             <DialogTitle
               class="text-accent font-medium leading-6 bg-grey text-center"
             >
-              GAME INFORMATION
             </DialogTitle>
 
             <!-- Modal content -->
@@ -107,7 +106,7 @@
                 <div class="mt-4 flex justify-end mr-10">
                   <button
                     @click="showGameModal = false"
-                    class="btn btn-sm btn-error ml-4"
+                    class="btn btn-sm btn-error ml-10"
                   >
                     X
                   </button>
@@ -183,7 +182,7 @@
             class="bg-accent-content p-6 rounded-lg shadow-lg w-full max-w-5xl z-50"
           >
             <DialogTitle
-              class="text-accent font-medium leading-6 bg-grey text-center text-2xl mb-5"
+              class="text-accent font-medium leading-6 bg-grey text-center mb-4 font-bold text-3xl"
             >
               Add New Game
             </DialogTitle>
@@ -343,35 +342,19 @@
 
                   <div class="form-control mt-4">
                     <label
-                      for="game-rating"
-                      class="block text-sm font-medium text-accent"
-                      >Enter Rating</label
-                    >
-                    <input
-                      v-model="addGameForm.rating"
-                      id="game-rating"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="number"
-                      step="0.1"
-                      placeholder="Ex(0.0,1.9)..."
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
                       for="game-description"
                       class="block text-sm font-medium text-accent"
                       >Description</label
                     >
-                    <input
+                    <textarea
                       v-model="addGameForm.description"
                       id="game-description"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="text"
+                      class="mt-1 block w-full h-full rounded-md border-gray-300 shadow-sm input input-bordered"
                       placeholder="Enter Description"
                       required
-                    />
+                      rows="5"
+                      cols="5"
+                    ></textarea>
                   </div>
 
                   <div class="form-control mt-4">
@@ -387,22 +370,6 @@
                       type="number"
                       step="0.01"
                       placeholder="Ex(0.01,3.22).."
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-no_of_download"
-                      class="block text-sm font-medium text-accent"
-                      >Enter Number Of Downloads</label
-                    >
-                    <input
-                      v-model="addGameForm.no_of_downloads"
-                      id="game-no_of_download"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="number"
-                      placeholder="Ex(1,293)"
                       required
                     />
                   </div>
@@ -436,196 +403,179 @@
           <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4">
               <DialogPanel
-                class="w-full max-w-md transform overflow-hidden rounded-lg bg-accent-content p-6 shadow-xl transition-all z-50"
+                class="w-full max-w-4xl transform overflow-hidden rounded-lg bg-accent-content p-6 shadow-xl transition-all z-50"
               >
                 <DialogTitle
-                  class="text-accent font-medium leading-6 bg-grey text-center"
+                  class="text-accent font-medium leading-6 bg-grey text-center mb-4 font-bold text-3xl underline"
                 >
-                  Update Game
+                  {{ editForm.title }}
                 </DialogTitle>
 
-                <form @submit.prevent="onSubmitUpdate">
-                  <div class="form-control mt-4 mb-4">
-                    <label
-                      for="game-name"
-                      class="block text-sm font-medium text-accent"
-                      >Game Name</label
-                    >
-                    <input
-                      v-model="editForm.name"
-                      id="game-name"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="text"
-                      placeholder="Enter Game Name"
-                      required
-                    />
-                  </div>
+                <form
+                  @submit.prevent="onSubmitUpdate"
+                  class="grid grid-cols-2 gap-4"
+                >
+                  <!-- Left Column -->
+                  <div class="space-y-4">
+                    <div class="form-control">
+                      <label
+                        for="game-name"
+                        class="block text-sm font-medium text-accent"
+                        >Game Name</label
+                      >
+                      <input
+                        v-model="editForm.title"
+                        id="game-name"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        type="text"
+                        placeholder="Enter Game Name"
+                        required
+                      />
+                    </div>
 
-                  <div id="form-control mt-5">
-                    <label
-                      v-for="genre in genres"
-                      :key="genre.id"
-                      class="flex items-center space-x-2"
-                    >
+                    <div class="form-control">
+                      <label class="block text-sm font-medium text-accent mb-2"
+                        >Select Genres</label
+                      >
+                      <div class="grid grid-cols-1 gap-2">
+                        <label
+                          v-for="genre in genres"
+                          :key="genre.id"
+                          class="flex items-center space-x-2"
+                        >
+                          <input
+                            type="checkbox"
+                            v-model="editForm.genre_ids"
+                            :value="genre.id"
+                            class="checkbox checkbox-accent"
+                          />
+                          <span class="text-grey-700">{{ genre.title }}</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-control">
+                      <label
+                        for="game-multiplayer"
+                        class="block text-sm font-medium text-accent"
+                        >Multiplayer?</label
+                      >
                       <input
                         type="checkbox"
-                        v-model="addGameForm.genre_ids"
-                        :value="genre.id"
+                        v-model="editForm.multiplayer"
+                        id="game-multiplayer"
                         class="checkbox checkbox-accent"
                       />
-                      <span class="text-grey-700">{{ genre.title }}</span>
-                    </label>
+                    </div>
                   </div>
 
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-release_date"
-                      class="block text-sm font-medium text-accent"
-                      >Select Release Date</label
-                    >
-                    <input
-                      v-model="editForm.release_date"
-                      id="game-release_date"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="date"
-                      required
-                    />
+                  <!-- Right Column -->
+                  <div class="space-y-4">
+                    <div class="form-control">
+                      <label
+                        for="game-release_date"
+                        class="block text-sm font-medium text-accent"
+                        >Select Release Date</label
+                      >
+                      <input
+                        v-model="editForm.release_date"
+                        id="game-release_date"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        type="date"
+                        required
+                      />
+                    </div>
+
+                    <div class="form-control">
+                      <label
+                        for="game-developer"
+                        class="block text-sm font-medium text-accent"
+                        >Developer Name</label
+                      >
+                      <input
+                        v-model="editForm.developer"
+                        id="game-developer"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        type="text"
+                        placeholder="Enter Developer Name"
+                        required
+                      />
+                    </div>
+
+                    <div class="form-control">
+                      <label
+                        for="game-publisher"
+                        class="block text-sm font-medium text-accent"
+                        >Publisher Name</label
+                      >
+                      <input
+                        v-model="editForm.publisher"
+                        id="game-publisher"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        type="text"
+                        placeholder="Enter Publisher Name"
+                        required
+                      />
+                    </div>
+
+                    <div class="form-control">
+                      <label
+                        for="game-platform"
+                        class="block text-sm font-medium text-accent"
+                        >Platform Name</label
+                      >
+                      <input
+                        v-model="editForm.platform"
+                        id="game-platform"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        type="text"
+                        placeholder="Enter Platform Name"
+                        required
+                      />
+                    </div>
+
+                    <div class="form-control">
+                      <label
+                        for="game-description"
+                        class="block text-sm font-medium text-accent"
+                        >Description</label
+                      >
+                      <textarea
+                        v-model="editForm.description"
+                        id="game-description"
+                        class="mt-1 w-full h-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        placeholder="Enter Description"
+                        required
+                        rows="5"
+                        cols="5"
+                      ></textarea>
+                    </div>
+
+                    <div class="form-control">
+                      <label
+                        for="game-price"
+                        class="block text-sm font-medium text-accent"
+                        >Enter Price</label
+                      >
+                      <input
+                        v-model="editForm.price"
+                        id="game-price"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
+                        type="number"
+                        step="0.01"
+                        placeholder="Ex(0.01,3.22).."
+                        required
+                      />
+                    </div>
                   </div>
 
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-developer"
-                      class="block text-sm font-medium text-accent"
-                      >Developer Name</label
-                    >
-                    <input
-                      v-model="editForm.developer"
-                      id="game-developer"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="text"
-                      placeholder="Enter Developer Name"
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-publisher"
-                      class="block text-sm font-medium text-accent"
-                      >Publisher Name</label
-                    >
-                    <input
-                      v-model="editForm.publisher"
-                      id="game-publisher"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="text"
-                      placeholder="Enter Publisher Name"
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-platform"
-                      class="block text-sm font-medium text-accent"
-                      >Platform Name</label
-                    >
-                    <input
-                      v-model="editForm.platform"
-                      id="game-platform"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="text"
-                      placeholder="Enter Platform Name"
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-rating"
-                      class="block text-sm font-medium text-accent"
-                      >Enter Rating</label
-                    >
-                    <input
-                      v-model="editForm.rating"
-                      id="game-rating"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="number"
-                      step="0.1"
-                      placeholder="Ex(0.0,1.9)..."
-                      required
-                    />
-                  </div>
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-description"
-                      class="block text-sm font-medium text-accent"
-                      >Description</label
-                    >
-                    <input
-                      v-model="editForm.description"
-                      id="game-description"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="text"
-                      placeholder="Enter Description"
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-price"
-                      class="block text-sm font-medium text-accent"
-                      >Enter Price</label
-                    >
-                    <input
-                      v-model="editForm.price"
-                      id="game-price"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="number"
-                      step="0.01"
-                      placeholder="Ex(0.01,3.22).."
-                      required
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-multiplayer"
-                      class="block text-sm font-medium text-accent"
-                      >Multiplayer?</label
-                    >
-                    <input
-                      type="checkbox"
-                      v-model="editForm.multiplayer"
-                      id="game-multiplayer"
-                    />
-                  </div>
-
-                  <div class="form-control mt-4">
-                    <label
-                      for="game-no_of_download"
-                      class="block text-sm font-medium text-accent"
-                      >Enter Number Of Downloads</label
-                    >
-                    <input
-                      v-model="editForm.no_of_downloads"
-                      id="game-no_of_download"
-                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm input input-bordered"
-                      type="number"
-                      placeholder="Ex(1,293)"
-                      required
-                    />
-                  </div>
-
-                  <div class="mt-4 flex justify-end">
-                    <button type="submit" class="btn btn-outline btn-accent">
-                      Update
-                    </button>
+                  <!-- Submit and Cancel Buttons -->
+                  <div class="mt-4 flex justify-end col-span-2 space-x-4">
+                    <button type="submit" class="btn btn-accent">Update</button>
                     <button
                       type="button"
                       @click="openEditModal = false"
-                      class="btn btn-outline btn-error ml-4"
+                      class="btn btn-error"
                     >
                       Cancel
                     </button>
@@ -637,6 +587,42 @@
         </Dialog>
       </TransitionRoot>
     </div>
+
+    <div>
+          <TransitionRoot
+            as="template"
+            :show="showDeleteBox"
+            @close="showDeleteBox = false"
+          >
+            <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
+              <div class="flex items-center justify-center min-h-screen">
+                <DialogPanel
+                  class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg"
+                >
+                  <DialogTitle class="text-accent font-bold text-[1.4rem] mb-4"
+                    >Are you sure you want to delete the game:
+                    {{ game_D_title }}?</DialogTitle
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-success ml-2"
+                    @click="removeGame(this.game_D_id)"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-error ml-2"
+                    @click="resetDelete()"
+                  >
+                    Cancel
+                  </button>
+                </DialogPanel>
+              </div>
+            </Dialog>
+          </TransitionRoot>
+        </div>
+
   </div>
 </template>
 
@@ -671,11 +657,9 @@ export default {
         developer: '',
         publisher: '',
         platform: '',
-        rating: 0.0, //float
         description: '',
         price: 0.0, //float
         multiplayer: [], //boolean
-        no_of_downloads: 0, //integer
       },
       editForm: {
         id: 0,
@@ -685,11 +669,9 @@ export default {
         developer: '',
         publisher: '',
         platform: '',
-        rating: 0.0, //float
         description: '',
         price: 0.0, //float
         multiplayer: [], //boolean
-        no_of_downloads: 0, //integer
       },
       message: '',
       modal_title: '',
@@ -711,6 +693,9 @@ export default {
       showGameModal: false,
       selectedFile: null, //for file
       imagePreview: null,
+      game_D_id:0,
+      game_D_title:'',
+      showDeleteBox: false,
     }
   },
   methods: {
@@ -746,11 +731,9 @@ export default {
       this.addGameForm.developer = ''
       this.addGameForm.publisher = ''
       this.addGameForm.platform = ''
-      this.addGameForm.rating = 0.0 //float
       this.addGameForm.description = ''
       this.addGameForm.price = 0.0 //float
       this.addGameForm.multiplayer = [] //boolean
-      this.addGameForm.no_of_downloads = 0 //integer
 
       this.editForm.id = ''
       this.editForm.name = ''
@@ -759,11 +742,9 @@ export default {
       this.editForm.developer = ''
       this.editForm.publisher = ''
       this.editForm.platform = ''
-      this.editForm.rating = 0.0 //float
       this.editForm.description = ''
       this.editForm.price = 0.0 //float
       this.editForm.multiplayer = [] //boolean
-      this.editForm.no_of_downloads = 0 //integer
     },
     handleFileChange(event) {
       // Get the selected file from the input
@@ -797,12 +778,10 @@ export default {
         developer: this.addGameForm.developer,
         publisher: this.addGameForm.publisher,
         platform: this.addGameForm.platform,
-        rating: this.addGameForm.rating,
         description: this.addGameForm.description,
         price: this.addGameForm.price,
-        multiplayer: multiplayer,
-        no_of_downloads: this.addGameForm.no_of_downloads,
         poster: this.selectedFile,
+        multiplayer: this.addGameForm.multiplayer,
       }
       console.log(payload)
       this.addGame(payload)
@@ -817,10 +796,10 @@ export default {
     onSubmitUpdate(e) {
       e.preventDefault()
       this.openEditModal = false
-
       let multiplayer = false
-      const genre_ids = this.addGameForm.genre_ids.map((id) => parseInt(id))
-      if (this.addGameForm.multiplayer[0]) multiplayer = true
+      let genre_ids = []
+      genre_ids = this.editForm.genre_ids.map((id) => parseInt(id))
+      if (this.editForm.multiplayer[0]) multiplayer = true
       const payload = {
         title: this.editForm.name,
         genre_ids,
@@ -828,11 +807,9 @@ export default {
         developer: this.editForm.developer,
         publisher: this.editForm.publisher,
         platform: this.editForm.platform,
-        rating: this.editForm.rating,
         description: this.editForm.description,
         price: this.editForm.price,
         multiplayer: this.editForm.multiplayer,
-        no_of_downloads: this.editForm.no_of_downloads,
         // poster: this.editForm.poster
       }
       this.updateGame(payload, this.editForm.id)
@@ -867,6 +844,7 @@ export default {
         .then(() => {
           this.getGames()
           this.message = 'Game Removed!'
+          this.resetDelete()
           this.showMessage = true
         })
         .catch((err) => {
@@ -880,9 +858,13 @@ export default {
     },
     // Handle delete button
     deleteGames(game) {
-      if (confirm(`Are you sure you want to delete the game: ${game.title}?`)) {
-        this.removeGame(game.id)
-      }
+      this.game_D_id = game.id
+      this.game_D_title = game.title
+    },
+    resetDelete() {
+      this.game_D_id = 0
+      this.game_D_title = ''
+      this.showDeleteBox = false
     },
     openGameModal(num) {
       let n = num - 1 ///change

@@ -28,19 +28,23 @@ _caching_
 
 NOTES
 
--   remove navbar from landing page
+-   remove navbar from landing page                                                   --done
 -   landing page card split
 -   modal styling
--   message popup
+-   message popup 
 -   review management
--   add genre card size
--   textarea row increase
--   add game rating remove, Number Of Downloads
--   add game description textarea
--   update remove rating, no of down, split the modal into right and left
--   description textarea
--   update modal game name
+-   add genre card size                                                               --done
+-   textarea row increase                                                             --done
+-   add game rating remove, Number Of Downloads                                       --done
+-   add game description textarea                                                     --done
+-   update remove rating, no of down, split the modal into right and left             --done
+-   description textarea                                                              --done
+-   update modal game name                                                            --done
 -   admin/games open -> default game page not modal
--   large number add commas
--   delete game/genre prompt change to modal
--   game images
+-   large number add commas                                                           --done
+-   delete game/genre prompt change to modal                                          --done
+-   game images  
+
+
+Issues
+- update game error not solve    304 image not modified
