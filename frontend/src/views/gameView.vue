@@ -62,7 +62,7 @@
                     Update
                   </button>
                   <button
-                    @click=";(showDeleteBox = true),(deleteGames(game))"
+                    @click=";(showDeleteBox = true), deleteGames(game)"
                     class="btn btn-error btn-sm mr-2"
                   >
                     Delete
@@ -78,16 +78,14 @@
             </tr>
           </tbody>
         </table>
-
-        <!-- Footer
-        <footer>
-          
-        </footer> -->
       </div>
     </div>
     <TransitionRoot :show="showGameModal" @close="showGameModal = false">
       <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
-        <div class="flex items-center justify-center min-h-full">
+        <div
+          style="max-width: 900px; margin: auto"
+          class="flex items-center justify-center min-h-full"
+        >
           <div class="fixed inset-0 bg-black bg-opacity-30"></div>
           <!-- Background overlay -->
 
@@ -100,9 +98,11 @@
             </DialogTitle>
 
             <!-- Modal content -->
-            <div class="w-full max-w-5xl">
+            <div class="w-90">
               <div class="flex justify-between items-center ml-20">
-                <h3 class="text-2xl font-bold">{{ modal_title }}</h3>
+                <h3 style="visibility: hidden" class="text-2xl font-bold">
+                  {{ modal_title }}
+                </h3>
                 <div class="mt-4 flex justify-end mr-10">
                   <button
                     @click="showGameModal = false"
@@ -114,57 +114,125 @@
               </div>
               <br />
               <br />
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="flex flex-col items-center mr-20">
-                  <img
-                    :src="modal_poster"
-                    alt="Image"
-                    height="400px"
-                    width="300px"
-                    style="
-                      box-shadow: 2px 2px 30px rgb(205, 204, 204);
-                      border-radius: 10px;
-                    "
-                  />
-                  <br />
-                </div>
-                <div class="flex flex-col">
-                  <div class="mb-2">
-                    <strong>Genre:</strong> {{ modal_genre }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Release Date:</strong> {{ modal_release_date }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Developer:</strong> {{ modal_developer }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Publisher:</strong> {{ modal_publisher }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Platform:</strong> {{ modal_platform }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Rating:</strong> {{ modal_rating }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Description:</strong>
-                    <p class="text-justify">{{ modal_description }}</p>
-                  </div>
-                  <div class="mb-2">
-                    <strong>Price:</strong> ${{ modal_price.toFixed(2) }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>Multiplayer:</strong>
-                    {{ modal_multiplayer ? 'Yes' : 'No' }}
-                  </div>
-                  <div class="mb-2">
-                    <strong>No. of Downloads:</strong>
-                    {{ modal_no_of_downloads }}
+            </div>
+            <!-- start -->
+            <div class="container mx-auto py-8 max-w-3xl">
+              <div class="carousel w-full custom-carousel">
+                <div
+                  v-for="(image, index) in images"
+                  :key="index"
+                  :id="'slide' + (index + 1)"
+                  class="carousel-item relative w-full"
+                >
+                  <img style="height: 16rem;" :src="image" class="w-full object-cover" />
+                  <div
+                    class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
+                  >
+                    <a
+                      :href="'#slide' + (index === 0 ? images.length : index)"
+                      class="btn btn-circle"
+                    >
+                      ❮
+                    </a>
+                    <a
+                      :href="
+                        '#slide' + (index === images.length - 1 ? 1 : index + 2)
+                      "
+                      class="btn btn-circle"
+                    >
+                      ❯
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
+
+            <br /><br /><br />
+            <h1 class="text-4xl font-bold text-center mb-3">
+              {{ modal_title }}
+            </h1>
+            <br />
+            <!-- Game Information Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 mt-8">
+              <!-- Left: Game Cover and Actions -->
+              <div class="flex flex-col items-center">
+                <img
+                  :src="modal_poster"
+                  alt="Game Cover"
+                  class="shadow-lg rounded-lg"
+                  style="width: 300px; height: 400px"
+                />
+                <br />
+                <!-- <div v-if="this.completed == true">
+                  <div class="flex flex-col space-y-2">
+                    <p>You have completed this game</p>
+                    <button class="btn btn-secondary w-full">Download</button>
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="flex flex-col space-y-2">
+                    <p v-if="this.purchased == true">
+                      You have purchased this game
+                    </p>
+                    <p
+                      v-if="this.subscribed == true && this.purchased == false"
+                    >
+                      You have subscribed
+                    </p>
+                    <button class="btn btn-secondary w-full">Download</button>
+                  </div>
+                </div> -->
+                <!-- <div
+                  v-if="
+                    this.subscribed == false &&
+                    this.purchased == false &&
+                    this.completed == false
+                  "
+                >
+                  <div class="flex flex-col space-y-2">
+                    <button class="btn btn-primary w-full">Buy</button>
+                    <button class="btn btn-secondary w-full">Subscribe</button>
+                  </div>
+                </div> -->
+              </div>
+
+              <div class="flex flex-col">
+                <div class="mb-2">
+                  <strong>Genre:</strong> {{ modal_genre }}
+                </div>
+                <div class="mb-2">
+                  <strong>Release Date:</strong> {{ modal_release_date }}
+                </div>
+                <div class="mb-2">
+                  <strong>Developer:</strong> {{ modal_developer }}
+                </div>
+                <div class="mb-2">
+                  <strong>Publisher:</strong> {{ modal_publisher }}
+                </div>
+                <div class="mb-2">
+                  <strong>Platform:</strong> {{ modal_platform }}
+                </div>
+                <div class="mb-2">
+                  <strong>Rating:</strong> {{ modal_rating }}
+                </div>
+                <div class="mb-2">
+                  <strong>Description:</strong>
+                  <p class="text-justify">{{ modal_description }}</p>
+                </div>
+                <div class="mb-2">
+                  <strong>Price:</strong> ${{ modal_price.toFixed(2) }}
+                </div>
+                <div class="mb-2">
+                  <strong>Multiplayer:</strong>
+                  {{ modal_multiplayer ? 'Yes' : 'No' }}
+                </div>
+                <div class="mb-2">
+                  <strong>No. of Downloads:</strong>
+                  {{ modal_no_of_downloads.toLocaleString('en-IN') }}
+                </div>
+              </div>
+            </div>
+
             <!-- Add more fields as needed -->
           </DialogPanel>
         </div>
@@ -589,40 +657,37 @@
     </div>
 
     <div>
-          <TransitionRoot
-            as="template"
-            :show="showDeleteBox"
-            @close="showDeleteBox = false"
-          >
-            <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
-              <div class="flex items-center justify-center min-h-screen">
-                <DialogPanel
-                  class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg"
-                >
-                  <DialogTitle class="text-accent font-bold text-[1.4rem] mb-4"
-                    >Are you sure you want to delete the game:
-                    {{ game_D_title }}?</DialogTitle
-                  >
-                  <button
-                    type="button"
-                    class="btn btn-outline btn-success ml-2"
-                    @click="removeGame(this.game_D_id)"
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline btn-error ml-2"
-                    @click="resetDelete()"
-                  >
-                    Cancel
-                  </button>
-                </DialogPanel>
-              </div>
-            </Dialog>
-          </TransitionRoot>
-        </div>
-
+      <TransitionRoot
+        as="template"
+        :show="showDeleteBox"
+        @close="showDeleteBox = false"
+      >
+        <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto">
+          <div class="flex items-center justify-center min-h-screen">
+            <DialogPanel class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg">
+              <DialogTitle class="text-accent font-bold text-[1.4rem] mb-4"
+                >Are you sure you want to delete the game:
+                {{ game_D_title }}?</DialogTitle
+              >
+              <button
+                type="button"
+                class="btn btn-outline btn-success ml-2"
+                @click="removeGame(this.game_D_id)"
+              >
+                Confirm
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline btn-error ml-2"
+                @click="resetDelete()"
+              >
+                Cancel
+              </button>
+            </DialogPanel>
+          </div>
+        </Dialog>
+      </TransitionRoot>
+    </div>
   </div>
 </template>
 
@@ -649,7 +714,6 @@ export default {
     return {
       games: [],
       genres: [],
-      topGames: [],
       addGameForm: {
         name: '',
         genre_ids: [],
@@ -674,18 +738,6 @@ export default {
         multiplayer: [], //boolean
       },
       message: '',
-      modal_title: '',
-      modal_genre: '',
-      modal_poster: '',
-      modal_release_date: '',
-      modal_developer: '',
-      modal_publisher: '',
-      modal_platform: '',
-      modal_rating: 0.0,
-      modal_description: '',
-      modal_price: 0.0,
-      modal_multiplayer: false,
-      modal_no_of_downloads: 0,
       showMessage: false, //show hide
       openAddModel: false,
       openEditModal: false,
@@ -693,9 +745,32 @@ export default {
       showGameModal: false,
       selectedFile: null, //for file
       imagePreview: null,
-      game_D_id:0,
-      game_D_title:'',
+      game_D_id: 0,
+      game_D_title: '',
       showDeleteBox: false,
+
+      //
+
+      images: [
+        'https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp',
+        'https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp',
+        'https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp',
+        'https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp',
+      ],
+      // Example game data
+      modal_title: '',
+      modal_poster: '',
+      modal_genre: '',
+      modal_release_date: '',
+      modal_developer: '',
+      modal_publisher: '',
+      modal_platform: '',
+      modal_rating: '',
+      modal_description: '',
+      modal_price: 0.0,
+      modal_multiplayer: false,
+      modal_no_of_downloads: 0,
+      isvisible: false,
     }
   },
   methods: {
@@ -707,7 +782,6 @@ export default {
         .then((res) => {
           this.games = res.data.games
           this.genres = res.data.genres
-          this.topGames = res.data.games
         })
         .catch((err) => {
           console.error(err)
@@ -866,37 +940,65 @@ export default {
       this.game_D_title = ''
       this.showDeleteBox = false
     },
-    openGameModal(num) {
-      let n = num - 1 ///change
-      if (Array.isArray(this.topGames) && this.topGames[n]) {
-        this.modal_title = this.topGames[n].title
-        let gs = this.topGames[n].genres
-        let grs = ''
-        for (let i = 0; i < gs.length; i++) {
-          grs = grs.concat(gs[i])
-          if (i < gs.length - 1) {
-            grs = grs.concat(', ') // Add comma between genres
+    openGameModal(id) {
+      this.showGameModal = true
+      this.getGamePhotos(id)
+      const path = `http://127.0.0.1:5000/api/game/${id}`
+      axios
+        .get(path, {})
+        .then((res) => {
+          // console.log(res)
+
+          if (res.data.status == 'success') {
+            this.modal_title = res.data.game.title
+            let gs = res.data.game.genres
+            let grs = ''
+            for (let i = 0; i < gs.length; i++) {
+              grs = grs.concat(gs[i])
+              if (i < gs.length - 1) {
+                grs = grs.concat(', ')
+              }
+            }
+            this.modal_genre = grs
+            this.modal_poster = res.data.game.poster
+            this.modal_release_date = res.data.game.release_date
+            this.modal_developer = res.data.game.developer
+            this.modal_publisher = res.data.game.publisher
+            this.modal_platform = res.data.game.platform
+            this.modal_rating = res.data.game.rating
+            this.modal_description = res.data.game.description
+            this.modal_price = res.data.game.price
+            this.modal_multiplayer = res.data.game.multiplayer
+            this.modal_no_of_downloads = res.data.game.no_of_downloads
+          } else if (res.data.status == 'failure') {
+            this.isvisible = true
+            this.message = res.data.message
+            this.alert_type = 'alert-error'
           }
-        }
-        this.modal_genre = grs
-        this.modal_poster = this.topGames[n].poster
-        this.modal_release_date = this.topGames[n].release_date
-        this.modal_developer = this.topGames[n].developer
-        this.modal_publisher = this.topGames[n].publisher
-        this.modal_platform = this.topGames[n].platform
-        this.modal_rating = this.topGames[n].rating
-        this.modal_description = this.topGames[n].description
-        this.modal_price = this.topGames[n].price
-        this.modal_multiplayer = this.topGames[n].multiplayer
-        this.modal_no_of_downloads = this.topGames[n].no_of_downloads
-        try {
-          this.showGameModal = true
-        } catch (error) {
-          console.error('Error opening modal:', error)
-        }
-      } else {
-        console.error('Game not found at index:', n)
-      }
+        })
+        .catch(() => {
+          // console.log(res)
+          this.isvisible = true
+          this.message = 'some error'
+          this.alert_type = 'alert-error'
+        })
+    },
+    getGamePhotos(id) {  
+      const path = `http://127.0.0.1:5000/api/game/${id}/photos`
+      axios
+        .get(path, {})
+        .then((res) => {
+          console.log(res)
+          if (res.data.status == 'success') {
+            this.images = res.data.photos
+          }
+        })
+        .catch(() => {
+          // console.log(res)
+          this.isvisible = true
+          this.message = 'some error'
+          this.alert_type = 'alert-error'
+        })
     },
   },
   created() {

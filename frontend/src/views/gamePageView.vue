@@ -55,7 +55,9 @@
               <p v-if="this.subscribed == true && this.purchased == false">
                 You have subscribed
               </p>
-              <button class="btn btn-secondary w-full">Download</button>
+              <button class="btn btn-secondary w-full" @click="yourGames()">
+                Download
+              </button>
             </div>
           </div>
           <div
@@ -99,7 +101,8 @@
             <strong>Multiplayer:</strong> {{ modal_multiplayer ? 'Yes' : 'No' }}
           </div>
           <div class="mb-2">
-            <strong>No. of Downloads:</strong> {{ modal_no_of_downloads.toLocaleString('en-IN') }}
+            <strong>No. of Downloads:</strong>
+            {{ modal_no_of_downloads.toLocaleString('en-IN') }}
           </div>
         </div>
       </div>
@@ -379,8 +382,63 @@ export default {
           this.alert_type = 'alert-error'
         })
     },
-    deleteReview() {},
-    submitReview() {},
+    deleteReview() {
+      const userid = this.$store.getters.get_userid
+      const path2 = `http://127.0.0.1:5000/api/review/modify/${userid}/${this.gameid}`
+      axios
+        .delete(path2, {
+          rating: this.userRating,
+          feedback: this.user_review.feedback,
+          user_id: userid,
+          game_id: this.gameid,
+        })
+        .then((res) => {
+          if (res.data.status == 'success') {
+            this.checkReview()
+            this.userHasReviewed = false
+            this.userRating = 0
+            this.user_review = ''
+            this.getAllReviews()
+          }
+        })
+    },
+    submitReview() {
+      const userid = this.$store.getters.get_userid
+      const path1 = `http://127.0.0.1:5000/api/review`
+      const path2 = `http://127.0.0.1:5000/api/review/modify/${userid}/${this.gameid}`
+      if (this.userHasReviewed) {
+        axios
+          .put(path2, {
+            rating: this.userRating,
+            feedback: this.user_review.feedback,
+            user_id: userid,
+            game_id: this.gameid,
+          })
+          .then((res) => {
+            if (res.data.status == 'success') {
+              this.checkReview()
+              this.getAllReviews()
+            }
+          })
+      } else {
+        axios
+          .post(path1, {
+            rating: this.userRating,
+            feedback: this.user_review.feedback,
+            user_id: userid,
+            game_id: this.gameid,
+          })
+          .then((res) => {
+            if (res.data.status == 'success') {
+              this.checkReview()
+              this.getAllReviews()
+            }
+          })
+      }
+    },
+    yourGames() {
+      this.$router.push({ name: 'downloadView' })
+    },
   },
   beforeMount() {
     this.getGame()

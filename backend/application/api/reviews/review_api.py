@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
+from flask_restx import Resource, abort, fields, marshal, reqparse
+
 from application.api.game.genre_api import genre_fields
 from application.data.database import db
 from application.data.model import Game as game_model
@@ -7,7 +9,6 @@ from application.data.model import GamePhoto as game_photos_model
 from application.data.model import Genre as genre_model
 from application.data.model import Review as review_model
 from application.data.model import User as user_model
-from flask_restx import Resource, abort, fields, marshal, reqparse
 
 game_fields = {
     'id': fields.Integer,
@@ -94,7 +95,7 @@ class ReviewResource(Resource):
 
         return {'status': 'success', 'reviews': marshal(review_data, review_fields)}
 
-    def post(self):
+    def post(self, gameid):
         args = review_parser.parse_args()
         user = user_model.query.filter_by(id=args['user_id']).first()
         if not user:
@@ -170,3 +171,27 @@ class ModifyReviewResource(Resource):
             return {'status': 'success', 'message': 'Review updated !'}
         else:
             return {'status': 'failure', 'message': 'Review not found !'}
+
+
+class AdminReviewResource(Resource):
+    def get(self):
+        reviews = review_model.query.all()
+        if not reviews:
+            return {'status': 'failure', 'message': 'Review not found'}, 404
+
+        # Get the related user and game details
+        review_data = []
+        for review in reviews:
+            review_data.append({
+                'id': review.id,
+                'user_id': review.user_id,
+                'username': review.user.username,
+                'email': review.user.email,
+                'game_id': review.game_id,
+                'title': review.game.title,
+                'rating': review.rating,
+                'feedback': review.feedback,
+                'date': review.date
+            })
+
+        return {'status': 'success', 'message': 'reviews load successfully', 'reviews': marshal(review_data, review_fields)}, 200

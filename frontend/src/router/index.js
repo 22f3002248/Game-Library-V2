@@ -12,6 +12,9 @@ import adminManageUsers from '../views/adminManageUsers.vue'
 import userProfile from '../views/userProfile.vue'
 import downloadView from '../views/downloadView.vue'
 import subscriptionUserManage from '../views/subscriptionUserManage.vue'
+import adminManageReviews from '../views/adminManageReviews.vue'
+import adminManageSubscriptions from '../views/adminManageSubscriptions.vue'
+import adminManageOrders from '../views/adminManageOrders.vue'
 
 const routes = [
   { path: '/', name: 'landingView', component: landingView }, // working
@@ -19,7 +22,7 @@ const routes = [
   { path: '/games', name: 'allGamesView', component: allGamesView },
   { path: '/admin/genre', name: 'genreView', component: genreView },
   { path: '/admin/games', name: 'gameView', component: gameView },
-  { path: '/admin-dashboard', name: 'adminDash', component: adminDash },
+  { path: '/admin/dashboard', name: 'adminDash', component: adminDash },
   {
     path: '/admin/users',
     name: 'adminManageUsers',
@@ -31,6 +34,26 @@ const routes = [
     component: adminAllGamesView,
   },
   { path: '/game/:gameid', name: 'gamePageView', component: gamePageView },
+  {
+    path: '/admin/allgames',
+    name: 'adminAllGamesView',
+    component: adminAllGamesView,
+  },
+  {
+    path: '/admin/reviews',
+    name: 'adminManageReviews',
+    component: adminManageReviews,
+  },
+  {
+    path: '/admin/orders',
+    name: 'adminManageOrders',
+    component: adminManageOrders,
+  },
+  {
+    path: '/admin/subscriptions',
+    name: 'adminManageSubscriptions',
+    component: adminManageSubscriptions,
+  },
   { path: '/page-not-found', name: 'pageNotFound', component: pageNotFound },
   { path: '/user-profile', name: 'userProfile', component: userProfile },
   { path: '/user-downloads', name: 'downloadView', component: downloadView },

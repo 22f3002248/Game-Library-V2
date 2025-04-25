@@ -187,7 +187,7 @@
           <form method="dialog">
             <button class="btn">Close</button>
           </form>
-          <button class="btn btn-primary" @click="handlePayment">Pay</button>
+          <button class="btn btn-primary" @click="handlePayment()">Pay</button>
         </div>
       </div>
     </dialog>
@@ -277,7 +277,23 @@ export default {
     openGame(gameid) {
       this.$router.push({ name: 'gamePageView', params: { gameid } })
     },
-    handlePayment() {},
+    handlePayment() {
+      axios
+        .get(
+          `http://127.0.0.1:5000/api/subscribe/${this.$store.getters.get_userid}`,
+          {}
+        )
+        .then((response) => {
+          if (response.data.status == 'success') {
+            this.closeModal()
+            this.checkSubscription()
+          }
+        })
+        .catch((error) => {
+          this.closeModal()
+          this.checkSubscription()
+        })
+    },
   },
   created() {
     this.checkSubscription()

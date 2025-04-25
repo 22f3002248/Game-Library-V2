@@ -16,12 +16,14 @@ from application.api.purchase.purchase_api import (CheckPurchase,
                                                    GetPurchasedResource,
                                                    PurchaseResource)
 from application.api.purchase.subscription_api import (CheckSubscription,
+                                                       GetHash,
                                                        GetSubscribedGames,
                                                        SubscriptionResource)
-from application.api.reviews.review_api import (ModifyReviewResource,
+from application.api.reviews.review_api import (AdminReviewResource,
+                                                ModifyReviewResource,
                                                 ReviewResource)
 from application.api.stats.stat import UserStats
-from application.api.user.user_api import AUserResource
+from application.api.user.user_api import AUserResource, SUserResource
 
 
 def initialize_api(app):
@@ -67,5 +69,7 @@ def initialize_api(app):
     api.add_resource(GameResource, '/admin/games')
     api.add_resource(SingleGameResource, '/admin/games/<int:id>')
     api.add_resource(AUserResource, '/admin/users')
-
+    api.add_resource(GetHash, '/api/user/<int:userid>/game/<int:gameid>/hash')
+    api.add_resource(SUserResource, '/admin/users/<int:id>')
+    api.add_resource(AdminReviewResource, '/admin/reviews')
     return api

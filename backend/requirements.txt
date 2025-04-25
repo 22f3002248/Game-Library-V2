@@ -12,3 +12,4 @@ Flask-Caching
 jinja2
 weasyprint==52.5
 Flask-Excel
+flask_restx

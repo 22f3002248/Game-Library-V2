@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, timedelta, timezone
 
 from flask_restx import Resource, fields, marshal, reqparse
@@ -82,7 +83,7 @@ class SubscriptionResource(Resource):
                             subscription_status=True)
             db.session.add()
             db.session.commit()
-            return {'status': 'failure', 'subscription': False}
+            return {'status': 'failure', 'subscription': True}
 
 
 class GetSubscribedGames(Resource):
@@ -102,3 +103,10 @@ class GetSubscribedGames(Resource):
             return {'status': 'failure', 'message': "No games found", 'games': []}
         else:
             return {'status': 'success', 'games': marshal(games, game_fields)}
+
+
+class GetHash(Resource):
+    def get(self, userid, gameid):
+        hash = hashlib.sha256(
+            str("GAME_HASH"+str(userid)+str(gameid)).encode('utf-8')).hexdigest()
+        return {'status': 'success', 'hash': hash}

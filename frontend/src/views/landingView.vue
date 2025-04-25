@@ -18,45 +18,67 @@
         </svg>
         <span>{{ message }}</span>
       </div>
-
-      <div
-        class="headline"
-        style="
-          height: 400px;
-          background-image: url(https://th.bing.com/th/id/OIP.TGab8-eSpLItcGDxUZKfNAHaEL?w=293&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7);
-          background-size: cover;
-        "
-      >
-        <div>
-          <p style="font-size: 40px">
-            Let The <br />
-            Game Begin
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque,
-            totam sunt incidunt ab corrupti fugiat error perferendis iure nemo
-            ipsa harum delectus, dicta omnis exercitationem expedita optio rem,
-            id magni.
-          </p>
-        </div>
-
-        <div style="border: 2px solid red; display: inline-block">
-          <p class="text-4xl font-bold mb-3">GameVault</p>
-          <!-- Make a grid layout for the buttons -->
-          <div class="flex">
-            <!-- Login and Register buttons are placed in a grid -->
-            <div>
-              <button class="btn btn-primary px-6" @click="openModal">
-                Login
-              </button>
-            </div>
-            <div>
-              <button class="btn btn-secondary px-6">Register</button>
-            </div>
+    </div>
+    <div
+      class="mt-3 w-[1200px] h-[680px] shadow-lg mx-auto rounded-xl bg-[url(https://th.bing.com/th/id/R.d023351cd802d65c50f0f5cfd372f297?rik=AKM1qkQvw1KLsg&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f05%2fDesktop-gaming-backgrounds-1080p-dosh-tosh.jpg&ehk=vdt7p4cwZQfq4ul%2fSKWfhGTpUBcqPgBwvX%2blPS93sKA%3d&risl=&pid=ImgRaw&r=0)] p-8 bg-cover flex justify-between items-center"
+    >
+      <!-- Left content -->
+      <div class="w-1/2">
+        <!-- Buttons -->
+        <div class="flex justify-end gap-3 mr-60">
+          <div>
+            <button
+              class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+            >
+              Explore
+            </button>
+          </div>
+          <div>
+            <button
+              class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+              @click="openModal"
+            >
+              Login
+            </button>
+          </div>
+          <div>
+            <button
+              class="p-3 italic font-bold text-2xl hover:text-cyan-400 hover:underline"
+              @click="openRegisterModal"
+            >
+              Register
+            </button>
           </div>
         </div>
+
+        <!-- Text -->
+        <div class="italic">
+          <p class="text-6xl mt-10 ml-8 font-bold space-y-1">
+            <span class="text-cyan-300 block animate-bounce">Discover.</span>
+            <span class="block animate-pulse">Collect.</span>
+            <span class="text-cyan-400 block animate-bounce">Play.</span>
+            <span class="block animate-pulse">Repeat.</span>
+          </p>
+          <p
+            class="ml-14 mt-3 font-bold w-[170px] opacity-0 animate-fade-in transition-opacity duration-1000 delay-700"
+          >
+            Whether you're a casual player or a hardcore collector, our game
+            library helps you stay connected to the games you love, anytime and
+            anywhere.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right image -->
+      <div class="w-1/2 flex justify-center items-center">
+        <img
+          src="https://www.pngplay.com/wp-content/uploads/11/God-Of-War-Download-Free-PNG.png"
+          alt="Game character"
+          class="max-h-[500px] object-contain drop-shadow-lg"
+        />
       </div>
     </div>
+
     <div class="container mx-auto">
       <div class="mr-3">
         <br /><br />
@@ -65,8 +87,18 @@
       </div>
     </div>
 
+    <br />
+    <hr />
     <div class="container mx-auto">
-      <div class="mr-3" style="margin-bottom: 200px">
+      <div
+        class="text-center text-4xl text-white-200 font-bold p-2 rounded-lg italic mb-3 p-5 opacity-0.9 animate-pulse hover:scale-105 hover:text-cyan-300 transition-all duration-500 ease-in-out"
+      >
+        Organize your games. Unleash your play.
+      </div>
+
+      <hr />
+      <br />
+      <div class="mr-3">
         <!-- Top Games Section -->
         <h1 class="text-3xl font-bold mb-4 text-center">Our Top Picks</h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -179,26 +211,6 @@
           </div>
         </div>
         <!-- Footer Section -->
-        <br /><br /><br /><br /><br /><br /><br /><br />
-        <footer class="mt-auto p-5 bg-neutral text-neutral-content">
-          <div class="flex justify-between">
-            <div>
-              <h3 class="text-lg font-bold">Contact Us</h3>
-              <p>Email: support@gamevault.com</p>
-            </div>
-            <div>
-              <h3 class="text-lg font-bold">Newsletter</h3>
-              <p>Sign up for the latest news and updates.</p>
-              <br />
-              <button class="btn btn-sm btn-accent">Subscribe</button>
-            </div>
-          </div>
-        </footer>
-        <div class="text-center mt-4">
-          <p>&copy; 2025 GameVault. All rights reserved.</p>
-          <p>Privacy Policy | Terms of Service</p>
-        </div>
-        <div style="margin-bottom: -300px"></div>
       </div>
     </div>
 
@@ -255,6 +267,70 @@
       </div>
     </dialog>
 
+    <!-- Modal Structure -->
+    <dialog id="register_modal" class="modal">
+      <div class="modal-box w-11/12 max-w-xl">
+        <h3 class="text-lg font-bold">Register</h3>
+
+        <!-- Register form -->
+        <form class="py-4">
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Username</span>
+            </label>
+            <input
+              v-model="username"
+              type="text"
+              placeholder="Enter your username"
+              class="input input-bordered w-full"
+              required
+            />
+          </div>
+
+          <!-- Email input -->
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Email</span>
+            </label>
+            <input
+              v-model="email"
+              type="email"
+              placeholder="Enter your email"
+              class="input input-bordered w-full"
+              required
+            />
+          </div>
+
+          <!-- Password input -->
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Password</span>
+            </label>
+            <input
+              v-model="password"
+              type="password"
+              placeholder="Enter your password"
+              class="input input-bordered w-full"
+              required
+            />
+          </div>
+        </form>
+
+        <!-- Modal action buttons -->
+        <div class="modal-action">
+          <!-- Close button -->
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+
+          <!-- Submit button -->
+          <button class="btn btn-primary" @click="submitRegisterForm">
+            Register
+          </button>
+        </div>
+      </div>
+    </dialog>
+
     <!-- GAME MODAL -->
     <dialog id="game_modal" class="modal">
       <div class="modal-box w-11/12 max-w-5xl">
@@ -280,9 +356,7 @@
             />
             <br />
             <div class="flex flex-col space-y-2">
-              <button class="btn btn-primary">Buy</button>
-              <button class="btn btn-secondary">Subscribe</button>
-              <button class="btn">Add to Wishlist</button>
+              <button class="btn btn-primary">Login or Register to play</button>
             </div>
           </div>
           <div class="flex flex-col">
@@ -316,13 +390,6 @@
             </div>
           </div>
         </div>
-        <div class="mt-4">
-          <h4 class="text-md font-semibold">Reviews:</h4>
-          <!-- <textarea
-              class="textarea w-full h-24 mt-2"
-              placeholder="Write your review here..."
-            ></textarea> -->
-        </div>
       </div>
     </dialog>
 
@@ -336,6 +403,7 @@ export default {
   name: 'LandingView',
   data() {
     return {
+      username: '',
       email: '',
       password: '',
       message: '',
@@ -368,7 +436,7 @@ export default {
           console.log(res.data.user)
           this.$store.dispatch('set_state_after_login', res.data.user)
           if (this.$store.getters.get_type == 'admin') {
-            this.$router.push('/admin/games')
+            this.$router.push('/admin/dashboard')
           } else {
             this.$router.push('/user-dashboard')
           }
@@ -381,6 +449,10 @@ export default {
           //   this.message = 'There was an error.'
           //   this.alert_type = 'alert-error'
           // }
+          //reset
+          this.username = ''
+          this.email = ''
+          this.password = ''
           this.closeModal()
         })
         .catch(() => {
@@ -391,11 +463,48 @@ export default {
         })
       this.closeModal()
     },
+
+    submitRegisterForm() {
+      const path = 'http://127.0.0.1:5000/api/register'
+      axios
+        .post(path, {
+          username: this.username,
+          email: this.email,
+          password: this.password,
+        })
+        .then((res) => {
+          // console.log(res)
+          this.closeRegisterModal()
+          //reset
+          this.username = ''
+          this.email = ''
+          this.password = ''
+          //show message
+          this.isvisible = true
+          this.message = res.data.message
+          this.alert_type = 'alert-success'
+          this.openModal()
+        })
+        .catch(() => {
+          this.isvisible = true
+          this.message = 'There was an error...'
+          this.alert_type = 'alert-error'
+          this.closeModal()
+        })
+      this.closeModal()
+    },
+
     openModal() {
       document.getElementById('login_modal').showModal()
     },
     closeModal() {
       document.getElementById('login_modal').close()
+    },
+    openRegisterModal() {
+      document.getElementById('register_modal').showModal()
+    },
+    closeRegisterModal() {
+      document.getElementById('register_modal').close()
     },
     getTopGames() {
       const path = `http://127.0.0.1:5000/api/games/top/${3}`
@@ -460,5 +569,19 @@ export default {
 <style scoped>
 .container {
   max-width: 1200px;
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
