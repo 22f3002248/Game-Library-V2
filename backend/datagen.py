@@ -1,5 +1,8 @@
 import random
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+
+from faker import Faker
+from werkzeug.security import generate_password_hash
 
 from application.data.database import db
 from application.data.datalist import GAMES, GENRES, feedbacks, game_images
@@ -8,13 +11,26 @@ from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
 from application.data.model import GamePhoto as game_photos_model
 from application.data.model import Genre as genre_model
+from application.data.model import Profile as profile_model
 from application.data.model import Review as review_model
 from application.data.model import Role as role_model
 from application.data.model import RolesUsers as roles_users
 from application.data.model import Subscription as sub_model
 from application.data.model import User as user_model
 from application.data.model import game_genre_association as gg_model
-from werkzeug.security import generate_password_hash
+
+
+def current_time():
+    current_timeutc = datetime.now(timezone.utc)
+    ist_offset = timedelta(hours=5, minutes=30)
+    current_time = current_timeutc + ist_offset
+    return current_time
+
+
+def month_subscribe(dt):
+    ist_offset = timedelta(days=30)
+    current_time = dt + ist_offset
+    return current_time
 
 
 def gen():
@@ -33,16 +49,23 @@ def gen():
                        password=generate_password_hash("12345"), roles=["user"])
         db.session.commit()
         sub_model(userid=2)
-        db.session.add(sub_model(userid=2))
+        sub = sub_model(userid=user_model.query.filter_by(
+            username=f"user").first().id, subscription_date=current_time(),
+            subscription_end_date=month_subscribe(current_time()),
+            subscription_status=True)
+        db.session.add(sub)
         db.session.commit()
     for i in range(2, 11):
         if not ds.find_user(email=f"user{i}.gamevault@gmail.com"):
             ds.create_user(username=f"user{i}", email=f"user{i}.gamevault@gmail.com",
                            password=generate_password_hash("12345"), roles=["user"])
             db.session.commit()
-            if i % 2 == 0:
+
+            if i % 2 == 0 and i != 2:
                 sub = sub_model(userid=user_model.query.filter_by(
-                    username=f"user{i}").first().id)
+                    username=f"user{i}").first().id, subscription_date=current_time(),
+                    subscription_end_date=month_subscribe(current_time()),
+                    subscription_status=True)
                 db.session.add(sub)
                 db.session.commit()
         db.session.commit()
@@ -88,36 +111,53 @@ def create_games():
 def assign_games_to_users():
     users = user_model.query.all()
     games = game_model.query.all()
+
     for user in users:
         subscription = sub_model.query.filter_by(userid=user.id).first()
-        for game in games:
+        assigned_games = set()
+
+        # Randomly select some games to assign (e.g., 5 to 10 games)
+        num_games_to_assign = random.randint(5, min(len(games), 10))
+        selected_games = random.sample(games, num_games_to_assign)
+
+        for game in selected_games:
+            if (user.id, game.id) in assigned_games:
+                continue
+
             existing_entry = gu_model.query.filter_by(
-                user_id=user.id, game_id=game.id).first()
+                user_id=user.id, game_id=game.id
+            ).first()
             if existing_entry:
                 continue
+
             if subscription:
+                # Subscribed users may or may not purchase, but they are subscribed
                 purchased = random.choice([True, False])
+                completed = random.choice([True, False])
                 game_user = gu_model(
                     user_id=user.id,
                     game_id=game.id,
                     purchased=purchased,
                     subscribed=True,
-                    completed=random.choice([True, False])
+                    completed=completed
                 )
             else:
-                if random.random() < 0.4:
-                    game_user = gu_model(
-                        user_id=user.id,
-                        game_id=game.id,
-                        purchased=True,
-                        subscribed=False,
-                        completed=random.choice([True, False])
-                    )
-                else:
-                    continue
-                with db.session.no_autoflush:
-                    db.session.add(game_user)
-                    db.session.commit()
+                # Non-subscribers may only purchase games
+                purchased = random.choice([True, False])
+                if not purchased:
+                    continue  # skip assigning this game
+                completed = random.choice([True, False])
+                game_user = gu_model(
+                    user_id=user.id,
+                    game_id=game.id,
+                    purchased=True,
+                    subscribed=False,
+                    completed=completed
+                )
+
+            db.session.add(game_user)
+            assigned_games.add((user.id, game.id))
+
     db.session.commit()
 
 
@@ -160,4 +200,60 @@ def create_game_photos():
                             photos_data) > 4 else None
                     )
                     db.session.add(new_game_photos)
+        db.session.commit()
+
+
+fake = Faker('en_IN')  # Use Indian locale for realistic data
+
+
+def profileDataGen():
+    if not profile_model.query.all():
+        users = user_model.query.all()
+
+        for user in users:
+            # Skip if profile already exists
+            if profile_model.query.filter_by(user_id=user.id).first():
+                continue
+
+            first_name = fake.first_name()
+            last_name = fake.last_name()
+            gender = random.choice(['Male', 'Female'])
+            dob = fake.date_of_birth(minimum_age=18, maximum_age=40)
+            bio = fake.text(max_nb_chars=150)
+            profile_picture = f"https://api.dicebear.com/7.x/initials/svg?seed={first_name}{last_name}"
+
+            phone_number = fake.phone_number()
+            address = fake.address().replace("\n", ", ")
+            city = fake.city()
+            state = fake.state()
+            country = "India"
+            postal_code = fake.postcode()
+
+            github_url = f"https://github.com/{user.username}"
+            twitter_url = f"https://twitter.com/{user.username}"
+            linkedin_url = f"https://linkedin.com/in/{user.username}"
+            website_url = f"https://{user.username}.portfolio.in"
+
+            profile = profile_model(
+                user_id=user.id,
+                first_name=first_name,
+                last_name=last_name,
+                gender=gender,
+                date_of_birth=dob,
+                bio=bio,
+                profile_picture=profile_picture,
+                phone_number=phone_number,
+                address=address,
+                city=city,
+                state=state,
+                country=country,
+                postal_code=postal_code,
+                github_url=github_url,
+                twitter_url=twitter_url,
+                linkedin_url=linkedin_url,
+                website_url=website_url
+            )
+
+            db.session.add(profile)
+
         db.session.commit()

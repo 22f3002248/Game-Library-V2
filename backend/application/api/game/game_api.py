@@ -1,14 +1,16 @@
 import os
 from datetime import datetime
 
-from application.api.game.genre_api import genre_fields
-from application.data.database import db
-from application.data.model import Game as game_model
-from application.data.model import GamePhoto as game_photos_model
-from application.data.model import Genre as genre_model
 from flask import current_app as app
 from flask import request
 from flask_restx import Resource, fields, marshal, reqparse
+
+from application.api.game.genre_api import genre_fields
+from application.data.database import db
+from application.data.model import Game as game_model
+from application.data.model import Game_User as game_user_model
+from application.data.model import GamePhoto as game_photos_model
+from application.data.model import Genre as genre_model
 
 game_fields = {
     'id': fields.Integer,
@@ -55,6 +57,7 @@ games_parser.add_argument(
 games_parser.add_argument(
     'multiplayer', type=bool, required=True, help="multiplayer value is required!"
 )
+
 
 class GameResource(Resource):
     # ? to send all the games
@@ -145,7 +148,7 @@ class SingleGameResource(Resource):
             if isinstance(release_date, str):
                 game.release_date = datetime.strptime(
                     release_date, '%Y-%m-%d').date()
-                
+
         genre_ids = args.get('genre_ids', [])
         if genre_ids:
             genres = genre_model.query.filter(
@@ -169,6 +172,7 @@ class SingleGameResource(Resource):
 
         # Return a success response as a plain dictionary
         return {"status": "success", "message": "game deleted!"}, 200
+
 
 class TopGameListResource(Resource):
     def get(self, no):
@@ -197,3 +201,17 @@ class GamePhotoResource(Resource):
             if gps.picture5 != None:
                 pic_res.append(gps.picture5)
             return {"status": "success", "photos": pic_res}
+
+
+class CompleteGameListResource(Resource):
+    def get(self, userid):
+        gu = game_user_model.query.filter_by(
+            user_id=userid, completed=True).all()
+        games = []
+        for i in gu:
+            game = game_model.query.filter_by(id=i.game_id).first()
+            if game:
+                games.append(game)
+        if len(games) < 1:
+            return {"status": "failure", "message": "games not found!"}
+        return {'status': 'success', 'games': marshal(games, game_fields)}

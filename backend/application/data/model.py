@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 from flask import current_app as app
 from flask import url_for
 from flask_security import RoleMixin, UserMixin
+from flask_sqlalchemy import SQLAlchemy
 
 from .database import db
 
@@ -79,9 +80,10 @@ class Genre(db.Model):
 
 class Subscription(db.Model):
     userid = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.Boolean, default=False)
-    start_date = db.Column(db.DateTime, default=current_time())
-    end_date = db.Column(db.DateTime, default=month_subscribe(current_time()))
+    subscription_date = db.Column(db.DateTime, default=None)
+    subscription_end_date = db.Column(db.DateTime, default=None)
+    subscription_status = db.Column(db.Boolean, default=False)
+    subscription_renewal_date = db.Column(db.DateTime, default=None)
 
 
 class RolesUsers(db.Model):
@@ -123,9 +125,8 @@ class Game_User(db.Model):
     purchased = db.Column(db.Boolean, default=False)
     subscribed = db.Column(db.Boolean, default=False)
     completed = db.Column(db.Boolean, default=False)
-    date = db.Column(db.DateTime, default=current_time())
-
-    # Relationships back to Game and User
+    complete_date = db.Column(db.DateTime, default=current_time())
+    purchase_date = db.Column(db.DateTime, default=None)
     game = db.relationship('Game', back_populates='users')
     user = db.relationship('User', back_populates='games')
 
@@ -139,3 +140,30 @@ class Review(db.Model):
     date = db.Column(db.DateTime, default=current_time())
     game = db.relationship('Game', back_populates='reviews')
     user = db.relationship('User', back_populates='reviews')
+
+
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False, unique=True)
+    user = db.relationship(
+        'User', backref=db.backref('profile', uselist=False))
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    gender = db.Column(db.String(10))
+    date_of_birth = db.Column(db.Date)
+    bio = db.Column(db.Text)
+    profile_picture = db.Column(db.String(255))
+    phone_number = db.Column(db.String(20))
+    address = db.Column(db.String(255))
+    city = db.Column(db.String(100))
+    state = db.Column(db.String(100))
+    country = db.Column(db.String(100))
+    postal_code = db.Column(db.String(20))
+    github_url = db.Column(db.String(255))
+    twitter_url = db.Column(db.String(255))
+    linkedin_url = db.Column(db.String(255))
+    website_url = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=current_time())
+    updated_at = db.Column(
+        db.DateTime, default=current_time(), onupdate=current_time())

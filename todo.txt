@@ -1,0 +1,30 @@
+PAGES           TODO                                        WHO
+landing         fix boxes and pictures                      vinayak
+login box       add admin router push                       vinayak
+userDash        handle completed purchased games            tanush --done
+user navbar     handle missing PAGES                        tanush --done
+
+
+
+
+---------------------------------------------------
+adminAllGamesView.vue --fix vinayak
+adminDash.vue --fix vinayak
+adminManageUsers.vue --fix vinayak
+landingView.vue --fix vinayak REGISTER
+genreView.vue
+gameView.vue
+---------------------------------------------------
+
+downloadView.vue
+
+gamePageView.vue
+
+subscriptionUserManage.vue
+
+---------------------------------------------------
+
+pageNotFound.vue --done
+allGamesView.vue --done
+userDash.vue --done
+userProfile.vue --done

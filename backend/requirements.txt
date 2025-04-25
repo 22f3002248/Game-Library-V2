@@ -3,7 +3,7 @@ Flask-SQLAlchemy==3.0.2
 flask-security-too
 email_validator
 bcrypt
-flask_restful
+flask_restx
 flask_cors
 flask-jwt-extended
 redis

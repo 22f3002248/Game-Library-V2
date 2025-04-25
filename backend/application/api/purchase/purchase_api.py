@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta, timezone
 
+from flask import jsonify
+from flask_restx import Resource, fields, marshal, reqparse
+
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
 from application.data.model import Subscription as sub_model
 from application.data.model import User as user_model
-from flask import jsonify
-from flask_restx import Resource, fields, marshal, reqparse
 
 genre_fields = {
     'id': fields.Integer,
@@ -94,27 +95,14 @@ class GetPurchasedResource(Resource):
         if not uid:
             return {'status': 'failure',
                     'message': "User not found"}
-        if user_model.query.filter_by(id=int(uid)).first().roles[0].name != 'user':
-            return {'status': 'failure',
-                    'message': "unauthorized"}
-        else:
-            purchased_games = db.session.query(gu_model, game_model, user_model)\
-                .join(game_model, gu_model.gameid == game_model.id)\
-                .join(user_model, gu_model.userid == user_model.id)\
-                .filter(gu_model.userid == uid, gu_model.purchased == True).all()
-
-            result = [{
-                'userid': user.id,
-                'username': user.username,
-                'email': user.email,
-                'gameid': game.id,
-                'game_title': game.title,
-                'date': game_user.date,
-                'purchased': game_user.purchased,
-                'subscribed': game_user.subscribed,
-                'completed': game_user.completed
-            } for game_user, game, user in purchased_games]
-        return {'status': 'success', 'purchased': marshal(result, game_user_fields)}
+        purchased_games = gu_model.query.filter_by(
+            user_id=uid, purchased=True).all()
+        games = []
+        for i in purchased_games:
+            game = game_model.query.filter_by(id=i.game_id).first()
+            games.append(game)
+        print(games)
+        return {'status': 'success', 'games': marshal(games, game_fields)}
 
 
 class GetAllPurchasedResource(Resource):

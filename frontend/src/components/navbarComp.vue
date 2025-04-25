@@ -23,20 +23,22 @@
             tabindex="0"
             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
-            <li><a @click="goToLanding()">Homepage</a></li>
+            <li><a @click="goToHome()">Homepage</a></li>
             <li><a @click="goToLibrary()">Library</a></li>
-            <li><a @click="goToStore()">Store</a></li>
-            <li><a @click="goToWishlist()">Wishlist</a></li>
-            <li><a @click="goToFriends()">Friends</a></li>
             <li><a @click="goToProfile()">Profile</a></li>
+            <li>
+              <a @click="manageUserSubscription()">Manage Subscription</a>
+            </li>
+            <li><a @click="yourGames()">Your Games</a></li>
+            <li><a @click="logout()">Logout</a></li>
           </ul>
         </div>
       </div>
       <div class="navbar-center">
-        <a class="btn btn-ghost text-2xl" @click="goToLanding()">GameVault</a>
+        <a class="btn btn-ghost text-2xl" @click="goToHome()">GameVault</a>
       </div>
       <div class="navbar-end">
-        <button class="btn btn-ghost btn-circle">
+        <button class="btn btn-ghost btn-circle" @click="goToLibrary()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -52,27 +54,27 @@
             />
           </svg>
         </button>
-        <button class="btn btn-ghost btn-circle">
-          <div class="indicator">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <span class="badge badge-xs badge-primary indicator-item"></span>
-          </div>
-        </button>
       </div>
     </div>
+    <!-- LOGOUT MODAL. -->
+    <dialog id="login_modal" class="modal">
+      <div class="modal-box w-11/12 max-w-xl">
+        <h3 class="text-lg font-bold">Logout</h3>
+        <p class="py-4">Are you sure you want to logout?</p>
+        <p class="py-4">You will be redirected to the landing page.</p>
+        <!-- Modal action buttons -->
+        <div class="modal-action">
+          <!-- Close button -->
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+          <!-- Submit button -->
+          <button class="btn btn-primary" @click="submitLoginForm">
+            Login
+          </button>
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
 
@@ -84,14 +86,44 @@ export default {
     return {}
   },
   methods: {
-    goToLanding() {},
+    goToHome() {
+      if (this.$store.getters.get_type == 'admin') {
+        this.$router.push({ name: 'adminDash' })
+      } else if (this.$store.getters.get_type == 'user') {
+        this.$router.push({ name: 'userDash' })
+      } else {
+        this.$router.push({ name: 'landingView' })
+      }
+    },
     goToLibrary() {
       this.$router.push({ name: 'allGamesView' })
     },
-    goToStore() {},
-    goToWishlist() {},
-    goToFriends() {},
-    goToProfile() {},
+    logout() {
+      this.$store.dispatch('set_state_after_logout').then(() => {
+        this.$router.push({ name: 'landingView' })
+      })
+    },
+    submitLoginForm() {
+      const form = document.getElementById('login_modal')
+      if (form) {
+        form.close()
+      }
+    },
+    manageUserSubscription() {
+      this.$router.push({ name: 'subscriptionUserManage' })
+    },
+    yourGames() {
+      this.$router.push({ name: 'downloadView' })
+    },
+    openGame(gameid) {
+      this.$router.push({ name: 'gamePageView', params: { gameid } })
+    },
+    goToProfile() {
+      this.$router.push({ name: 'userProfile' })
+    },
+    goToLibrary() {
+      this.$router.push({ name: 'allGamesView' })
+    },
   },
 }
 </script>

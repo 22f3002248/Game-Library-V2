@@ -9,6 +9,9 @@ import gamePageView from '../views/gamePageView.vue'
 import allGamesView from '../views/allGamesView.vue'
 import adminAllGamesView from '../views/adminAllGamesView.vue'
 import adminManageUsers from '../views/adminManageUsers.vue'
+import userProfile from '../views/userProfile.vue'
+import downloadView from '../views/downloadView.vue'
+import subscriptionUserManage from '../views/subscriptionUserManage.vue'
 
 const routes = [
   { path: '/', name: 'landingView', component: landingView }, // working
@@ -17,19 +20,25 @@ const routes = [
   { path: '/admin/genre', name: 'genreView', component: genreView },
   { path: '/admin/games', name: 'gameView', component: gameView },
   { path: '/admin-dashboard', name: 'adminDash', component: adminDash },
-  { path:'/admin/users', name:'adminManageUsers', component: adminManageUsers},
+  {
+    path: '/admin/users',
+    name: 'adminManageUsers',
+    component: adminManageUsers,
+  },
   {
     path: '/admin/allgames',
     name: 'adminAllGamesView',
     component: adminAllGamesView,
   },
   { path: '/game/:gameid', name: 'gamePageView', component: gamePageView },
-  {
-    path: '/admin/allgames',
-    name: 'adminAllGamesView',
-    component: adminAllGamesView,
-  },
   { path: '/page-not-found', name: 'pageNotFound', component: pageNotFound },
+  { path: '/user-profile', name: 'userProfile', component: userProfile },
+  { path: '/user-downloads', name: 'downloadView', component: downloadView },
+  {
+    path: '/manage-subscription',
+    name: 'subscriptionUserManage',
+    component: subscriptionUserManage,
+  },
   { path: '/:pathMatch(.*)*', component: pageNotFound },
 ]
 

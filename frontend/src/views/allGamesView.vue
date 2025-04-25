@@ -20,6 +20,17 @@
             {{ genre.name }}
           </option>
         </select>
+        <select
+          v-model="sortBy"
+          @change="sortGames"
+          class="select select-bordered w-25 max-w-xs ml-4"
+        >
+          <option value="" disabled>Sort By</option>
+          <option value="title-asc">Alphabetical (A → Z)</option>
+          <option value="title-desc">Alphabetical (Z → A)</option>
+          <option value="rating-asc">Rating (1 → 10)</option>
+          <option value="rating-desc">Rating (10 → 1)</option>
+        </select>
       </div>
 
       <!-- Game Library Section -->
@@ -51,6 +62,7 @@
               <p class="text-sm text-gray-600 flex-grow">
                 {{ game.description }}
               </p>
+              <p>Rating: {{ game.rating }} ★</p>
               <button
                 class="btn btn-primary mt-4 w-full"
                 @click="openGame(game.id)"
@@ -80,9 +92,41 @@ export default {
       genres: [], // This will hold all available genres
       searchQuery: '',
       selectedGenre: '',
+      sortBy: '', // This will hold the selected sorting option
+      isvisible: false,
     }
   },
   computed: {
+    sortGames() {
+      let filtered = this.allGames
+
+      // Filter by search query
+      if (this.searchQuery) {
+        filtered = filtered.filter((game) =>
+          game.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+        )
+      }
+
+      // Filter by selected genre
+      if (this.selectedGenre) {
+        filtered = filtered.filter((game) =>
+          game.genres.some((genre) => genre === this.selectedGenre)
+        )
+      }
+
+      // Sort logic
+      if (this.sortBy === 'title-asc') {
+        filtered.sort((a, b) => a.title.localeCompare(b.title))
+      } else if (this.sortBy === 'title-desc') {
+        filtered.sort((a, b) => b.title.localeCompare(a.title))
+      } else if (this.sortBy === 'rating-asc') {
+        filtered.sort((a, b) => a.rating - b.rating)
+      } else if (this.sortBy === 'rating-desc') {
+        filtered.sort((a, b) => b.rating - a.rating)
+      }
+
+      return filtered
+    },
     filteredGames() {
       let filtered = this.allGames
 

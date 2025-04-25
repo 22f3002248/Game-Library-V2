@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta, timezone
 
+from flask_restx import Resource, fields, marshal, reqparse
+
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
 from application.data.model import Subscription as sub_model
-from flask_restx import Resource, fields, marshal, reqparse
 
 genre_fields = {
     'id': fields.Integer,
@@ -54,23 +55,50 @@ games_parser.add_argument(
 
 class CheckSubscription(Resource):
     def get(self, userid):
-        sub = sub_model.query.filter_by(userid=userid).first()
+        sub = sub_model.query.filter_by(
+            userid=userid, subscription_status=True).first()
         if sub:
-            return {'status': 'success', 'subscription_status': 'active', 'end_date': str(sub.end_date)}
+            return {'status': 'success', 'subscription': True, 'end_date': str(sub.subscription_end_date)}
         else:
-            return {'status': 'failure', 'message': "user is not subscribed"}
+            return {'status': 'failure', 'subscription': False}
 
 
 class SubscriptionResource(Resource):
-    def get(self, userid):
+    def get(self, userid):  # add one more month
         sub = sub_model.query.filter_by(userid=userid).first()
         if sub:
-            sub.start_date = current_time()
-            sub.end_date = month_subscribe(current_time())
+            if sub.subscription_status == False:
+                sub.subscription_date = current_time()
+                sub.subscription_end_date = month_subscribe(current_time())
+            else:
+                sub.subscription_end_date = sub.subscription_end_date + \
+                    timedelta(days=30)
             db.session.commit()
-            return {'status': 'success', 'subscription_status': 'active-updated', 'end_date': str(sub.end_date)}
+            return {'status': 'success', 'subscription': True, 'end_date': str(sub.subscription_end_date)}
         else:
-            sub = sub_model(userid=userid)
+            sub = sub_model(userid=userid, subscription_date=current_time(),
+                            subscription_end_date=month_subscribe(
+                                current_time()),
+                            subscription_status=True)
             db.session.add()
             db.session.commit()
-            return {'status': 'failure', 'message': "user is not subscribed"}
+            return {'status': 'failure', 'subscription': False}
+
+
+class GetSubscribedGames(Resource):
+    def get(self, userid):
+        sub = sub_model.query.filter_by(
+            userid=userid, subscription_status=True).first()
+        if not sub:
+            return {'status': 'failure', 'message': "No subscription found", 'games': []}
+        subscribed_games = gu_model.query.filter_by(
+            user_id=userid, subscribed=True).all()
+        games = []
+        for i in subscribed_games:
+            game = game_model.query.filter_by(id=i.game_id).first()
+            if game:
+                games.append(game)
+        if not subscribed_games:
+            return {'status': 'failure', 'message': "No games found", 'games': []}
+        else:
+            return {'status': 'success', 'games': marshal(games, game_fields)}
