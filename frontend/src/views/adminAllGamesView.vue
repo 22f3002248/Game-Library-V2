@@ -25,10 +25,12 @@
         </div>
 
         <!-- Section moved outside of flex for proper structure -->
-        <section class="mt-12">
-          <h3 class="text-3xl font-bold mb-6">
+        <section class="mt-12" style="overflow: auto; height: 550px">
+          <h3 class="text-3xl font-bold mb-6 text-accent">
             All Games ({{ filteredGames.length }})
           </h3>
+          <hr>
+          <br>
           <p v-if="filteredGames.length === 0" class="text-gray-600">
             No games found.
           </p>

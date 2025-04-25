@@ -14,11 +14,11 @@ from application.api.profile.profile_api import ProfileResource
 from application.api.purchase.purchase_api import (CheckPurchase,
                                                    GetAllPurchasedResource,
                                                    GetPurchasedResource,
-                                                   PurchaseResource)
+                                                   PurchaseResource,AGetAllPurchasedResource)
 from application.api.purchase.subscription_api import (CheckSubscription,
                                                        GetHash,
                                                        GetSubscribedGames,
-                                                       SubscriptionResource)
+                                                       SubscriptionResource,AGetSubscribedGames)
 from application.api.reviews.review_api import (AdminReviewResource,
                                                 ModifyReviewResource,
                                                 ReviewResource)
@@ -51,10 +51,14 @@ def initialize_api(app):
                      '/api/purchase/<int:uid>/purchased')
     api.add_resource(GetAllPurchasedResource,
                      '/api/purchase/<int:userid>/purchased/all')
+    api.add_resource(AGetAllPurchasedResource,
+                     '/admin/purchases')
     api.add_resource(CheckSubscription, '/api/check/subscription/<int:userid>')
     api.add_resource(SubscriptionResource, '/api/subscribe/<int:userid>')
     api.add_resource(GetSubscribedGames,
                      '/api/subscription/<int:userid>/games')
+    api.add_resource(AGetSubscribedGames,
+                     '/admin/subscriptions')
     # > REVIEW
     api.add_resource(
         ReviewResource, '/api/review/<int:gameid>')

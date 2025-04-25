@@ -45,6 +45,14 @@ game_user_fields = {
     'completed': fields.Boolean
 }
 
+purchase_fields = {
+    'username': fields.String,
+    'email': fields.String,
+    'game_title': fields.String,
+    'purchase_date': fields.DateTime,
+    'purchased': fields.Boolean,
+}
+
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument(
@@ -129,3 +137,19 @@ class GetAllPurchasedResource(Resource):
         } for game_user, game, user in purchased_games]
 
         return {'status': 'success', 'purchased': marshal(result, game_user_fields)}
+
+
+class AGetAllPurchasedResource(Resource):
+    def get(self):
+        gus = gu_model.query.filter_by(purchased=True).all()
+        purchases = []
+        for gu in gus:
+            purchases.append({
+                'username': gu.user.username,
+                'email': gu.user.email,
+                'game_title': gu.game.title,
+                'purchase_date': gu.purchase_date,
+                'purchased': gu.purchased,
+            })
+        return {'status': 'success', 'purchases': marshal(purchases, purchase_fields)}    
+        

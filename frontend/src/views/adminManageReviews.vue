@@ -3,21 +3,29 @@
     <navbarCompVertical></navbarCompVertical>
     <div class="flex-1">
       <div class="bg-accent-content text-white p-6 shadow-lg w-full h-full">
-        <h1 class="text-3xl text-center bg-grey text-accent p-4">
+        <h1 class="text-3xl text-center bg-grey text-accent p-4 font-bold">
           Manage Reviews
         </h1>
         <hr class="my-4" />
         <!-- Alert Message -->
-        <div v-if="showMessage" class="alert alert-success m-3">
-          {{ message }}
+        <div
+          v-show="showMessage"
+          class="alert alert-success m-2 mx-auto flex justify-between"
+          style="max-width: 400px"
+        >
+          <span>{{ message }}</span>
+          <button
+            class="rounded-md border border-black px-2 font-bold"
+            @click="showMessage = false"
+          >
+            X
+          </button>
         </div>
 
-        <div class="flex space-x-2">
-          <!-- Add Genre Button -->
-          <button type="button" class="btn btn-sm btn-success">sample</button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+          style="overflow: auto; height: 550px"
+        >
           <div v-for="(review, id) in reviews" :key="id" class="text-grey">
             <div class="card m-3 border border-grey p-3">
               <div class="flex justify-between">
@@ -55,18 +63,18 @@
                   class="bg-neutral p-6 rounded-lg w-[500px] shadow-lg"
                 >
                   <DialogTitle class="text-accent font-bold text-[1.4rem] mb-4"
-                    >Are you sure you want to delete the review:
+                    >Are you sure you want to delete this review ?
                   </DialogTitle>
                   <button
                     type="button"
-                    class="btn btn-outline btn-success ml-2"
-                    @click="removeReview(user_id,game_id)"
+                    class="btn btn-sm btn-success ml-2"
+                    @click="removeReview(user_id, game_id)"
                   >
                     Confirm
                   </button>
                   <button
                     type="button"
-                    class="btn btn-outline btn-error ml-2"
+                    class="btn btn-sm btn-error ml-2"
                     @click="resetDelete()"
                   >
                     Cancel
@@ -108,8 +116,8 @@ export default {
       reviews: [],
       showMessage: false,
       showDeleteBox: false,
-      user_id:0,
-      game_id:0
+      user_id: 0,
+      game_id: 0,
     }
   },
   methods: {
@@ -125,6 +133,7 @@ export default {
           console.log(e)
         })
     },
+
     //remove reviews
     removeReview(user_id, game_id) {
       const path = `http://localhost:5000/api/review/modify/${user_id}/${game_id}`
@@ -135,8 +144,8 @@ export default {
           this.message = 'Genre Removed!'
           this.resetDelete()
           this.showMessage = true
-          this.game_id=0
-          this.user_id=0
+          this.game_id = 0
+          this.user_id = 0
         })
         .catch((err) => {
           console.log(err)
@@ -155,6 +164,9 @@ export default {
   },
   created() {
     this.getReviews()
+    setTimeout(() => {
+      this.showMessage = false
+    }, 3000)
   },
 }
 </script>
