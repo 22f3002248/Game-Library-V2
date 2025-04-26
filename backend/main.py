@@ -1,9 +1,3 @@
-from celery.result import AsyncResult
-from celery.schedules import crontab
-from flask import Flask, jsonify, send_file
-from flask_cors import CORS
-from flask_security import Security
-
 from application.api.initialize_api import initialize_api
 from application.data.database import db
 from application.data.datastore import ds
@@ -12,16 +6,21 @@ from application.tasks import (async_task_example, autorevoke, ratingcal,
                                send_monthly_report_to_admin,
                                send_weekly_report_to_all_users)
 from application.worker import celery_init_app
+from celery.result import AsyncResult
+from celery.schedules import crontab
 from config import devconfig
 from datagen import (assign_games_to_users, create_game_photos, create_games,
                      create_genres, gen, gen_reviews, profileDataGen)
+from flask import Flask, jsonify, send_file
+from flask_cors import CORS
+from flask_security import Security
 
 app = Flask(__name__)
 app.config.from_object(devconfig)
 CORS(app, resources={r"/*": {"origins": "*"}})
 db.init_app(app)
 security = Security(app, ds)
-api = initialize_api(app)    
+api = initialize_api(app)
 
 
 with app.app_context():
@@ -63,11 +62,11 @@ celery_app = celery_init_app(app)
 @celery_app.on_after_configure.connect
 def celery_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(hour=10, minute=29),
+        crontab(hour=10, minute=0),
         send_weekly_report_to_all_users.s(),
     )
     sender.add_periodic_task(
-        crontab(hour=10, minute=29),
+        crontab(hour=10, minute=0),
         send_monthly_report_to_admin.s(),
     )
     sender.add_periodic_task(

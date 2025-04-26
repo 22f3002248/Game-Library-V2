@@ -6,16 +6,15 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
 
-from celery import shared_task
-from flask import current_app as app
-from jinja2 import Template
-
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
 from application.data.model import Review as review_model
 from application.data.model import Subscription as sub_model
 from application.data.model import User as user_model
+from celery import shared_task
+from flask import current_app as app
+from jinja2 import Template
 
 
 # Define a sample Celery task
@@ -105,7 +104,7 @@ def send_weekly_report_to_all_users():
                         'purchased': user_game.purchased,
                         'subscribed': user_game.subscribed,
                         'completed': user_game.completed,
-                        'date': user_game.date.strftime('%d/%m/%Y %H:%M')
+                        'date': user_game.purchase_date.strftime('%d/%m/%Y %H:%M') if user_game.purchase_date else 'N/A',
                     })
 
             data = {
