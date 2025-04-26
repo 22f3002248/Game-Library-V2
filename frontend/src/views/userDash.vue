@@ -14,26 +14,37 @@
       <br />
       <!-- Featured Games Section -->
       <section>
-        <h3 class="text-3xl font-bold mb-6">Featured Games</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h3 class="text-3xl font-bold mb-6">Top Rated Games</h3>
+
+        <!-- Flex row layout -->
+        <div class="flex flex-wrap gap-6">
           <div
             v-for="(game, index) in topGames"
             :key="index"
-            class="card bg-white shadow-lg rounded-lg overflow-hidden"
+            class="flex flex-col sm:flex-row bg-white shadow-lg rounded-lg overflow-hidden w-full sm:w-[48%] lg:w-[32%]"
           >
+            <!-- Image on the left -->
             <img
               :src="game.poster"
               :alt="game.title"
-              class="w-full object-cover h-64"
+              class="w-full sm:w-1/3 object-cover h-64 sm:h-auto"
             />
-            <div class="p-4">
-              <h4 class="font-bold text-lg mb-2 text-black">
-                {{ game.title }}
-              </h4>
-              <p class="text-sm text-gray-600">{{ game.description }}</p>
-              <p>Rating: {{ game.rating }} ★</p>
+
+            <!-- Text on the right -->
+            <div class="p-4 flex flex-col justify-between sm:w-2/3">
+              <div>
+                <h4 class="font-bold text-xl mb-2 text-black">
+                  {{ game.title }}
+                </h4>
+                <p class="text-sm text-gray-600 mb-2">
+                  {{ game.description }}
+                </p>
+                <p class="text-gray-700 font-medium">
+                  Rating: {{ game.rating }} ★
+                </p>
+              </div>
               <button
-                class="btn btn-secondary mt-4 w-full"
+                class="btn btn-secondary mt-4 sm:mt-6 w-full sm:w-auto"
                 @click="openGame(game.id)"
               >
                 Play Now
@@ -41,6 +52,7 @@
             </div>
           </div>
         </div>
+
         <br />
         <hr style="border-color: darkslategray" />
         <br />

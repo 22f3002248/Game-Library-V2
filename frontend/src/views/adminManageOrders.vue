@@ -65,7 +65,7 @@
                 <td>{{ purchase.username }}</td>
                 <td>{{ purchase.email }}</td>
                 <td>{{ purchase.game_title }}</td>
-                <td>{{ purchase.purchase_date }}</td>
+                <td>{{ formatEndDate(purchase.purchase_date) }}</td>
                 <td></td>
               </tr>
             </tbody>
@@ -116,6 +116,18 @@ export default {
     },
   },
   methods: {
+    formatEndDate(end_date) {
+      if (!end_date) return ''
+      const dateObj = new Date(end_date.replace(' ', 'T')) // Convert to ISO 8601
+      const options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }
+      const time = dateObj.toLocaleTimeString('en-US', options)
+      const date = dateObj.toLocaleDateString('en-GB') // dd/mm/yyyy
+      return `${time} ${date}`
+    },
     getOrders() {
       const path = 'http://127.0.0.1:5000/admin/purchases'
       axios

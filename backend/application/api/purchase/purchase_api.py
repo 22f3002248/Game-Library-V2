@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta, timezone
 
-from flask import jsonify
-from flask_restx import Resource, fields, marshal, reqparse
-
 from application.data.database import db
 from application.data.model import Game as game_model
 from application.data.model import Game_User as gu_model
 from application.data.model import Subscription as sub_model
 from application.data.model import User as user_model
+from flask import jsonify
+from flask_restx import Resource, fields, marshal, reqparse
 
 genre_fields = {
     'id': fields.Integer,
@@ -90,7 +89,8 @@ class PurchaseResource(Resource):
             gu.purchased = True
             db.session.commit()
         else:
-            pur = gu_model(user_id=userid, game_id=gameid, purchased=True)
+            pur = gu_model(user_id=userid, game_id=gameid,
+                           purchased=True, purchase_date=current_time())
             db.session.add(pur)
             db.session.commit()
         return {'status': 'success',
@@ -151,5 +151,4 @@ class AGetAllPurchasedResource(Resource):
                 'purchase_date': gu.purchase_date,
                 'purchased': gu.purchased,
             })
-        return {'status': 'success', 'purchases': marshal(purchases, purchase_fields)}    
-        
+        return {'status': 'success', 'purchases': marshal(purchases, purchase_fields)}

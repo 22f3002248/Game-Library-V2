@@ -1,9 +1,6 @@
 import random
 from datetime import datetime, timedelta, timezone
 
-from faker import Faker
-from werkzeug.security import generate_password_hash
-
 from application.data.database import db
 from application.data.datalist import GAMES, GENRES, feedbacks, game_images
 from application.data.datastore import ds
@@ -18,6 +15,8 @@ from application.data.model import RolesUsers as roles_users
 from application.data.model import Subscription as sub_model
 from application.data.model import User as user_model
 from application.data.model import game_genre_association as gg_model
+from faker import Faker
+from werkzeug.security import generate_password_hash
 
 
 def current_time():
@@ -141,6 +140,10 @@ def assign_games_to_users():
                     subscribed=True,
                     completed=completed
                 )
+                if purchased:
+                    game_user.purchase_date = current_time()
+                if completed:
+                    game_user.completed_date = current_time()
             else:
                 # Non-subscribers may only purchase games
                 purchased = random.choice([True, False])
@@ -154,7 +157,10 @@ def assign_games_to_users():
                     subscribed=False,
                     completed=completed
                 )
-
+                if purchased:
+                    game_user.purchase_date = current_time()
+                if completed:
+                    game_user.completed_date = current_time()
             db.session.add(game_user)
             assigned_games.add((user.id, game.id))
 
